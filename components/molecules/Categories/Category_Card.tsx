@@ -9,16 +9,18 @@ interface Props {
   imageUrl: string;
   href: string;
   stock: number;
+  isSelected: boolean;
+  onSelect: (title: string) => void;
 }
 
-const Card_Container = styled(Link)`
+const Card_Container = styled.div<{ isSelected: boolean }>`
   display: flex;
   flex-direction: column;
   width: 150px;
   height: 150px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: ${({ isSelected }) => (isSelected ? "#007bff" : "#fff")};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   text-decoration: none;
@@ -26,6 +28,7 @@ const Card_Container = styled(Link)`
   align-items: center;
   justify-content: space-between;
   padding: 10px;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-5px);
@@ -64,10 +67,15 @@ const Card_Stock = styled.span<{ stock: number }>`
   font-weight: bold;
   color: ${({ stock }) => (stock > 0 ? "#28a745" : "#dc3545")};
 `;
-
-export const Category_Card: FC<Props> = ({ title, description, imageUrl, href, stock }) => {
+export const Category_Card: FC<Props> = ({ title, description, imageUrl, href, stock, isSelected, onSelect }) => {
   return (
-    <Card_Container href={href}>
+    <Card_Container
+      isSelected={isSelected}
+      onClick={(event) => {
+        event.stopPropagation();
+        onSelect(title);
+      }}
+    >
       <Card_Image>
         <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
       </Card_Image>

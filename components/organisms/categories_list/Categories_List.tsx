@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Category_Card } from "../../molecules/Categories/Category_Card";
-import { Add_Category_Card } from "../../molecules/Categories/Add_Category_Card";
+import { Category_Card } from "../../molecules/categories/Category_Card";
+import { Add_Category_Card } from "../../molecules/categories/Add_Category_Card";
 
 interface Category {
   title: string;
@@ -13,12 +13,15 @@ interface Category {
 
 interface Props {
   categories: Category[];
+  onCategorySelect: (category: string) => void;
+  selectedCategory?: string | null; 
 }
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 0;
+  margin-top: 15px;
 `;
 
 const Title = styled.h2`
@@ -61,17 +64,20 @@ const handleAddCategory = () => {
   alert("Agregar nueva categoría");
 };
 
-
-export const Category_List: FC<Props> = ({ categories }) => {
+export const Category_List: FC<Props> = ({ categories, onCategorySelect, selectedCategory }) => {
   return (
     <Container>
       <Title>Categorías</Title>
       <Divider />
       <Categories_Container>
-      <Add_Category_Card onAddCategory={handleAddCategory} />
+        <Add_Category_Card onAddCategory={handleAddCategory} />
         {categories.map((category, index) => (
           <Category_Wrapper key={index}>
-            <Category_Card {...category} />
+            <Category_Card
+              {...category}
+              isSelected={selectedCategory === category.title} 
+              onSelect={() => onCategorySelect(category.title)}
+            />
           </Category_Wrapper>
         ))}
       </Categories_Container>

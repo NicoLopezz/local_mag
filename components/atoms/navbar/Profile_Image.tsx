@@ -4,7 +4,6 @@ import Image from "next/image";
 
 interface Props {
   src: string;
-  alt: string;
 }
 
 const ProfileWrapper = styled.div`
@@ -14,10 +13,10 @@ const ProfileWrapper = styled.div`
   overflow: hidden;
 `;
 
-export const ProfileImage: FC<Props> = ({ src, alt }) => {
+export const ProfileImage: FC<Props> = ({ src}) => {
   return (
     <ProfileWrapper>
-      <Image src={src} alt={alt} width={40} height={40} />
+      <Image src={src} alt="" width={40} height={40} />
     </ProfileWrapper>
   );
 };

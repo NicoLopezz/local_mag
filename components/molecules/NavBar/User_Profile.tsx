@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { UserName } from "../../atoms/NavBar/User_Name";
-import { ProfileImage } from "../../atoms/NavBar/Profile_Image";
+import { UserName } from "../../atoms/navbar/User_Name";
+import { ProfileImage } from "../../atoms/navbar/Profile_Image";
 
 interface Props {
   name: string;
@@ -18,7 +18,7 @@ export const UserProfile: FC<Props> = ({ name, imageUrl }) => {
   return (
     <ProfileWrapper>
       <UserName name={name} />
-      <ProfileImage src={imageUrl} alt={name} />
+      <ProfileImage src={imageUrl} />
     </ProfileWrapper>
   );
 };

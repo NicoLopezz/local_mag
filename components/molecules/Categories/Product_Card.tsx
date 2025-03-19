@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import { Stock_Control } from "../../atoms/Stock_Control";
+import { Stock_Control } from "../../atoms/cards/Stock_Control";
 import Link from "next/link";
 
 interface Props {
@@ -74,6 +74,7 @@ export const Product_Card: FC<Props> = ({ title, description, imageUrl, href, pr
     const handleDecrease = () => setCurrentStock((prev) => (prev > 0 ? prev - 1 : 0));
   
     return (
+        
       <Card_Container href={href || "#"}>
         <Card_Image>
           <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />

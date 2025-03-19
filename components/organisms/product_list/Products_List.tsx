@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Product_Card } from "../../molecules/Categories/Product_Card";
-import { Add_Product_Card } from "../../molecules/Categories/Add_Product_Card";
+import { Product_Card } from "../../molecules/categories/Product_Card";
+import { Add_Product_Card } from "../../molecules/categories/Add_Product_Card";
 
 interface Product {
   title: string;
@@ -18,6 +18,7 @@ interface Props {
 
 const Container = styled.div`
   max-width: 1200px;
+
   margin: 0 auto;
   padding: 20px 0;
 `;
@@ -43,6 +44,8 @@ const Products_Container = styled.div`
   padding: 10px 0;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
+  justify-content: flex-start;
+  align-items: stretch;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -55,8 +58,9 @@ const Products_Container = styled.div`
 `;
 
 const Product_Wrapper = styled.div`
-  flex: 0 0 calc(100% / 6 - 16px);
+  flex: 1 1 calc(100% / 6 - 16px);
   max-width: calc(100% / 6 - 16px);
+  display: flex;
 `;
 
 

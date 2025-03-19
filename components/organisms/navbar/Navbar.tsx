@@ -1,8 +1,8 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { SearchInput } from "../../molecules/NavBar/Search_Input";
-import { NotificationBell } from "../../molecules/NavBar/Notification_Bell";
-import { UserProfile } from "../../molecules/NavBar/User_Profile";
+import { SearchInput } from "../../molecules/navbar/Search_Input";
+import { NotificationBell } from "../../molecules/navbar/Notification_Bell";
+import { UserProfile } from "../../molecules/navbar/User_Profile";
 
 interface Props {
   userName: string;
@@ -10,24 +10,32 @@ interface Props {
 }
 
 const NavbarContainer = styled.nav`
+  width: 100%;
+  position: fixed;
+  margin-left:5%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background-color: #fff;
   border-bottom: 1px solid #ddd;
+  height:3rem;
 `;
 
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  /* gap: 20px; */
+  padding-left: 3rem;
 `;
 
 const RightSection = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  padding-right: 10rem;
 `;
 
 export const Navbar: FC<Props> = ({ userName, userImage }) => {
@@ -35,9 +43,9 @@ export const Navbar: FC<Props> = ({ userName, userImage }) => {
     <NavbarContainer>
       <LeftSection>
         <span>Nombre del local ▼</span>
-        <SearchInput />
       </LeftSection>
       <RightSection>
+        <SearchInput />
         <NotificationBell />
         <UserProfile name={userName} imageUrl={userImage} />
       </RightSection>
