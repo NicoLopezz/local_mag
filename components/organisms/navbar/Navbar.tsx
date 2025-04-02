@@ -9,46 +9,66 @@ interface Props {
   userImage: string;
 }
 
-const NavbarContainer = styled.nav`
+export const Navbar: FC<Props> = ({ userName, userImage }) => {
+  return (
+    <Navbar_Wrapper>
+      <Navbar_Container>
+        <Left_Section>
+          <span>Nombre del local ▼</span>
+        </Left_Section>
+        <Center_Section>
+          <SearchInput />
+        </Center_Section>
+        <Right_Section>
+          <NotificationBell />
+          <UserProfile name={userName} imageUrl={userImage} />
+        </Right_Section>
+      </Navbar_Container>
+    </Navbar_Wrapper>
+  );
+};
+
+
+const Navbar_Wrapper = styled.div`
   width: 100%;
   position: fixed;
-  margin-left:5%;
   top: 0;
   left: 0;
+  border-bottom: 1px solid #ddd;
   z-index: 1000;
+`;
+
+const Navbar_Container = styled.div`
+  width: 100%;
+  height: 4rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
-  border-bottom: 1px solid #ddd;
-  height:3rem;
+  padding: 0 5%;
+  box-sizing: border-box;
+  position: relative;
 `;
 
-const LeftSection = styled.div`
+const Left_Section = styled.div`
   display: flex;
   align-items: center;
-  /* gap: 20px; */
-  padding-left: 3rem;
+  margin-left: 3rem;
 `;
 
-const RightSection = styled.div`
+const Center_Section = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+`;
+
+const Right_Section = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-  padding-right: 10rem;
+  margin-left: auto;
 `;
-
-export const Navbar: FC<Props> = ({ userName, userImage }) => {
-  return (
-    <NavbarContainer>
-      <LeftSection>
-        <span>Nombre del local ▼</span>
-      </LeftSection>
-      <RightSection>
-        <SearchInput />
-        <NotificationBell />
-        <UserProfile name={userName} imageUrl={userImage} />
-      </RightSection>
-    </NavbarContainer>
-  );
-};

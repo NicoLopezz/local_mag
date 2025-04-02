@@ -2,8 +2,18 @@ import { FC } from "react";
 import styled from "styled-components";
 
 interface Props {
-  onAddCategory: () => void;
+  onAddRole: () => void;
 }
+
+export const Add_Empleado_Card: FC<Props> = ({ onAddRole }) => {
+  return (
+    <Card_Container onClick={onAddRole}>
+      <Add_Icon>+</Add_Icon>
+      <Add_Text>Agregar Empleado</Add_Text>
+    </Card_Container>
+  );
+};
+
 
 const Card_Container = styled.div`
   display: flex;
@@ -13,7 +23,6 @@ const Card_Container = styled.div`
   border-radius: 12px;
   background-color: #fff;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   align-items: center;
   justify-content: center;
   padding: 10px;
@@ -40,11 +49,3 @@ const Add_Text = styled.p`
   margin: 8px 0 0 0;
 `;
 
-export const Add_Category_Card: FC<Props> = ({ onAddCategory }) => {
-  return (
-    <Card_Container onClick={onAddCategory}>
-      <Add_Icon>+</Add_Icon>
-      <Add_Text>Agregar Categoría</Add_Text>
-    </Card_Container>
-  );
-};

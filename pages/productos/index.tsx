@@ -1,0 +1,167 @@
+import { useEffect, useRef, useState } from "react";
+import type { NextPage } from "next";
+import styled from "styled-components";
+import { useRouter } from "next/router";
+import { Category_List } from "../../components/organisms/lists/Categories_List";
+import { Product_List } from "../../components/organisms/lists/Products_List";
+import { Add_Product_Modal } from "../../components/organisms/add_modals/Add_Product_Modal";
+import { Add_Category_Modal } from "../../components/organisms/add_modals/Add_Category_Modal";
+import { mockData } from "../../mock_data/products";
+import { Toast } from "../../components/atoms/notification/Toast";
+
+const Navbar_Height = "1rem";
+const Sidebar_Width = "1rem";
+
+
+
+const Productos: NextPage = () => {
+  const router = useRouter();
+  const [productModalOpen, setProductModalOpen] = useState(false);
+  const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const search = typeof router.query.search === "string" ? router.query.search : "";
+  const category = typeof router.query.category === "string" ? router.query.category : null;
+
+  const handleCategorySelect = (categorySelected: string) => {
+    const isSame = category === categorySelected;
+    const newCategory = isSame ? undefined : categorySelected;
+
+    router.replace({
+      pathname: "/productos",
+      query: {
+        ...router.query,
+        category: newCategory,
+      },
+    });
+  };
+
+  const handleAddProduct = () => setProductModalOpen(true);
+  const handleCloseProductModal = () => setProductModalOpen(false);
+
+  const handleOpenCategoryModal = () => setCategoryModalOpen(true);
+  const handleCloseCategoryModal = () => setCategoryModalOpen(false);
+
+  const handleProductSubmit = () => {
+    setProductModalOpen(false);
+    setToastMessage("Producto creado con éxito");
+  };
+
+  const handleCategorySubmit = () => {
+    setCategoryModalOpen(false);
+    setToastMessage("Categoría creada con éxito");
+  };
+
+  const handleCloseToast = () => setToastMessage(null);
+
+  const categoriesFormatted = mockData.categories.map((category) => ({
+    title: category.title,
+    description: category.description,
+    imageUrl: category.imageUrl,
+    href: category.href,
+    stock: category.stock,
+  }));
+
+  const productsFormatted = mockData.products
+    .filter(
+      (product) =>
+        (!category || product.category === category) &&
+        (!search || product.title.toLowerCase().includes(search.toLowerCase()))
+    )
+    .map((product) => ({
+      title: product.title,
+      description: product.description,
+      imageUrl: "/images/default.jpg",
+      href: "#",
+      productCode: `SKU-${product.id}`,
+      stock: product.stock,
+    }));
+    
+    useEffect(() => {
+      if (!search.trim()) return;
+    
+      const filteredProducts = mockData.products.filter((product) =>
+        product.title.toLowerCase().includes(search.toLowerCase())
+      );
+    
+      const uniqueCategories = [...new Set(filteredProducts.map((p) => p.category))];
+    
+      if (uniqueCategories.length === 1) {
+        const detectedCategory = uniqueCategories[0];
+    
+        if (category !== detectedCategory) {
+          router.replace({
+            pathname: "/productos",
+            query: {
+              ...router.query,
+              category: detectedCategory,
+            },
+          });
+        }
+      }
+    }, [search]);
+    
+
+  return (
+    <Page_Container>
+      <Main_Content>
+        <Content_Area>
+          <Category_List
+            categories={categoriesFormatted}
+            onCategorySelect={handleCategorySelect}
+            onAddCategory={handleOpenCategoryModal}
+            selectedCategory={category}
+          />
+          <Product_List
+            key={category || search || "all"}
+            products={productsFormatted}
+            onAddProduct={handleAddProduct}
+          />
+        </Content_Area>
+      </Main_Content>
+
+      {productModalOpen && (
+        <Add_Product_Modal
+          onClose={handleCloseProductModal}
+          onSubmit={handleProductSubmit}
+        />
+      )}
+      {categoryModalOpen && (
+        <Add_Category_Modal
+          onClose={handleCloseCategoryModal}
+          onSubmit={handleCategorySubmit}
+        />
+      )}
+      {toastMessage && (
+        <Toast message={toastMessage} onClose={handleCloseToast} />
+      )}
+    </Page_Container>
+  );
+};
+
+
+
+const Page_Container = styled.div`
+  display: flex;
+  width: 100%;
+  height: calc(100vh - ${Navbar_Height});
+  overflow: hidden;
+`;
+
+const Main_Content = styled.div`
+  display: flex;
+  overflow: hidden;
+  padding: 0px;
+  flex-grow: 1;
+`;
+
+const Content_Area = styled.div`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: calc(100vw - ${Sidebar_Width});
+  margin-left: 2rem;
+`;
+
+export default Productos;

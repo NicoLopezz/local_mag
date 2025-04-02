@@ -8,7 +8,12 @@ interface Props {
 const Text_Wrapper = styled.span`
   font-size: 14px;
   font-weight: 500;
+  text-decoration: none;
+  color: inherit;
 `;
+
+
+
 
 export const Sidebar_Text: FC<Props> = ({ text }) => {
   return <Text_Wrapper>{text}</Text_Wrapper>;

@@ -4,12 +4,14 @@ import styled from "styled-components";
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
-const Categorias: NextPage = () => {
+const Clientes: NextPage = () => {
   return (
     <Page_Container>
       <Main_Content>
         <Content_Area>
-          <Page_Title>Categorias</Page_Title>
+          <Page_Title>Clientes
+          
+          </Page_Title>
         </Content_Area>
       </Main_Content>
     </Page_Container>
@@ -44,4 +46,4 @@ const Page_Title = styled.h1`
   font-weight: 700;
 `;
 
-export default Categorias;
+export default Clientes;

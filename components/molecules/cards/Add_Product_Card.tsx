@@ -5,6 +5,16 @@ interface Props {
   onAddProduct: () => void;
 }
 
+export const Add_Product_Card: FC<Props> = ({ onAddProduct }) => {
+  return (
+    <Card_Container onClick={onAddProduct}>
+      <Add_Icon>+</Add_Icon>
+      <Add_Text>Agregar Producto</Add_Text>
+    </Card_Container>
+  );
+};
+
+
 const Card_Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,11 +49,3 @@ const Add_Text = styled.p`
   margin: 8px 0 0 0;
 `;
 
-export const Add_Product_Card: FC<Props> = ({ onAddProduct }) => {
-  return (
-    <Card_Container onClick={onAddProduct}>
-      <Add_Icon>+</Add_Icon>
-      <Add_Text>Agregar Producto</Add_Text>
-    </Card_Container>
-  );
-};

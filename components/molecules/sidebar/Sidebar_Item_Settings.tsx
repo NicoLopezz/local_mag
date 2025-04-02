@@ -4,7 +4,7 @@ import { Sidebar_Icon } from "../../atoms/sidebar/Sidebar_Icon";
 import { Sidebar_Text } from "../../atoms/sidebar/Sidebar_Text";
 import { FiSettings } from "react-icons/fi";
 
-const Settings_Wrapper = styled.a`
+const Settings_Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

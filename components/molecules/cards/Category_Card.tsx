@@ -1,7 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import Link from "next/link";
 
 interface Props {
   title: string;
@@ -13,6 +12,35 @@ interface Props {
   onSelect: (title: string) => void;
 }
 
+export const Category_Card: FC<Props> = ({
+  title,
+  description,
+  imageUrl,
+  href,
+  stock,
+  isSelected,
+  onSelect,
+}) => {
+  return (
+    <Card_Container
+      isSelected={isSelected}
+      onClick={(event) => {
+        event.stopPropagation();
+        onSelect(title);
+      }}
+    >
+      <Card_Image>
+        <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
+      </Card_Image>
+      <Card_Content>
+        <Card_Title>{title}</Card_Title>
+        <Card_Description>{description}</Card_Description>
+        <Card_Stock stock={stock}>Stock: {stock > 0 ? stock : "Agotado"}</Card_Stock>
+      </Card_Content>
+    </Card_Container>
+  );
+};
+
 const Card_Container = styled.div<{ isSelected: boolean }>`
   display: flex;
   flex-direction: column;
@@ -20,9 +48,11 @@ const Card_Container = styled.div<{ isSelected: boolean }>`
   height: 150px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: ${({ isSelected }) => (isSelected ? "#007bff" : "#fff")};
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  background-color: #fff;
+  border: ${({ isSelected }) => (isSelected ? "2px solid #02203f" : "1px solid #ddd")};
+  box-shadow: ${({ isSelected }) =>
+    isSelected ? "0 0 10px rgba(0, 123, 255, 0.3)" : "0px 4px 8px rgba(0, 0, 0, 0.05)"};
+  transition: all 0.1s ease-in-out;
   text-decoration: none;
   color: inherit;
   align-items: center;
@@ -32,7 +62,7 @@ const Card_Container = styled.div<{ isSelected: boolean }>`
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -67,23 +97,3 @@ const Card_Stock = styled.span<{ stock: number }>`
   font-weight: bold;
   color: ${({ stock }) => (stock > 0 ? "#28a745" : "#dc3545")};
 `;
-export const Category_Card: FC<Props> = ({ title, description, imageUrl, href, stock, isSelected, onSelect }) => {
-  return (
-    <Card_Container
-      isSelected={isSelected}
-      onClick={(event) => {
-        event.stopPropagation();
-        onSelect(title);
-      }}
-    >
-      <Card_Image>
-        <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
-      </Card_Image>
-      <Card_Content>
-        <Card_Title>{title}</Card_Title>
-        <Card_Description>{description}</Card_Description>
-        <Card_Stock stock={stock}>Stock: {stock > 0 ? stock : "Agotado"}</Card_Stock>
-      </Card_Content>
-    </Card_Container>
-  );
-};

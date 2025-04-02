@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Stock_Control } from "../../atoms/cards/Stock_Control";
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface Props {
   title: string;
@@ -11,9 +11,43 @@ interface Props {
   href: string;
   productCode: string;
   stock: number;
+  
 }
 
-const Card_Container = styled(Link)`
+export const Product_Card: FC<Props> = ({ title, description, imageUrl, productCode, stock }) => {
+  const [currentStock, setCurrentStock] = useState(stock);
+  const router = useRouter();
+
+  const handleIncrease = () => setCurrentStock((prev) => prev + 1);
+  const handleDecrease = () => setCurrentStock((prev) => (prev > 0 ? prev - 1 : 0));
+
+  const handleClick = () => {
+    const params = new URLSearchParams();
+  
+    if (router.query.search) params.set("search", router.query.search as string);
+    params.set("productCode", productCode);
+    if (router.query.category) params.set("category", router.query.category as string);
+  
+    router.replace(`/productos?${params.toString()}`);
+  };
+  
+
+  return (
+    <Card_Container onClick={handleClick}>
+      <Card_Image>
+        <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
+      </Card_Image>
+      <Card_Content>
+        <Card_Title>{title}</Card_Title>
+        <Card_Description>{description}</Card_Description>
+        <Product_Code>{productCode}</Product_Code>
+      </Card_Content>
+      <Stock_Control stock={currentStock} onIncrease={handleIncrease} onDecrease={handleDecrease} />
+    </Card_Container>
+  );
+};
+
+const Card_Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 150px;
@@ -28,6 +62,7 @@ const Card_Container = styled(Link)`
   align-items: center;
   justify-content: space-between;
   padding: 10px;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-5px);
@@ -66,26 +101,3 @@ const Product_Code = styled.span`
   color: #888;
   margin-top: 5px;
 `;
-
-export const Product_Card: FC<Props> = ({ title, description, imageUrl, href, productCode, stock }) => {
-    const [currentStock, setCurrentStock] = useState(stock);
-  
-    const handleIncrease = () => setCurrentStock((prev) => prev + 1);
-    const handleDecrease = () => setCurrentStock((prev) => (prev > 0 ? prev - 1 : 0));
-  
-    return (
-        
-      <Card_Container href={href || "#"}>
-        <Card_Image>
-          <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
-        </Card_Image>
-        <Card_Content>
-          <Card_Title>{title}</Card_Title>
-          <Card_Description>{description}</Card_Description>
-          <Product_Code>{productCode}</Product_Code>
-        </Card_Content>
-        <Stock_Control stock={currentStock} onIncrease={handleIncrease} onDecrease={handleDecrease} />
-      </Card_Container>
-    );
-  };
-  

@@ -7,11 +7,20 @@ interface Props {
   onDecrease: () => void;
 }
 
+export const Stock_Control: FC<Props> = ({ stock, onIncrease, onDecrease }) => {
+  return (
+    <Stock_Container>
+      <Stock_Value>{stock}</Stock_Value>
+      <Stock_Button onClick={onDecrease}>-</Stock_Button>
+    </Stock_Container>
+  );
+};
+
 const Stock_Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 70%;
   padding: 5px;
   border-top: 1px solid #ddd;
 `;
@@ -39,13 +48,3 @@ const Stock_Value = styled.span`
   font-size: 1rem;
   font-weight: bold;
 `;
-
-export const Stock_Control: FC<Props> = ({ stock, onIncrease, onDecrease }) => {
-  return (
-    <Stock_Container>
-      <Stock_Button onClick={onDecrease}>-</Stock_Button>
-      <Stock_Value>{stock}</Stock_Value>
-      <Stock_Button onClick={onIncrease}>+</Stock_Button>
-    </Stock_Container>
-  );
-};

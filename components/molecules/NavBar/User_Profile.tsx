@@ -11,14 +11,13 @@ interface Props {
 const ProfileWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
 `;
 
 export const UserProfile: FC<Props> = ({ name, imageUrl }) => {
   return (
     <ProfileWrapper>
       <UserName name={name} />
-      <ProfileImage src={imageUrl} />
-    </ProfileWrapper>
+      <ProfileImage src="/images/user-profile.png" userProfile="Matias" />
+      </ProfileWrapper>
   );
 };

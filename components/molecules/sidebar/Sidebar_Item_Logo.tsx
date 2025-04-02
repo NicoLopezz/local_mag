@@ -1,30 +1,33 @@
 import { FC } from "react";
 import styled from "styled-components";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface Props {
   logo: string;
   alt: string;
+  empresa: string;
 }
 
-const Logo_Wrapper = styled.div`
-  width: 99%;
-  height: 80px; /* Ajusta el tamaño del logo */
+export const Sidebar_Item_Logo: FC<Props> = ({ logo, alt, empresa }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/empresa/${empresa}`);
+  };
+
+  return (
+    <Logo_Container onClick={handleClick}>
+      <Image src={logo} alt={alt} width={48} height={48} />
+    </Logo_Container>
+  );
+};
+
+const Logo_Container = styled.div`
+  height: 6rem;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f9fafb;
-  border-bottom: 1px solid #ddd;
+  cursor: pointer;
 `;
-
-const Logo_Image = styled.img`
-  max-width: 60%;
-  max-height: 80%;
-`;
-
-export const Sidebar_Item_Logo: FC<Props> = ({ logo, alt }) => {
-  return (
-    <Logo_Wrapper>
-      <Logo_Image src={logo} alt={alt} />
-    </Logo_Wrapper>
-  );
-};
