@@ -8,12 +8,12 @@ export const Modal_Overlay = styled.div`
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(6px);
-  z-index: 10003;
+  z-index: 9999999;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.15s ease-out;
-
+  
   &.closing {
     animation: fadeOut 0.15s ease-in forwards;
   }

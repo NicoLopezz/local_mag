@@ -17,7 +17,7 @@ export const UserProfile: FC<Props> = ({ name, imageUrl }) => {
   return (
     <ProfileWrapper>
       <UserName name={name} />
-      <ProfileImage src="/images/user-profile.png" userProfile="Matias" />
+      <ProfileImage src="/images/user-profile.png" userProfile="Nicolas" />
       </ProfileWrapper>
   );
 };

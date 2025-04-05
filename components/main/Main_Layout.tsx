@@ -23,7 +23,7 @@ export const Main_Layout: FC<Props> = ({ children }) => {
     <Layout_Container>
       <Sidebar />
       <Content>
-        <Navbar userName="Matías" userImage="/images/profile.jpg" />
+        <Navbar userName="" userImage="/images/profile.jpg" />
         {children}
       </Content>
     </Layout_Container>

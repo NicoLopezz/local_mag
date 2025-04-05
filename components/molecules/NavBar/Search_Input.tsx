@@ -29,22 +29,23 @@ export const SearchInput: FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-
+  
     if (value.trim() === "") {
       router.replace("/productos");
       return;
     }
-
-    router.replace({
-      pathname: "/productos",
-      query: {
-        ...router.query,
-        search: value,
-        productCode: undefined,
-      },
-    });
+  
+    const params = new URLSearchParams();
+  
+    params.set("search", value);
+  
+    if (router.query.category) {
+      params.set("category", router.query.category as string);
+    }
+  
+    router.replace(`/productos?${params.toString()}`);
   };
-
+  
   const handleClear = () => {
     setInputValue("");
     inputRef.current?.focus();

@@ -1,7 +1,9 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Product_Card } from "../../molecules/cards/Product_Card";
 import { Add_Product_Card } from "../../molecules/cards/Add_Product_Card";
+import { Producto_Detail } from "../../organisms/modals_details/productos/Producto_Details";
+import { useRouter } from "next/router";
 
 interface Product {
   title: string;
@@ -18,21 +20,63 @@ interface Props {
 }
 
 export const Product_List: FC<Props> = ({ products, onAddProduct }) => {
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalProductTitle, setModalProductTitle] = useState("");
+
+  const selectedProductCode =
+    typeof router.query.productCode === "string"
+      ? router.query.productCode
+      : null;
+
+  const handleSelect = (productCode: string) => {
+    const currentCode = router.query.productCode;
+    const params = new URLSearchParams(router.query as Record<string, string>);
+
+    const product = products.find((p) => p.productCode === productCode);
+
+    if (currentCode === productCode) {
+      params.delete("productCode");
+    } else {
+      params.set("productCode", productCode);
+    }
+
+    router.replace(`/productos?${params.toString()}`);
+
+    if (product && currentCode !== productCode) {
+      setModalProductTitle(product.title);
+      setModalOpen(true);
+    }
+  };
+
   return (
-    <Container>
-      <Title>Productos</Title>
-      <Divider />
-      <Products_Container>
-        <Product_Wrapper>
-          <Add_Product_Card onAddProduct={onAddProduct} />
-        </Product_Wrapper>
-        {products.map((product, index) => (
-          <Product_Wrapper key={index}>
-            <Product_Card {...product} />
+    <>
+      <Container>
+        <Title>Productos</Title>
+        <Divider />
+        <Products_Container>
+          <Product_Wrapper>
+            <Add_Product_Card onAddProduct={onAddProduct} />
           </Product_Wrapper>
-        ))}
-      </Products_Container>
-    </Container>
+          {products.map((product, index) => (
+            <Product_Wrapper key={index}>
+              <Product_Card
+                {...product}
+                isSelected={selectedProductCode === product.productCode}
+                onSelect={handleSelect}
+              />
+            </Product_Wrapper>
+          ))}
+        </Products_Container>
+      </Container>
+
+      {modalOpen && (
+        <Producto_Detail
+          // title={modalProductTitle}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

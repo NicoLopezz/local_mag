@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Product_Card } from "../../molecules/cards/Product_Card";
 import { Add_SubProceso_Card } from "../../molecules/cards/Add_SubProceso_Card";
@@ -18,6 +18,12 @@ interface Props {
 }
 
 export const SubProceos_List: FC<Props> = ({ products, onAddProduct }) => {
+  const [selectedProductCode, setSelectedProductCode] = useState<string | null>(null);
+
+  const handleSelect = (productCode: string) => {
+    setSelectedProductCode((prev) => (prev === productCode ? null : productCode));
+  };
+
   return (
     <Container>
       <Title>Sub-Procesos</Title>
@@ -28,7 +34,11 @@ export const SubProceos_List: FC<Props> = ({ products, onAddProduct }) => {
         </Product_Wrapper>
         {products.map((product, index) => (
           <Product_Wrapper key={index}>
-            <Product_Card {...product} />
+            <Product_Card
+              {...product}
+              isSelected={selectedProductCode === product.productCode}
+              onSelect={handleSelect}
+            />
           </Product_Wrapper>
         ))}
       </Products_Container>

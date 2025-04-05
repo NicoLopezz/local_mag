@@ -9,7 +9,7 @@ export const mockData = {
     { title: "Limpieza", description: "Productos para el hogar", imageUrl: "/images/limpieza.jpg", href: "#", stock: 60 }
   ],
   products: [
-    { id: 1, title: "Coca-Cola 500ml", description: "Refresco de cola", imageUrl: "/images/coca-cola.jpg", href: "#", productCode: "SKU-001", stock: 30, category: "Bebidas" },
+    { id: 1, title: "Coca-Cola 500ml", description: "Refresco de cola", imageUrl: "/images/products/coca-cola.png", href: "#", productCode: "SKU-001", stock: 30, category: "Bebidas" },
     { id: 2, title: "Pepsi 500ml", description: "Refresco de cola", imageUrl: "/images/pepsi.jpg", href: "#", productCode: "SKU-002", stock: 25, category: "Bebidas" },
     { id: 3, title: "Agua Mineral 1L", description: "Agua pura sin gas", imageUrl: "/images/agua.jpg", href: "#", productCode: "SKU-003", stock: 50, category: "Bebidas" },
     { id: 4, title: "Jugo de Naranja 1L", description: "Jugo natural", imageUrl: "/images/jugo-naranja.jpg", href: "#", productCode: "SKU-004", stock: 20, category: "Bebidas" },

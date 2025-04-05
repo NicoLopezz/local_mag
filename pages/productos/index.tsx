@@ -73,33 +73,44 @@ const Productos: NextPage = () => {
       description: product.description,
       imageUrl: "/images/default.jpg",
       href: "#",
-      productCode: `SKU-${product.id}`,
+      productCode: product.productCode,
       stock: product.stock,
     }));
-    
+
     useEffect(() => {
       if (!search.trim()) return;
     
-      const filteredProducts = mockData.products.filter((product) =>
+      const filtered = mockData.products.filter((product) =>
         product.title.toLowerCase().includes(search.toLowerCase())
       );
     
-      const uniqueCategories = [...new Set(filteredProducts.map((p) => p.category))];
+      const uniqueCategories = [...new Set(filtered.map((p) => p.category))];
+    
+      const params = new URLSearchParams();
+      params.set("search", search);
     
       if (uniqueCategories.length === 1) {
         const detectedCategory = uniqueCategories[0];
+        params.set("category", detectedCategory);
+      } else if (router.query.category) {
+        // si antes había categoría pero ahora no hay única, la quitamos
+        params.set("category", router.query.category as string);
+      }
     
-        if (category !== detectedCategory) {
-          router.replace({
-            pathname: "/productos",
-            query: {
-              ...router.query,
-              category: detectedCategory,
-            },
-          });
-        }
+      if (filtered.length === 1) {
+        const product = filtered[0];
+        const newCode = product.productCode;
+        params.set("productCode", newCode);
+      }
+    
+      const newUrl = `/productos?${params.toString()}`;
+      const currentUrl = router.asPath;
+    
+      if (currentUrl !== newUrl) {
+        router.replace(newUrl);
       }
     }, [search]);
+    
     
 
   return (

@@ -84,7 +84,7 @@ const Productos: NextPage = () => {
       description: product.description,
       imageUrl: "/images/default.jpg",
       href: "#",
-      productCode: `SKU-${product.id}`,
+      productCode: product.productCode,
       stock: product.stock,
     }));
 

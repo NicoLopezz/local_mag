@@ -14,7 +14,7 @@ export const Navbar: FC<Props> = ({ userName, userImage }) => {
     <Navbar_Wrapper>
       <Navbar_Container>
         <Left_Section>
-          <span>Nombre del local ▼</span>
+          <span>Distribuidora RRL</span>
         </Left_Section>
         <Center_Section>
           <SearchInput />
@@ -52,7 +52,9 @@ const Navbar_Container = styled.div`
 const Left_Section = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 3rem;
+  margin-left: 3.5rem;
+  font-size: 1.5rem;
+  font-weight: 400;
 `;
 
 const Center_Section = styled.div`

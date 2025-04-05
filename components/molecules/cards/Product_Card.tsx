@@ -2,7 +2,6 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Stock_Control } from "../../atoms/cards/Stock_Control";
-import { useRouter } from "next/router";
 
 interface Props {
   title: string;
@@ -11,29 +10,31 @@ interface Props {
   href: string;
   productCode: string;
   stock: number;
-  
+  isSelected: boolean;
+  onSelect: (productCode: string) => void;
 }
 
-export const Product_Card: FC<Props> = ({ title, description, imageUrl, productCode, stock }) => {
+export const Product_Card: FC<Props> = ({
+  title,
+  description,
+  imageUrl,
+  productCode,
+  stock,
+  isSelected,
+  onSelect,
+}) => {
   const [currentStock, setCurrentStock] = useState(stock);
-  const router = useRouter();
 
   const handleIncrease = () => setCurrentStock((prev) => prev + 1);
   const handleDecrease = () => setCurrentStock((prev) => (prev > 0 ? prev - 1 : 0));
 
-  const handleClick = () => {
-    const params = new URLSearchParams();
-  
-    if (router.query.search) params.set("search", router.query.search as string);
-    params.set("productCode", productCode);
-    if (router.query.category) params.set("category", router.query.category as string);
-  
-    router.replace(`/productos?${params.toString()}`);
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onSelect(productCode);
   };
-  
 
   return (
-    <Card_Container onClick={handleClick}>
+    <Card_Container isSelected={isSelected} onClick={handleClick}>
       <Card_Image>
         <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
       </Card_Image>
@@ -47,7 +48,7 @@ export const Product_Card: FC<Props> = ({ title, description, imageUrl, productC
   );
 };
 
-const Card_Container = styled.div`
+const Card_Container = styled.div<{ isSelected: boolean }>`
   display: flex;
   flex-direction: column;
   width: 150px;
@@ -55,8 +56,10 @@ const Card_Container = styled.div`
   border-radius: 12px;
   overflow: hidden;
   background-color: #fff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: ${({ isSelected }) => (isSelected ? "2px solid #02203f" : "1px solid #ddd")};
+  box-shadow: ${({ isSelected }) =>
+    isSelected ? "0 0 10px rgba(0, 123, 255, 0.3)" : "0px 4px 8px rgba(0, 0, 0, 0.05)"};
+  transition: all 0.1s ease-in-out;
   text-decoration: none;
   color: inherit;
   align-items: center;
@@ -66,7 +69,7 @@ const Card_Container = styled.div`
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
   }
 `;
 
