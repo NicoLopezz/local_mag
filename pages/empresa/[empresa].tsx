@@ -12,7 +12,7 @@ export default function EmpresaPage() {
         <FadeSlideIn>
           <Image_Block>
             <Image
-              src="/images/logo2.png"
+              src="/images/logo.png"
               alt="Logo"
               width={200}
               height={200}

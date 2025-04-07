@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Sidebar_Item } from "../../molecules/sidebar/Sidebar_Item";
 import { Sidebar_Item_Logo } from "../../molecules/sidebar/Sidebar_Item_Logo";
 import { Sidebar_Item_Settings } from "../../molecules/sidebar/Sidebar_Item_Settings";
-import { FiUsers, FiUserCheck, FiFileText, FiRefreshCcw, FiBox, FiZap, FiTrendingUp } from "react-icons/fi";
+import { FiUsers, FiUserCheck, FiCheckSquare, FiFileText, FiRefreshCcw, FiBox, FiZap, FiTrendingUp } from "react-icons/fi";
 import { FaBalanceScale } from "react-icons/fa";
 
 export const Sidebar: FC = () => {
@@ -12,7 +12,7 @@ export const Sidebar: FC = () => {
   return (
     <Sidebar_Container>
       {empresa && (
-        <Sidebar_Item_Logo logo="/images/logo2.png" alt="Local" empresa={empresa} />
+        <Sidebar_Item_Logo logo="/images/logo.png" alt="Local" empresa={empresa} />
       )}
       <Sidebar_Items_Wrapper>
         {sidebar_items.map((item, index) => (
@@ -52,5 +52,6 @@ const sidebar_items = [
   { icon: <FiRefreshCcw />, text: "Procesos", href: "/procesos" },
   { icon: <FiUserCheck />, text: "Empleados", href: "/empleados" },
   { icon: <FiFileText />, text: "Informes", href: "/informes" },
+  { icon: <FiCheckSquare />, text: "Tareas", href: "/tareas" },
   { icon: <FaBalanceScale />, text: "Legales", href: "/legales" }
 ];

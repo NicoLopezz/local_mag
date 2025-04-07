@@ -25,7 +25,7 @@ export const Producto_Detalles: FC = () => {
         </Details_List>
       </Info_Content>
 
-      <QR_Container>
+      <QR_Container> 
         <QRCodeCanvas
           value={`https://tusitio.com/productos/${product.productCode}`}
           size={200}
@@ -104,7 +104,7 @@ const Label = styled.span`
 
 const QR_Container = styled.div`
   align-self: flex-end;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
 `;
 
 const Mensaje = styled.div`
