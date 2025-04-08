@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { Navbar } from "../organisms/navbar/Navbar";
 import { Sidebar } from "../organisms/sidebar/Sidebar";
 
+const Navbar_Height = "1rem";
+const Sidebar_Width = "1rem";
+
+
 interface Props {
   children: ReactNode;
 }
@@ -10,12 +14,14 @@ interface Props {
 const Layout_Container = styled.div`
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - ${Navbar_Height});
+  overflow-y: hidden;
 `;
 
 const Content = styled.div`
   flex-grow: 1;
   padding-top: 1rem;
+  
 `;
 
 export const Main_Layout: FC<Props> = ({ children }) => {

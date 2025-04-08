@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Task_Card } from "@/components/molecules/card_tasks/task_card";
-import { New_Task_Card } from "@/components/molecules/card_tasks/New_Task_Card";
+import { Task_Card } from "@/components/molecules/tasks/Task_Card";
+import { New_Task_Card } from "@/components/molecules/tasks/New_Task_Card";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -89,7 +89,8 @@ export const Tasks_Column: FC<Props> = ({
 
 const Column = styled.div`
   flex-shrink: 0;
-  background-color: #f4f5f7;
+    background: #ffffff;
+  border: 1px dashed #cbd5e1;
   border-radius: 12px;
   padding: 10px;
   width: 250px;

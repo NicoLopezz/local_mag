@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Tasks_Column } from "@/components/organisms/card_tasks/Tasks_Column";
-import { New_Column_Card } from "@/components/molecules/card_tasks/New_Column_Card";
-import { Task_Card } from "@/components/molecules/card_tasks/task_card";
+import { Tasks_Column } from "@/components/organisms/tasks/Tasks_Column";
+import { New_Column_Card } from "@/components/molecules/tasks/New_Column_Card";
+import { Task_Card } from "@/components/molecules/tasks/Task_Card";
 import {
   DndContext,
   DragOverlay,
@@ -250,12 +250,11 @@ export const Tasks_Board: FC<Props> = () => {
 };
 
 const Wrapper = styled.div`
-/* background-color: blue;  */
-  width: 90%;
+  background-color: orange;
+  max-width: 1500px;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
-  /* max-height: 100%; */
   height: 70vh;
   scrollbar-width: auto;
   -webkit-overflow-scrolling: touch;

@@ -46,8 +46,7 @@ export const Task_Card: FC<Props> = ({ id, title, tag }) => {
 const Card_Container = styled.div<{ $isDragging: boolean }>`
   width: 100%;
   min-height: 60px;
-  /* background-color: var(--white); */
-  background-color: orange;
+  background-color: var(--white);
   border-radius: 8px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
   padding: 12px;
