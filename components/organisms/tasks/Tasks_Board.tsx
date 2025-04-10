@@ -16,13 +16,17 @@ import {
   rectIntersection,
 } from "@dnd-kit/core";
 import { Add_Task_Modal } from "@/components/organisms/add_modals/Add_Task_Modal";
+import { Task_Detail_Modal } from "@/components/molecules/modal_details/Task_Detail_Modal";
+import { Task_Details } from "@/components/organisms/modals_details/tasks/Task_Detail";
 
 interface Task {
   id: string;
   title: string;
-  tag: string;
-  priority: string;
-  assigned: string;
+  tag?: string;
+  priority?: string;
+  assigned?: string;
+  description?: string;
+  status?: string;
 }
 
 interface Column {
@@ -41,7 +45,10 @@ export const Tasks_Board: FC<Props> = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [targetColumnId, setTargetColumnId] = useState<string | null>(null);
-  
+
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
     useSensor(TouchSensor)
@@ -52,12 +59,41 @@ export const Tasks_Board: FC<Props> = () => {
       {
         id: "priorities",
         title: "Prioridades",
-        tasks: [],
+        tasks: [
+          {
+            id: crypto.randomUUID(),
+            title: "Servidor en Render de test",
+            tag: "Infraestructura",
+            priority: "Alta",
+            assigned: "Nicolás",
+            description: "Subir el entorno a producción con validaciones",
+            status: "Pendiente",
+          },
+          {
+            id: crypto.randomUUID(),
+            title: "Crear vista de tareas",
+            tag: "Frontend",
+            priority: "Media",
+            assigned: "Camila",
+            description: "Diseñar y desarrollar UI de tareas con drag & drop",
+            status: "En progreso",
+          },
+        ],
       },
       {
         id: "in_progress",
         title: "In Progress",
-        tasks: [],
+        tasks: [
+          {
+            id: crypto.randomUUID(),
+            title: "Conectar login con backend",
+            tag: "Auth",
+            priority: "Alta",
+            assigned: "Nicolás",
+            description: "Integrar login con autenticación JWT y cookies",
+            status: "En progreso",
+          },
+        ],
       },
       {
         id: "delivered",
@@ -81,6 +117,8 @@ export const Tasks_Board: FC<Props> = () => {
                   tag: "Sin etiqueta",
                   priority: "Baja",
                   assigned: "Sin asignar",
+                  description: "Descripción generada automáticamente",
+                  status: "Pendiente",
                 },
               ],
             }
@@ -101,7 +139,7 @@ export const Tasks_Board: FC<Props> = () => {
 
   const handleSubmitModal = (task: {
     title: string;
-    description: string;
+    description?: string;
     priority?: string;
     dueDate?: string;
     assignee?: string;
@@ -122,6 +160,8 @@ export const Tasks_Board: FC<Props> = () => {
                   tag: task.tags || "Sin etiqueta",
                   priority: task.priority || "Sin prioridad",
                   assigned: task.assignee || "Sin asignar",
+                  description: task.description || "Sin descripción",
+                  status: "Pendiente",
                 },
               ],
             }
@@ -131,6 +171,16 @@ export const Tasks_Board: FC<Props> = () => {
 
     setIsModalOpen(false);
     setTargetColumnId(null);
+  };
+
+  const handleOpenTaskDetail = (task: Task) => {
+    setSelectedTask(task);
+    setShowDetailModal(true);
+  };
+
+  const handleCloseTaskDetail = () => {
+    setSelectedTask(null);
+    setShowDetailModal(false);
   };
 
   const handleAddColumn = (title: string) => {
@@ -209,9 +259,7 @@ export const Tasks_Board: FC<Props> = () => {
       if (!overColumn) return;
 
       if (activeColumn.id === overColumn.id) {
-        const oldIndex = activeColumn.tasks.findIndex(
-          (t) => t.id === active.id
-        );
+        const oldIndex = activeColumn.tasks.findIndex((t) => t.id === active.id);
         const newIndex = overColumn.tasks.findIndex((t) => t.id === over.id);
         const reorderedTasks = [...activeColumn.tasks];
         const [task] = reorderedTasks.splice(oldIndex, 1);
@@ -286,7 +334,7 @@ export const Tasks_Board: FC<Props> = () => {
                   handleAddQuickTask(column.id, taskName)
                 }
                 onOpenModal={() => handleOpenModal(column.id)}
-                onOpenTaskModal={(task) => console.log("Open task modal for:", task)}
+                onOpenTaskModal={handleOpenTaskDetail}
                 activeTaskId={activeTask?.id}
                 overTaskId={overTaskId}
                 isOver={overColumnId === column.id}
@@ -314,6 +362,17 @@ export const Tasks_Board: FC<Props> = () => {
           onClose={handleCloseModal}
           onSubmit={handleSubmitModal}
         />
+      )}
+
+      {showDetailModal && selectedTask && (
+        <Task_Detail_Modal isOpen={showDetailModal} onClose={handleCloseTaskDetail}>
+          <Task_Details
+            title={selectedTask.title}
+            description={selectedTask.description || "Sin descripción"}
+            priority={selectedTask.priority || "Sin prioridad"}
+            status={selectedTask.status || "Pendiente"}
+          />
+        </Task_Detail_Modal>
       )}
     </>
   );

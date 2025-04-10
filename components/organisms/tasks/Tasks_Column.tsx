@@ -11,9 +11,9 @@ import { useDroppable } from "@dnd-kit/core";
 interface Task {
   id: string;
   title: string;
-  tag: string;
-  priority: string;
-  assigned: string;
+  tag?: string;
+  priority?: string;
+  assigned?: string;
 }
 
 interface Props {
