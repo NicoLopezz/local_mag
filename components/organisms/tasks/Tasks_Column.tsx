@@ -26,6 +26,7 @@ interface Props {
   isOver?: boolean;
   onOpenModal: () => void;
   onOpenTaskModal: (task: Task) => void;
+  onMoveTask?: (taskId: string, direction: "next" | "last") => void;
 }
 
 export const Tasks_Column: FC<Props> = ({
@@ -38,6 +39,7 @@ export const Tasks_Column: FC<Props> = ({
   isOver,
   onOpenModal,
   onOpenTaskModal,
+  onMoveTask,
 }) => {
   const { setNodeRef } = useDroppable({ id });
 
@@ -54,7 +56,7 @@ export const Tasks_Column: FC<Props> = ({
         title: "",
         tag: "",
         priority: "",
-        assigned: ""
+        assigned: "",
       });
     }
 
@@ -73,8 +75,7 @@ export const Tasks_Column: FC<Props> = ({
         >
           <Cards_Container>
             {cardsToRender.map((task) =>
-              task.id === activeTaskId ? null : task.id ===
-                "__placeholder__" ? (
+              task.id === activeTaskId ? null : task.id === "__placeholder__" ? (
                 <Placeholder_Card key="placeholder" />
               ) : (
                 <Task_Card
@@ -84,7 +85,8 @@ export const Tasks_Column: FC<Props> = ({
                   tag={task.tag}
                   priority={task.priority}
                   assigned={task.assigned}
-                  onOpenModal={() => onOpenTaskModal(task)} 
+                  onOpenModal={() => onOpenTaskModal(task)}
+                  onMoveTask={onMoveTask}
                 />
               )
             )}

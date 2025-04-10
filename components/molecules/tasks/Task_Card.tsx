@@ -7,8 +7,10 @@ import { Task_Tag } from "@/components/atoms/card_tasks/Task_Tag";
 import { Drag_Indicator } from "@/components/atoms/card_tasks/Drag_Indicator";
 import { Task_Priority_Tag } from "@/components/atoms/card_tasks/Task_Priority_Tag";
 import { Task_Assigned } from "@/components/atoms/card_tasks/Task_Assigned";
+import { Task_Progress_Mini } from "@/components/atoms/card_tasks/Task_Progress_Mini";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { ChevronRight, ChevronsRight } from "lucide-react";
+import Image from "next/image";
 
 interface Props {
   id: string;
@@ -16,7 +18,10 @@ interface Props {
   tag?: string;
   priority?: string;
   assigned?: string;
+  assignedImage?: string;
+  status?: string;
   onOpenModal?: () => void;
+  onMoveTask?: (taskId: string, direction: "next" | "last") => void;
 }
 
 export const Task_Card: FC<Props> = ({
@@ -25,7 +30,10 @@ export const Task_Card: FC<Props> = ({
   tag = "Sin etiqueta",
   priority = "Sin prioridad",
   assigned = "Sin asignar",
+  assignedImage = "/images/empleados/persona.png",
+  status = "",
   onOpenModal,
+  onMoveTask,
 }) => {
   const {
     attributes,
@@ -36,17 +44,20 @@ export const Task_Card: FC<Props> = ({
     isDragging,
   } = useSortable({ id });
 
-  const [isChecked, setIsChecked] = useState(false);
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.4 : 1,
   };
 
-  const handleToggle = (e: React.MouseEvent) => {
+  const handleMoveNext = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsChecked(!isChecked);
+    onMoveTask?.(id, "next");
+  };
+
+  const handleMoveLast = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onMoveTask?.(id, "last");
   };
 
   return (
@@ -62,37 +73,69 @@ export const Task_Card: FC<Props> = ({
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
       onClick={onOpenModal}
     >
-      <Circle_Toggle
-        onClick={handleToggle}
-        $checked={isChecked}
-        as={motion.div}
-        animate={{ scale: isChecked ? 1.15 : 1 }}
-        transition={{ type: "spring", stiffness: 250, damping: 15 }}
-      >
-        {isChecked && <Check size={12} color="#fff" />}
-      </Circle_Toggle>
-
-      <Absolute_Top_Right>
+      <Top_Row>
         <Task_Priority_Tag priority={priority} />
-      </Absolute_Top_Right>
+        <Icons_Wrapper>
+          <Icon_Box onClick={handleMoveNext}>
+            <ChevronRight size={14} />
+          </Icon_Box>
+          <Icon_Box onClick={handleMoveLast}>
+            <ChevronsRight size={14} />
+          </Icon_Box>
+        </Icons_Wrapper>
+      </Top_Row>
 
       <Content_Area>
         <Drag_Indicator />
         <Task_Title title={title} />
-        <Task_Tag tag={tag} />
+        <Tags_Container>
+          {tag.split(",").map((t, idx) => (
+            <Styled_Tag key={idx}>{t.trim()}</Styled_Tag>
+          ))}
+        </Tags_Container>
       </Content_Area>
 
-      <Absolute_Bottom_Right>
+      <Assigned_Area>
+        <Profile_Image
+          src={assignedImage}
+          width={20}
+          height={20}
+          alt="profile"
+        />
         <Task_Assigned name={assigned} />
-      </Absolute_Bottom_Right>
+      </Assigned_Area>
+
+      <Progress_Mini_Wrapper>
+        <Task_Progress_Mini status={status as any} />
+      </Progress_Mini_Wrapper>
     </Card_Container>
   );
 };
 
+const Tags_Container = styled.div`
+  display: flex;
+  margin-top: 4px;
+  margin-left: -0.3rem;
+`;
+
+const Styled_Tag = styled.div`
+  background: #000000a1;
+  color: #fff;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 400;
+  border-radius: 4px;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+  white-space: nowrap;
+  margin-right: -2px;
+`;
+
+
 const Card_Container = styled.div<{ $isDragging: boolean }>`
   position: relative;
   width: 100%;
-  min-height: 72px;
+  min-height: 110px;
+  height: 7rem;
   background-color: var(--white);
   border-radius: 12px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
@@ -109,37 +152,51 @@ const Card_Container = styled.div<{ $isDragging: boolean }>`
     $isDragging ? "2px solid var(--strong-green)" : "1px solid transparent"};
 `;
 
-const Circle_Toggle = styled.div<{ $checked: boolean }>`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid #4444448a;
-  background-color: ${({ $checked }) => ($checked ? "#000000a6" : "transparent")};
+const Top_Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Icons_Wrapper = styled.div`
+  display: flex;
+  gap: 6px;
+`;
+
+const Icon_Box = styled.div`
+  background-color: #b6b5b53f;
+  padding: 4px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 `;
 
-const Absolute_Top_Right = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-`;
-
-const Absolute_Bottom_Right = styled.div`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-`;
-
 const Content_Area = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin-top: 0.5rem;
+  margin-top: -0.5rem;
   margin-left: -0.3rem;
+`;
+
+const Assigned_Area = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  margin-left: auto;
+`;
+
+const Profile_Image = styled(Image)`
+  border-radius: 50%;
+  background-color: #f0f0f0;
+`;
+
+const Progress_Mini_Wrapper = styled.div`
+  position: absolute;
+  bottom: -5px;
+  left: 5px;
+  width: 80px;
 `;

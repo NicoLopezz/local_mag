@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
-import styled from "styled-components";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import styled, { keyframes } from "styled-components";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
 
 interface Props {
   onSubmit: (task: TaskInput) => void;
@@ -31,6 +31,10 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
   });
 
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [tagInput, setTagInput] = useState("");
+  const [tagList, setTagList] = useState<string[]>(
+    form.tags ? form.tags.split(",").map(tag => tag.trim()) : []
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,9 +50,23 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
     setForm((prev) => ({ ...prev, priority: value }));
   };
 
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && tagInput.trim()) {
+      e.preventDefault();
+      if (!tagList.includes(tagInput.trim())) {
+        setTagList((prev) => [...prev, tagInput.trim()]);
+      }
+      setTagInput("");
+    }
+  };
+
+  const handleTagRemove = (tag: string) => {
+    setTagList((prev) => prev.filter((t) => t !== tag));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(form);
+    onSubmit({ ...form, tags: tagList.join(",") });
   };
 
   const priorityLevels = ["Baja", "Media", "Alta"];
@@ -107,11 +125,23 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
           onChange={handleChange}
         />
 
+        <Tags_Wrapper>
+          {tagList.map((tag) => (
+            <Tag key={tag}>
+              {tag}
+              <RemoveTag onClick={() => handleTagRemove(tag)}>
+                <X size={12} />
+              </RemoveTag>
+            </Tag>
+          ))}
+        </Tags_Wrapper>
+
         <Styled_Input
           name="tags"
-          placeholder="Etiquetas (separadas por coma)"
-          value={form.tags}
-          onChange={handleChange}
+          placeholder="Presioná Enter para agregar etiquetas"
+          value={tagInput}
+          onChange={(e) => setTagInput(e.target.value)}
+          onKeyDown={handleTagKeyDown}
         />
       </Advanced_Container>
 
@@ -237,7 +267,6 @@ const Priority_Selector = styled.div`
   justify-content: space-around;
   width: 90%;
   position: relative;
-  /* margin-bottom: 1.5rem; */
   height: 25px;
 `;
 
@@ -255,7 +284,6 @@ const Priority_Text = styled.span<{ selected?: boolean }>`
   color: #000;
   transition: all 0.25s ease;
   transform: ${({ selected }) => (selected ? "scale(1.05)" : "scale(1)")};
-
 `;
 
 const Animated_Underline = styled.div<{ index: number }>`
@@ -269,4 +297,41 @@ const Animated_Underline = styled.div<{ index: number }>`
   transition: transform 0.5s ease;
   transform: translateX(${({ index }) => index * 100}%);
   opacity: ${({ index }) => (index === -1 ? 0 : 1)};
+`;
+
+const slideInTag = keyframes`
+  0% {
+    transform: translateY(8px) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+`;
+
+const Tags_Wrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 90%;
+`;
+
+const Tag = styled.div`
+  background: #000;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  animation: ${slideInTag} 0.3s ease;
+`;
+
+const RemoveTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `;

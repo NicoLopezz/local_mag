@@ -10,15 +10,13 @@ interface Props {
   status: string;
 }
 
-
-
 export const Task_Details: FC<Props> = ({ title, description, priority, status }) => {
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDescription, setEditedDescription] = useState(description || "Sin descripción");
   const [editedPriority, setEditedPriority] = useState(priority || "Media");
-  const [editedStatus, setEditedStatus] = useState(status || "Pendiente");
+  const [editedStatus, setEditedStatus] = useState<keyof typeof statusSteps | "">("");
+  const [endDate, setEndDate] = useState(new Date());
   const [daysRemaining, setDaysRemaining] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
 
   const hasChanges =
@@ -29,10 +27,28 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
 
   useEffect(() => {
     const randomDays = Math.floor(Math.random() * 10) + 1;
-    const randomProgress = Math.floor(Math.random() * 100);
-    setDaysRemaining(randomDays);
-    setProgress(randomProgress);
-  }, []);
+    const randomFutureDate = new Date();
+    randomFutureDate.setDate(randomFutureDate.getDate() + randomDays);
+    setEndDate(randomFutureDate);
+    setEditedStatus(status as keyof typeof statusSteps);
+  }, [status]);
+
+  useEffect(() => {
+    const today = new Date();
+    const timeDiff = endDate.getTime() - today.getTime();
+    const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    setDaysRemaining(days);
+  }, [endDate]);
+
+  const statusSteps = {
+    "Paso 1": 1,
+    "Paso 2": 2,
+    "Paso 3": 3,
+    "Paso 4": 4,
+  };
+
+  const step = editedStatus ? statusSteps[editedStatus] : 0;
+  const fillPercent = step > 0 ? ((step - 1) / 3) * 100 : 0;
 
   const handleSave = () => {
     console.log("Guardar cambios:", {
@@ -40,6 +56,7 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
       description: editedDescription,
       priority: editedPriority,
       status: editedStatus,
+      endDate,
     });
     setIsEditing(false);
   };
@@ -61,17 +78,33 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
         </EditIcon>
       </TopRow>
 
-      <ProgressBarWrapper>
-        <ProgressBarInner style={{ width: `${progress}%` }} />
-      </ProgressBarWrapper>
+      <StepProgress>
+        <StepTrack />
+        {step > 0 && (
+          <StepFill
+            initial={{ width: 0 }}
+            animate={{ width: `${fillPercent}%` }}
+            transition={{ duration: 0.6, ease: [0.42, 0, 0.58, 1] }}
+          />
+        )}
+        {[1, 2, 3, 4].map((s, idx) => (
+          <StepContainer key={s} style={{ left: `${(idx) * 33.3333}%` }}>
+            <StepLabel active={step >= s}>Paso {s}</StepLabel>
+            <StepCircle
+              animate={{
+                backgroundColor: step >= s ? "#000" : "#fff",
+                boxShadow: step >= s ? "0 0 8px rgba(0, 0, 0, 0.6)" : "none",
+                scale: step === s ? 1.15 : 1,
+              }}
+              transition={{ duration: 0.4 }}
+            />
+          </StepContainer>
+        ))}
+      </StepProgress>
 
       <Section>
         <Label>Descripción</Label>
-        <TextArea
-          value={editedDescription}
-          onChange={(e) => setEditedDescription(e.target.value)}
-          disabled={!isEditing}
-        />
+        <TextArea value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} disabled={!isEditing} />
       </Section>
 
       <Row>
@@ -86,20 +119,37 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
 
         <Section>
           <Label>Estado</Label>
-          <Select value={editedStatus} onChange={(e) => setEditedStatus(e.target.value)} disabled={!isEditing}>
-            <option value="Pendiente">Pendiente</option>
-            <option value="En progreso">En progreso</option>
-            <option value="Completado">Completado</option>
+          <Select value={editedStatus} onChange={(e) => setEditedStatus(e.target.value as keyof typeof statusSteps)} disabled={!isEditing}>
+            <option value="">Seleccionar</option>
+            <option value="Paso 1">Paso 1</option>
+            <option value="Paso 2">Paso 2</option>
+            <option value="Paso 3">Paso 3</option>
+            <option value="Paso 4">Paso 4</option>
           </Select>
         </Section>
-      </Row>
+        <Section>
+          {isEditing ? (
+            <>
+              <Label>New date</Label>
+              <DateInput
+                type="date"
+                value={endDate.toISOString().split("T")[0]}
+                onChange={(e) => {
+                  setEndDate(new Date(e.target.value));
+                  setIsEditing(true);
+                }}
+              />
+            </>
+          ) : (
+            <Countdown>
+              <Label>Fin de tarea</Label>
+              <span>{endDate.toLocaleDateString()}</span>
+              <Restan>Restan {daysRemaining} días</Restan>
+            </Countdown>
+          )}
+        </Section>
 
-      <Section>
-        <Label>Tiempo restante</Label>
-        <Countdown>
-          <Calendar size={12} /> {daysRemaining} días
-        </Countdown>
-      </Section>
+      </Row>
 
       <Actions>
         {hasChanges && isEditing && (
@@ -121,6 +171,8 @@ const Container = styled.div`
   gap: 2rem;
   width: 100%;
   max-width: 600px;
+  height: 60vh;
+  padding-top: 1rem;
 `;
 
 const TopRow = styled.div`
@@ -164,18 +216,63 @@ const EditIcon = styled.div`
   }
 `;
 
-const ProgressBarWrapper = styled.div`
-  width: 100%;
-  height: 6px;
-  background: #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
+const StepProgress = styled.div`
+  margin-left: 2rem;
+  width: 80%;
+  position: relative;
+  height: 4rem;
+  display: flex;
+  align-items: center;
 `;
 
-const ProgressBarInner = styled.div`
-  height: 100%;
-  background: var(--strong-green);
-  transition: width 0.4s ease;
+const StepTrack = styled.div`
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #ddd;
+  border-radius: 4px;
+  z-index: 0;
+`;
+
+const StepFill = styled(motion.div)`
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  height: 3px;
+  background: black;
+  border-radius: 4px;
+  transform-origin: left;
+  z-index: 1;
+`;
+
+const StepContainer = styled.div`
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+  z-index: 2;
+`;
+
+const StepCircle = styled(motion.div)`
+  margin-top: 0.2rem;
+  width: 15px;
+  height: 15px;
+  border: 2px solid black;
+  border-radius: 50%;
+  background-color: white;
+`;
+
+const StepLabel = styled.span<{ active?: boolean }>`
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: ${({ active }) => (active ? "#000" : "#333")};
+  font-weight: ${({ active }) => (active ? 600 : 400)};
+  text-align: center;
+  min-width: 48px;
 `;
 
 const Section = styled.div`
@@ -216,14 +313,36 @@ const Countdown = styled.div`
   font-size: 16px;
   color: var(--dark-blue);
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  transition: all 0.3s ease;
+`;
+
+const Restan = styled.span`
+  font-size: 13px;
+  font-style: italic;
+  color: #444;
+  transition: all 0.3s ease;
+`;
+
+
+
+const DateInput = styled.input`
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-family: inherit;
+  width: fit-content;
+  transition: all 0.3s ease;
 `;
 
 const Actions = styled.div`
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  margin-top: 2rem;
 `;
 
 const Button = styled.button`
@@ -245,7 +364,8 @@ const Button = styled.button`
 `;
 
 const DeleteButton = styled.button`
-  background-color: #f44336;
+  background-color: #000000;
+  height: auto;
   color: white;
   font-weight: 400;
   padding: 12px 16px;

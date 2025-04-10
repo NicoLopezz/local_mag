@@ -67,7 +67,7 @@ export const Tasks_Board: FC<Props> = () => {
             priority: "Alta",
             assigned: "Nicolás",
             description: "Subir el entorno a producción con validaciones",
-            status: "Pendiente",
+            status: "",
           },
           {
             id: crypto.randomUUID(),
@@ -97,7 +97,7 @@ export const Tasks_Board: FC<Props> = () => {
       },
       {
         id: "delivered",
-        title: "Delivered",
+        title: "Done",
         tasks: [],
       },
     ]);
@@ -136,6 +136,38 @@ export const Tasks_Board: FC<Props> = () => {
     setIsModalOpen(false);
     setTargetColumnId(null);
   };
+
+  const handleMoveTask = (taskId: string, direction: "next" | "last") => {
+    setColumns((prev) => {
+      const currentColumnIndex = prev.findIndex((col) =>
+        col.tasks.some((t) => t.id === taskId)
+      );
+  
+      if (currentColumnIndex === -1) return prev;
+  
+      const currentColumn = prev[currentColumnIndex];
+      const task = currentColumn.tasks.find((t) => t.id === taskId);
+      if (!task) return prev;
+  
+      const newColumns = [...prev];
+      newColumns[currentColumnIndex].tasks = currentColumn.tasks.filter(
+        (t) => t.id !== taskId
+      );
+  
+      const targetIndex =
+        direction === "next"
+          ? Math.min(currentColumnIndex + 1, newColumns.length - 1)
+          : newColumns.length - 1;
+  
+      newColumns[targetIndex].tasks = [
+        ...newColumns[targetIndex].tasks,
+        task,
+      ];
+  
+      return newColumns;
+    });
+  };
+  
 
   const handleSubmitModal = (task: {
     title: string;
@@ -333,6 +365,7 @@ export const Tasks_Board: FC<Props> = () => {
                 onAddTask={(taskName) =>
                   handleAddQuickTask(column.id, taskName)
                 }
+                onMoveTask={handleMoveTask}
                 onOpenModal={() => handleOpenModal(column.id)}
                 onOpenTaskModal={handleOpenTaskDetail}
                 activeTaskId={activeTask?.id}
