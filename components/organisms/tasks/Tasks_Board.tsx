@@ -67,7 +67,7 @@ export const Tasks_Board: FC<Props> = () => {
             priority: "Alta",
             assigned: "Nicolás",
             description: "Subir el entorno a producción con validaciones",
-            status: "",
+            status: "Paso 1",
           },
           {
             id: crypto.randomUUID(),
@@ -76,7 +76,7 @@ export const Tasks_Board: FC<Props> = () => {
             priority: "Media",
             assigned: "Camila",
             description: "Diseñar y desarrollar UI de tareas con drag & drop",
-            status: "En progreso",
+            status: "Paso 2",
           },
         ],
       },
@@ -91,7 +91,7 @@ export const Tasks_Board: FC<Props> = () => {
             priority: "Alta",
             assigned: "Nicolás",
             description: "Integrar login con autenticación JWT y cookies",
-            status: "En progreso",
+            status: "Paso 4",
           },
         ],
       },
@@ -114,11 +114,11 @@ export const Tasks_Board: FC<Props> = () => {
                 {
                   id: crypto.randomUUID(),
                   title,
-                  tag: "Sin etiqueta",
+                  tag: "",
                   priority: "Baja",
                   assigned: "Sin asignar",
                   description: "Descripción generada automáticamente",
-                  status: "Pendiente",
+                  status: "Paso 1",
                 },
               ],
             }
@@ -142,32 +142,28 @@ export const Tasks_Board: FC<Props> = () => {
       const currentColumnIndex = prev.findIndex((col) =>
         col.tasks.some((t) => t.id === taskId)
       );
-  
+
       if (currentColumnIndex === -1) return prev;
-  
+
       const currentColumn = prev[currentColumnIndex];
       const task = currentColumn.tasks.find((t) => t.id === taskId);
       if (!task) return prev;
-  
+
       const newColumns = [...prev];
       newColumns[currentColumnIndex].tasks = currentColumn.tasks.filter(
         (t) => t.id !== taskId
       );
-  
+
       const targetIndex =
         direction === "next"
           ? Math.min(currentColumnIndex + 1, newColumns.length - 1)
           : newColumns.length - 1;
-  
-      newColumns[targetIndex].tasks = [
-        ...newColumns[targetIndex].tasks,
-        task,
-      ];
-  
+
+      newColumns[targetIndex].tasks = [...newColumns[targetIndex].tasks, task];
+
       return newColumns;
     });
   };
-  
 
   const handleSubmitModal = (task: {
     title: string;
@@ -189,11 +185,11 @@ export const Tasks_Board: FC<Props> = () => {
                 {
                   id: crypto.randomUUID(),
                   title: task.title,
-                  tag: task.tags || "Sin etiqueta",
+                  tag: task.tags || "",
                   priority: task.priority || "Sin prioridad",
                   assigned: task.assignee || "Sin asignar",
                   description: task.description || "Sin descripción",
-                  status: "Pendiente",
+                  status: "Paso 1",
                 },
               ],
             }
@@ -231,7 +227,26 @@ export const Tasks_Board: FC<Props> = () => {
     const task = columns
       .flatMap((col) => col.tasks)
       .find((t) => t.id === active.id);
-    if (task) setActiveTask(task);
+    console.log("📦 active.id recibido en dragStart:", active.id);
+    console.log(
+      "🧱 todas las tasks disponibles:",
+      columns.flatMap((col) => col.tasks)
+    );
+
+    if (task) {
+      const cloned = {
+        id: task.id,
+        title: task.title,
+        tag: task.tag || "",
+        priority: task.priority || "",
+        assigned: task.assigned || "",
+        description: task.description || "",
+        status: task.status || "",
+      };
+      console.log("🎯 Clonado para DragOverlay:", cloned);
+      setActiveTask(cloned);
+    }
+    
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -291,7 +306,9 @@ export const Tasks_Board: FC<Props> = () => {
       if (!overColumn) return;
 
       if (activeColumn.id === overColumn.id) {
-        const oldIndex = activeColumn.tasks.findIndex((t) => t.id === active.id);
+        const oldIndex = activeColumn.tasks.findIndex(
+          (t) => t.id === active.id
+        );
         const newIndex = overColumn.tasks.findIndex((t) => t.id === over.id);
         const reorderedTasks = [...activeColumn.tasks];
         const [task] = reorderedTasks.splice(oldIndex, 1);
@@ -379,13 +396,17 @@ export const Tasks_Board: FC<Props> = () => {
 
         <DragOverlay>
           {activeTask && (
-            <Task_Card
-              id={activeTask.id}
-              title={activeTask.title}
-              tag={activeTask.tag}
-              priority={activeTask.priority}
-              assigned={activeTask.assigned}
-            />
+            <>
+              {console.log("🎯 activeTask en overlay:", activeTask)}
+              <Task_Card
+                id={activeTask.id}
+                title={activeTask.title}
+                tag={activeTask.tag}
+                priority={activeTask.priority}
+                assigned={activeTask.assigned}
+                status={activeTask.status}
+              />
+            </>
           )}
         </DragOverlay>
       </DndContext>
@@ -398,12 +419,30 @@ export const Tasks_Board: FC<Props> = () => {
       )}
 
       {showDetailModal && selectedTask && (
-        <Task_Detail_Modal isOpen={showDetailModal} onClose={handleCloseTaskDetail}>
+        <Task_Detail_Modal
+          isOpen={showDetailModal}
+          onClose={handleCloseTaskDetail}
+        >
           <Task_Details
             title={selectedTask.title}
             description={selectedTask.description || "Sin descripción"}
             priority={selectedTask.priority || "Sin prioridad"}
-            status={selectedTask.status || "Pendiente"}
+            status={selectedTask.status || "Paso 1"}
+            assigned={selectedTask.assigned || "Sin asignar"}
+            tag={selectedTask.tag || ""}
+            onStatusChange={(newStatus) => {
+              setColumns((prev) =>
+                prev.map((col) => ({
+                  ...col,
+                  tasks: col.tasks.map((t) =>
+                    t.id === selectedTask.id ? { ...t, status: newStatus } : t
+                  ),
+                }))
+              );
+              setSelectedTask((prev) =>
+                prev ? { ...prev, status: newStatus } : prev
+              );
+            }}
           />
         </Task_Detail_Modal>
       )}

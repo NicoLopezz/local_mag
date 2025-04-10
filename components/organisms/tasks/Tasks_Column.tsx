@@ -14,6 +14,7 @@ interface Task {
   tag?: string;
   priority?: string;
   assigned?: string;
+  status?: string; // Added status property
 }
 
 interface Props {
@@ -79,14 +80,16 @@ export const Tasks_Column: FC<Props> = ({
                 <Placeholder_Card key="placeholder" />
               ) : (
                 <Task_Card
-                  key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  tag={task.tag}
-                  priority={task.priority}
-                  assigned={task.assigned}
-                  onOpenModal={() => onOpenTaskModal(task)}
-                  onMoveTask={onMoveTask}
+                key={task.id}
+                id={task.id}
+                title={task.title}
+                tag={task.tag}
+                priority={task.priority}
+                assigned={task.assigned}
+                assignedImage="/images/empleados/persona.png"
+                status={task.status} 
+                onOpenModal={() => onOpenTaskModal(task)}
+                onMoveTask={onMoveTask}
                 />
               )
             )}

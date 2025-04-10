@@ -27,11 +27,11 @@ interface Props {
 export const Task_Card: FC<Props> = ({
   id,
   title,
-  tag = "Sin etiqueta",
+  tag = "-",
   priority = "Sin prioridad",
   assigned = "Sin asignar",
   assignedImage = "/images/empleados/persona.png",
-  status = "",
+  status,
   onOpenModal,
   onMoveTask,
 }) => {
@@ -107,6 +107,7 @@ export const Task_Card: FC<Props> = ({
 
       <Progress_Mini_Wrapper>
         <Task_Progress_Mini status={status as any} />
+        {/* console.log("status en Task_Card!!!!:", status); */}
       </Progress_Mini_Wrapper>
     </Card_Container>
   );
@@ -136,7 +137,7 @@ const Card_Container = styled.div<{ $isDragging: boolean }>`
   width: 100%;
   min-height: 110px;
   height: 7rem;
-  background-color: var(--white);
+  background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
   padding: 14px 16px 10px 16px;

@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
-import { motion } from "framer-motion";
+import styled, { keyframes } from "styled-components";
+import { AnimatePresence, motion } from "framer-motion";
 import { Pencil, Calendar, Trash2, Save } from "lucide-react";
 
 interface Props {
@@ -8,13 +8,30 @@ interface Props {
   description: string;
   priority: string;
   status: string;
+  assigned: string;
+  tag: string;
+  onStatusChange: (newStatus: string) => void;
 }
 
-export const Task_Details: FC<Props> = ({ title, description, priority, status }) => {
+export const Task_Details: FC<Props> = ({
+  title,
+  description,
+  priority,
+  status,
+  assigned,
+  tag,
+  onStatusChange,
+}) => {
   const [editedTitle, setEditedTitle] = useState(title);
-  const [editedDescription, setEditedDescription] = useState(description || "Sin descripción");
-  const [editedPriority, setEditedPriority] = useState(priority || "Media");
-  const [editedStatus, setEditedStatus] = useState<keyof typeof statusSteps | "">("");
+  const [editedDescription, setEditedDescription] = useState(
+    description || "Sin descripción"
+  );
+  const [editedPriority, setEditedPriority] = useState(priority || "-");
+  const [editedAssigned, setEditedAssigned] = useState(assigned || "-");
+  const [editedTags, setEditedTags] = useState(tag);
+  const [editedStatus, setEditedStatus] = useState<
+    keyof typeof statusSteps | ""
+  >("");
   const [endDate, setEndDate] = useState(new Date());
   const [daysRemaining, setDaysRemaining] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -23,6 +40,8 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
     editedTitle !== title ||
     editedDescription !== description ||
     editedPriority !== priority ||
+    editedAssigned !== assigned ||
+    editedTags !== tag ||
     editedStatus !== status;
 
   useEffect(() => {
@@ -58,6 +77,7 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
       status: editedStatus,
       endDate,
     });
+    onStatusChange?.(editedStatus);
     setIsEditing(false);
   };
 
@@ -66,10 +86,18 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
   };
 
   return (
-    <Container as={motion.div} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring" }}>
+    <Container
+      as={motion.div}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ type: "spring" }}
+    >
       <TopRow>
         {isEditing ? (
-          <TitleInput value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+          <TitleInput
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+          />
         ) : (
           <Title>{editedTitle}</Title>
         )}
@@ -88,13 +116,13 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
           />
         )}
         {[1, 2, 3, 4].map((s, idx) => (
-          <StepContainer key={s} style={{ left: `${(idx) * 33.3333}%` }}>
+          <StepContainer key={s} style={{ left: `${idx * 33.3333}%` }}>
             <StepLabel active={step >= s}>Paso {s}</StepLabel>
             <StepCircle
               animate={{
-                backgroundColor: step >= s ? "#000" : "#fff",
-                boxShadow: step >= s ? "0 0 8px rgba(0, 0, 0, 0.6)" : "none",
-                scale: step === s ? 1.15 : 1,
+                backgroundColor: step >= s ? "#4c4b4b" : "#fff",
+                boxShadow: step >= s ? "0 0 22px rgba(0, 0, 0, 0.4)" : "none",
+                scale: step === s ? 1.2 : 1,
               }}
               transition={{ duration: 0.4 }}
             />
@@ -104,52 +132,182 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
 
       <Section>
         <Label>Descripción</Label>
-        <TextArea value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} disabled={!isEditing} />
+        <TextArea
+          value={editedDescription}
+          onChange={(e) => setEditedDescription(e.target.value)}
+          disabled={!isEditing}
+        />
       </Section>
 
       <Row>
-        <Section>
-          <Label>Prioridad</Label>
-          <Select value={editedPriority} onChange={(e) => setEditedPriority(e.target.value)} disabled={!isEditing}>
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </Select>
-        </Section>
+  <Section>
+    <Label>Prioridad</Label>
+    <Select
+      value={editedPriority}
+      onChange={(e) => setEditedPriority(e.target.value)}
+      disabled={!isEditing}
+    >
+      <option value="Alta">Alta</option>
+      <option value="Media">Media</option>
+      <option value="Baja">Baja</option>
+    </Select>
+  </Section>
 
-        <Section>
-          <Label>Estado</Label>
-          <Select value={editedStatus} onChange={(e) => setEditedStatus(e.target.value as keyof typeof statusSteps)} disabled={!isEditing}>
-            <option value="">Seleccionar</option>
-            <option value="Paso 1">Paso 1</option>
-            <option value="Paso 2">Paso 2</option>
-            <option value="Paso 3">Paso 3</option>
-            <option value="Paso 4">Paso 4</option>
-          </Select>
-        </Section>
-        <Section>
-          {isEditing ? (
-            <>
-              <Label>New date</Label>
-              <DateInput
-                type="date"
-                value={endDate.toISOString().split("T")[0]}
-                onChange={(e) => {
-                  setEndDate(new Date(e.target.value));
-                  setIsEditing(true);
-                }}
-              />
-            </>
-          ) : (
-            <Countdown>
-              <Label>Fin de tarea</Label>
-              <span>{endDate.toLocaleDateString()}</span>
-              <Restan>Restan {daysRemaining} días</Restan>
-            </Countdown>
-          )}
-        </Section>
+  <Section>
+    <Label>Estado</Label>
+    <Select
+      value={editedStatus}
+      onChange={(e) =>
+        setEditedStatus(e.target.value as keyof typeof statusSteps)
+      }
+      disabled={!isEditing}
+    >
+      <option value="">Seleccionar</option>
+      <option value="Paso 1">Paso 1</option>
+      <option value="Paso 2">Paso 2</option>
+      <option value="Paso 3">Paso 3</option>
+      <option value="Paso 4">Paso 4</option>
+    </Select>
+  </Section>
 
-      </Row>
+  <Section>
+    {isEditing ? (
+      <>
+        <Label>New date</Label>
+        <DateInput
+          type="date"
+          value={endDate.toISOString().split("T")[0]}
+          onChange={(e) => {
+            setEndDate(new Date(e.target.value));
+            setIsEditing(true);
+          }}
+        />
+      </>
+    ) : (
+      <Countdown>
+        <Label>Fin de tarea</Label>
+        <span>{endDate.toLocaleDateString()}</span>
+        <Restan>Restan {daysRemaining} días</Restan>
+      </Countdown>
+    )}
+  </Section>
+</Row>
+
+<Row as={motion.div} layout style={{ flexDirection: "column" }}>
+
+
+<Section as={motion.div} layout>
+  <Row style={{alignItems: "center", minHeight: "2.2rem" }}>
+    <Label as={motion.span}>Asignado a</Label>
+    {editedAssigned && (
+      <ChipContainer>
+        <Chip>
+          {editedAssigned}
+          {isEditing && <Remove onClick={() => setEditedAssigned("")}>×</Remove>}
+        </Chip>
+      </ChipContainer>
+    )}
+  </Row>
+
+  <AnimatePresence mode="wait">
+    {isEditing && (
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: "auto", opacity: 1 }}
+        exit={{ height: 0, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        style={{ overflow: "hidden" }}
+      >
+        <Input
+          type="text"
+          placeholder="Presione Enter para agregar nombre"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (e.currentTarget.value.trim()) {
+                setEditedAssigned(e.currentTarget.value.trim());
+                e.currentTarget.value = "";
+              }
+            }
+          }}
+        />
+      </motion.div>
+    )}
+  </AnimatePresence>
+</Section>
+
+
+
+
+<Section as={motion.div} layout>
+  <Row style={{ alignItems: "center", minHeight: "2.4rem" }}>
+    <Label as={motion.span}>Etiquetas</Label>
+    {editedTags.length > 0 && (
+      <ChipContainer>
+        {editedTags.split(",").map((tag, i) => (
+          <Chip key={i}>
+            {tag.trim()}
+            {isEditing && (
+              <Remove
+                onClick={() =>
+                  setEditedTags(
+                    editedTags
+                      .split(",")
+                      .filter((t) => t.trim() !== tag.trim())
+                      .join(",")
+                  )
+                }
+              >
+                ×
+              </Remove>
+            )}
+          </Chip>
+        ))}
+      </ChipContainer>
+    )}
+  </Row>
+
+  <AnimatePresence mode="wait">
+    {isEditing && (
+      <motion.div
+        initial={{ opacity: 0, scaleY: 0.9 }}
+        animate={{ opacity: 1, scaleY: 1 }}
+        exit={{ opacity: 0, scaleY: 0.9 }}
+        transition={{ duration: 0.2 }}
+        style={{ overflow: "hidden" }}
+      >
+        <Input
+          type="text"
+          placeholder="Presioná Enter para agregar etiquetas"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              const value = e.currentTarget.value.trim();
+              if (
+                value &&
+                !editedTags
+                  .split(",")
+                  .map((t) => t.trim())
+                  .includes(value)
+              ) {
+                setEditedTags(
+                  editedTags ? `${editedTags},${value}` : value
+                );
+              }
+              e.currentTarget.value = "";
+            }
+          }}
+        />
+      </motion.div>
+    )}
+  </AnimatePresence>
+</Section>
+
+
+
+</Row>
+
+
 
       <Actions>
         {hasChanges && isEditing && (
@@ -165,14 +323,14 @@ export const Task_Details: FC<Props> = ({ title, description, priority, status }
   );
 };
 
-const Container = styled.div`
+
+const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 2rem;
   width: 100%;
   max-width: 600px;
-  height: 60vh;
-  padding-top: 1rem;
+  max-height: 90vh;
 `;
 
 const TopRow = styled.div`
@@ -241,7 +399,7 @@ const StepFill = styled(motion.div)`
   top: 2rem;
   left: 0;
   height: 3px;
-  background: black;
+  background: #4c4b4b;
   border-radius: 4px;
   transform-origin: left;
   z-index: 1;
@@ -261,7 +419,7 @@ const StepCircle = styled(motion.div)`
   margin-top: 0.2rem;
   width: 15px;
   height: 15px;
-  border: 2px solid black;
+  border: 2px solid #4c4b4b;
   border-radius: 50%;
   background-color: white;
 `;
@@ -270,18 +428,18 @@ const StepLabel = styled.span<{ active?: boolean }>`
   font-size: 12px;
   margin-bottom: 6px;
   color: ${({ active }) => (active ? "#000" : "#333")};
-  font-weight: ${({ active }) => (active ? 600 : 400)};
+  font-weight: ${({ active }) => (active ? 600 : 200)};
   text-align: center;
   min-width: 48px;
 `;
 
-const Section = styled.div`
+const Section = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 `;
 
-const Label = styled.span`
+const Label = styled(motion.span)`
   font-weight: 400;
   color: #444;
 `;
@@ -304,9 +462,10 @@ const Select = styled.select`
   font-family: inherit;
 `;
 
-const Row = styled.div`
+const Row = styled(motion.div)`
   display: flex;
   gap: 1.5rem;
+  width: 90%;
 `;
 
 const Countdown = styled.div`
@@ -325,8 +484,6 @@ const Restan = styled.span`
   color: #444;
   transition: all 0.3s ease;
 `;
-
-
 
 const DateInput = styled.input`
   padding: 10px;
@@ -381,3 +538,66 @@ const DeleteButton = styled.button`
     background-color: #d32f2f;
   }
 `;
+
+const slideInTag = keyframes`
+  0% {
+    transform: translateY(8px) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+`;
+
+const ChipContainer = styled(motion.div)`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  animation: ${slideInTag} 0.3s ease;
+`;
+
+const Chip = styled.div`
+  background: #000000a1;
+  color: #fff;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 400;
+  border-radius: 4px;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: ${slideInTag} 0.3s ease;
+
+`;
+
+const Remove = styled.span`
+  cursor: pointer;
+  font-size: 14px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-family: inherit;
+  width: 90%;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+`;
+
+const TextStatic = styled(motion.div)`
+  padding: 10px 0;
+  font-size: 14px;
+  color: #333;
+`;
+
+const TagText = styled(motion.div)`
+  padding: 10px 0;
+  font-size: 14px;
+  color: #333;
+  white-space: pre-wrap;
+`;
+
