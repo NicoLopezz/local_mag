@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import styled from "styled-components";
 import { Tasks_Board } from "@/components/organisms/tasks/Tasks_Board";
 import { Priority_View } from "@/components/organisms/tasks/Priority_View";
@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
+
+
 
 const Tasks: NextPage = () => {
   const [activeTab, setActiveTab] = useState<"all" | "prioridades">("all");

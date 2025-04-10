@@ -5,6 +5,7 @@ import { Priority_Details } from "@/components/molecules/tasks/Priority_Details"
 import { AnimatePresence, motion } from "framer-motion";
 
 
+
 interface Task {
   id: string;
   title: string;

@@ -1,73 +1,84 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
-  onAdd: (taskName: string) => void;
+  onAdd: (taskName: string, description?: string, code?: string) => void;
+  onOpenModal: () => void;
 }
 
-export const New_Task_Card: FC<Props> = ({ onAdd }) => {
+export const New_Task_Card: FC<Props> = ({ onAdd, onOpenModal }) => {
   const [input, setInput] = useState("");
-  const [open, setOpen] = useState(false);
 
   const handleAdd = () => {
     if (input.trim() !== "") {
       onAdd(input.trim());
       setInput("");
-      setOpen(false);
     }
   };
 
-  const handleCancel = () => {
-    setInput("");
-    setOpen(false);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAdd();
+    }
   };
 
+  const handleClear = () => setInput("");
+
   return (
-    <Wrapper $hoverable={!open}>
-      {open ? (
-        <Form>
+    <Wrapper>
+      <Form>
+        <InputContainer>
           <Input
-            placeholder="Escribe el título de la card..."
+            placeholder="Escribe el título de la card"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            autoFocus
+            onKeyDown={handleKeyDown}
           />
-          <Actions>
-            <AddButton onClick={handleAdd}>Añadir card</AddButton>
-            <CancelButton onClick={handleCancel}>
-              <X size={20} />
-            </CancelButton>
-          </Actions>
-        </Form>
-      ) : (
-        <Trigger onClick={() => setOpen(true)}>+ Añadir una card</Trigger>
-      )}
+          <IconButton onClick={input ? handleClear : handleAdd}>
+            <AnimatePresence mode="wait">
+              {input ? (
+                <motion.div
+                  key="x"
+                  initial={{ opacity: 0, scale: 0.3 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.3 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X size={15} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="plus"
+                  initial={{ opacity: 0, scale: 0.3 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.3 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Plus size={15} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </IconButton>
+        </InputContainer>
+        <Actions>
+          <AddButton onClick={onOpenModal}>Añadir card</AddButton>
+        </Actions>
+      </Form>
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div<{ $hoverable: boolean }>`
-  /* background: #f3f4f6; */
+const Wrapper = styled.div`
   border-radius: 12px;
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 90%;
   gap: 0.75rem;
-  transition: transform 0.2s ease, background 0.2s ease;
-
-  ${({ $hoverable }) =>
-    $hoverable &&
-    `
-    cursor: pointer;
-
-    &:hover {
-      transform: translateY(-2px);
-      
-    }
-  `}
 `;
 
 const Form = styled.div`
@@ -77,68 +88,73 @@ const Form = styled.div`
   width: 100%;
 `;
 
-const Input = styled.input`
-  border: 1px solid #d1d5db;
+const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #00000071;
   border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.95rem;
+  overflow: hidden;
+  height: 30px;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  border: none;
+  padding: 0 0.75rem;
+  font-size: 12px;
+  height: 100%;
   outline: none;
+  background: #fff;
 
   &::placeholder {
     color: #9ca3af;
   }
+`;
 
-  &:focus {
-    border-color: var(--dark-blue);
+const IconButton = styled.button`
+  width: 25px;
+  height: 100%;
+  border: none;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #4b5563;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f3f4f6;
+    color: var(--dark-blue);
+  }
+
+  svg {
+    display: block;
   }
 `;
 
 const Actions = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 `;
 
 const AddButton = styled.button`
   background: #000;
   color: #fff;
-  padding: 0.45rem 1rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.9;
-  }
-`;
-
-const CancelButton = styled.button`
-  background: transparent;
-  border: none;
-  padding: 0.4rem;
-  cursor: pointer;
-  color: #6b7280;
-
-  &:hover {
-    color: #111;
-  }
-`;
-
-const Trigger = styled.button`
-  background: #e5e7eb60;
-  border: none;
-  color: #000;
-  font-size: 0.9rem;
-  font-weight: 700;
   padding: 0.5rem 1rem;
-  border-radius: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 400;
   cursor: pointer;
-  width: 100%;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    background: #d1d5db;
+    background: #1f1f1f;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 `;

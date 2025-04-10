@@ -12,6 +12,8 @@ interface Task {
   id: string;
   title: string;
   tag: string;
+  priority: string;
+  assigned: string;
 }
 
 interface Props {
@@ -22,6 +24,8 @@ interface Props {
   activeTaskId?: string;
   overTaskId?: string | null;
   isOver?: boolean;
+  onOpenModal: () => void;
+  onOpenTaskModal: (task: Task) => void;
 }
 
 export const Tasks_Column: FC<Props> = ({
@@ -32,6 +36,8 @@ export const Tasks_Column: FC<Props> = ({
   activeTaskId,
   overTaskId,
   isOver,
+  onOpenModal,
+  onOpenTaskModal,
 }) => {
   const { setNodeRef } = useDroppable({ id });
 
@@ -47,6 +53,8 @@ export const Tasks_Column: FC<Props> = ({
         id: "__placeholder__",
         title: "",
         tag: "",
+        priority: "",
+        assigned: ""
       });
     }
 
@@ -65,32 +73,35 @@ export const Tasks_Column: FC<Props> = ({
         >
           <Cards_Container>
             {cardsToRender.map((task) =>
-              task.id === activeTaskId
-                ? null
-                : task.id === "__placeholder__"
-                ? (
-                  <Placeholder_Card key="placeholder" />
-                ) : (
-                  <Task_Card
-                    key={task.id}
-                    id={task.id}
-                    title={task.title}
-                    tag={task.tag}
-                  />
-                )
+              task.id === activeTaskId ? null : task.id ===
+                "__placeholder__" ? (
+                <Placeholder_Card key="placeholder" />
+              ) : (
+                <Task_Card
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  tag={task.tag}
+                  priority={task.priority}
+                  assigned={task.assigned}
+                  onOpenModal={() => onOpenTaskModal(task)} 
+                />
+              )
             )}
           </Cards_Container>
         </SortableContext>
       </Scrollable>
-      <New_Task_Card onAdd={onAddTask} />
+      <New_Task_Card
+        onAdd={(taskName) => onAddTask(taskName)}
+        onOpenModal={onOpenModal}
+      />
     </Column>
   );
 };
 
 const Column = styled.div`
   flex-shrink: 0;
-    background: #ffffff;
-  border: 1px dashed #cbd5e1;
+  background-color: #f4f5f7;
   border-radius: 12px;
   padding: 10px;
   width: 250px;
