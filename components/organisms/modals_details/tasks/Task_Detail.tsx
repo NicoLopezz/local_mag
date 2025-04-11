@@ -11,6 +11,15 @@ interface Props {
   assigned: string;
   tag: string;
   onStatusChange: (newStatus: string) => void;
+  onSaveChanges: (updatedTask: {
+    title: string;
+    description: string;
+    priority: string;
+    status: string;
+    assigned: string;
+    tag: string;
+    endDate: Date;
+  }) => void;
 }
 
 export const Task_Details: FC<Props> = ({
@@ -20,7 +29,7 @@ export const Task_Details: FC<Props> = ({
   status,
   assigned,
   tag,
-  onStatusChange,
+  onSaveChanges,
 }) => {
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDescription, setEditedDescription] = useState(
@@ -35,6 +44,12 @@ export const Task_Details: FC<Props> = ({
   const [endDate, setEndDate] = useState(new Date());
   const [daysRemaining, setDaysRemaining] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+
+  const ResponsiveSection = styled(Section)`
+    @media (max-height: 700px) {
+      margin-top: 2rem;
+    }
+  `;
 
   const hasChanges =
     editedTitle !== title ||
@@ -70,14 +85,16 @@ export const Task_Details: FC<Props> = ({
   const fillPercent = step > 0 ? ((step - 1) / 3) * 100 : 0;
 
   const handleSave = () => {
-    console.log("Guardar cambios:", {
+    const updatedTask = {
       title: editedTitle,
       description: editedDescription,
       priority: editedPriority,
       status: editedStatus,
+      assigned: editedAssigned,
+      tag: editedTags,
       endDate,
-    });
-    onStatusChange?.(editedStatus);
+    };
+    onSaveChanges?.(updatedTask);
     setIsEditing(false);
   };
 
@@ -131,183 +148,189 @@ export const Task_Details: FC<Props> = ({
       </StepProgress>
 
       <Section>
-        <Label>Descripción</Label>
-        <TextArea
-          value={editedDescription}
-          onChange={(e) => setEditedDescription(e.target.value)}
-          disabled={!isEditing}
-        />
+        <ResponsiveSection>
+          <Label>Descripción</Label>
+          <TextArea
+            value={editedDescription}
+            onChange={(e) => setEditedDescription(e.target.value)}
+            disabled={!isEditing}
+          />
+        </ResponsiveSection>
       </Section>
 
       <Row>
-  <Section>
-    <Label>Prioridad</Label>
-    <Select
-      value={editedPriority}
-      onChange={(e) => setEditedPriority(e.target.value)}
-      disabled={!isEditing}
-    >
-      <option value="Alta">Alta</option>
-      <option value="Media">Media</option>
-      <option value="Baja">Baja</option>
-    </Select>
-  </Section>
+        <Section>
+          <Label>Prioridad</Label>
+          <Select
+            value={editedPriority}
+            onChange={(e) => setEditedPriority(e.target.value)}
+            disabled={!isEditing}
+          >
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </Select>
+        </Section>
 
-  <Section>
-    <Label>Estado</Label>
-    <Select
-      value={editedStatus}
-      onChange={(e) =>
-        setEditedStatus(e.target.value as keyof typeof statusSteps)
-      }
-      disabled={!isEditing}
-    >
-      <option value="">Seleccionar</option>
-      <option value="Paso 1">Paso 1</option>
-      <option value="Paso 2">Paso 2</option>
-      <option value="Paso 3">Paso 3</option>
-      <option value="Paso 4">Paso 4</option>
-    </Select>
-  </Section>
-
-  <Section>
-    {isEditing ? (
-      <>
-        <Label>New date</Label>
-        <DateInput
-          type="date"
-          value={endDate.toISOString().split("T")[0]}
-          onChange={(e) => {
-            setEndDate(new Date(e.target.value));
-            setIsEditing(true);
-          }}
-        />
-      </>
-    ) : (
-      <Countdown>
-        <Label>Fin de tarea</Label>
-        <span>{endDate.toLocaleDateString()}</span>
-        <Restan>Restan {daysRemaining} días</Restan>
-      </Countdown>
-    )}
-  </Section>
-</Row>
-
-<Row as={motion.div} layout style={{ flexDirection: "column" }}>
-
-
-<Section as={motion.div} layout>
-  <Row style={{alignItems: "center", minHeight: "2.2rem" }}>
-    <Label as={motion.span}>Asignado a</Label>
-    {editedAssigned && (
-      <ChipContainer>
-        <Chip>
-          {editedAssigned}
-          {isEditing && <Remove onClick={() => setEditedAssigned("")}>×</Remove>}
-        </Chip>
-      </ChipContainer>
-    )}
-  </Row>
-
-  <AnimatePresence mode="wait">
-    {isEditing && (
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: "auto", opacity: 1 }}
-        exit={{ height: 0, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        style={{ overflow: "hidden" }}
-      >
-        <Input
-          type="text"
-          placeholder="Presione Enter para agregar nombre"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              if (e.currentTarget.value.trim()) {
-                setEditedAssigned(e.currentTarget.value.trim());
-                e.currentTarget.value = "";
-              }
+        <Section>
+          <Label>Estado</Label>
+          <Select
+            value={editedStatus}
+            onChange={(e) =>
+              setEditedStatus(e.target.value as keyof typeof statusSteps)
             }
-          }}
-        />
-      </motion.div>
-    )}
-  </AnimatePresence>
-</Section>
+            disabled={!isEditing}
+          >
+            <option value="">Seleccionar</option>
+            <option value="Paso 1">Paso 1</option>
+            <option value="Paso 2">Paso 2</option>
+            <option value="Paso 3">Paso 3</option>
+            <option value="Paso 4">Paso 4</option>
+          </Select>
+        </Section>
 
+        <Section>
+          {isEditing ? (
+            <>
+              <Label>New date</Label>
+              <DateInput
+                type="date"
+                value={endDate.toISOString().split("T")[0]}
+                onChange={(e) => {
+                  setEndDate(new Date(e.target.value));
+                  setIsEditing(true);
+                }}
+              />
+            </>
+          ) : (
+            <Countdown>
+              <Label>Fin de tarea</Label>
+              <span>{endDate.toLocaleDateString()}</span>
+              <Restan>Restan {daysRemaining} días</Restan>
+            </Countdown>
+          )}
+        </Section>
+      </Row>
 
-
-
-<Section as={motion.div} layout>
-  <Row style={{ alignItems: "center", minHeight: "2.4rem" }}>
-    <Label as={motion.span}>Etiquetas</Label>
-    {editedTags.length > 0 && (
-      <ChipContainer>
-        {editedTags.split(",").map((tag, i) => (
-          <Chip key={i}>
-            {tag.trim()}
-            {isEditing && (
-              <Remove
-                onClick={() =>
-                  setEditedTags(
-                    editedTags
-                      .split(",")
-                      .filter((t) => t.trim() !== tag.trim())
-                      .join(",")
-                  )
-                }
-              >
-                ×
-              </Remove>
+      <Row as={motion.div} layout style={{ flexDirection: "column" }}>
+        <Section as={motion.div} layout>
+          <Row
+            style={{
+              alignItems: "center",
+              minHeight: "2.2rem",
+              marginBottom: "-0.5rem",
+            }}
+          >
+            <Label as={motion.span}>Asignado a</Label>
+            {editedAssigned && (
+              <ChipContainer>
+                <Chip>
+                  {editedAssigned}
+                  {isEditing && (
+                    <Remove onClick={() => setEditedAssigned("")}>×</Remove>
+                  )}
+                </Chip>
+              </ChipContainer>
             )}
-          </Chip>
-        ))}
-      </ChipContainer>
-    )}
-  </Row>
+          </Row>
 
-  <AnimatePresence mode="wait">
-    {isEditing && (
-      <motion.div
-        initial={{ opacity: 0, scaleY: 0.9 }}
-        animate={{ opacity: 1, scaleY: 1 }}
-        exit={{ opacity: 0, scaleY: 0.9 }}
-        transition={{ duration: 0.2 }}
-        style={{ overflow: "hidden" }}
-      >
-        <Input
-          type="text"
-          placeholder="Presioná Enter para agregar etiquetas"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              const value = e.currentTarget.value.trim();
-              if (
-                value &&
-                !editedTags
-                  .split(",")
-                  .map((t) => t.trim())
-                  .includes(value)
-              ) {
-                setEditedTags(
-                  editedTags ? `${editedTags},${value}` : value
-                );
-              }
-              e.currentTarget.value = "";
-            }
-          }}
-        />
-      </motion.div>
-    )}
-  </AnimatePresence>
-</Section>
+          <AnimatePresence mode="wait">
+            {isEditing && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                style={{ overflow: "hidden" }}
+              >
+                <Input
+                  type="text"
+                  placeholder="Presione Enter para agregar nombre"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      if (e.currentTarget.value.trim()) {
+                        setEditedAssigned(e.currentTarget.value.trim());
+                        e.currentTarget.value = "";
+                      }
+                    }
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Section>
 
+        <Section as={motion.div} layout>
+          <Row
+            style={{
+              alignItems: "center",
+              minHeight: "2.2rem",
+              marginBottom: "-0.5rem",
+            }}
+          >
+            <Label as={motion.span}>Etiquetas</Label>
+            {editedTags.length > 0 && (
+              <ChipContainer>
+                {editedTags.split(",").map((tag, i) => (
+                  <Chip key={i}>
+                    {tag.trim()}
+                    {isEditing && (
+                      <Remove
+                        onClick={() =>
+                          setEditedTags(
+                            editedTags
+                              .split(",")
+                              .filter((t) => t.trim() !== tag.trim())
+                              .join(",")
+                          )
+                        }
+                      >
+                        ×
+                      </Remove>
+                    )}
+                  </Chip>
+                ))}
+              </ChipContainer>
+            )}
+          </Row>
 
-
-</Row>
-
-
+          <AnimatePresence mode="wait">
+            {isEditing && (
+              <motion.div
+                initial={{ opacity: 0, scaleY: 0.9 }}
+                animate={{ opacity: 1, scaleY: 1 }}
+                exit={{ opacity: 0, scaleY: 0.9 }}
+                transition={{ duration: 0.2 }}
+                style={{ overflow: "hidden" }}
+              >
+                <Input
+                  type="text"
+                  placeholder="Presioná Enter para agregar etiquetas"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      const value = e.currentTarget.value.trim();
+                      if (
+                        value &&
+                        !editedTags
+                          .split(",")
+                          .map((t) => t.trim())
+                          .includes(value)
+                      ) {
+                        setEditedTags(
+                          editedTags ? `${editedTags},${value}` : value
+                        );
+                      }
+                      e.currentTarget.value = "";
+                    }
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Section>
+      </Row>
 
       <Actions>
         {hasChanges && isEditing && (
@@ -323,7 +346,6 @@ export const Task_Details: FC<Props> = ({
   );
 };
 
-
 const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
@@ -331,6 +353,8 @@ const Container = styled(motion.div)`
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
+  overflow-y: auto;
+  padding-right: 8px;
 `;
 
 const TopRow = styled.div`
@@ -350,7 +374,7 @@ const Title = styled.div`
 `;
 
 const TitleInput = styled.input`
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
   padding: 6px 10px;
   border-radius: 8px;
@@ -450,8 +474,10 @@ const TextArea = styled.textarea`
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 15px;
   font-family: inherit;
+  font-style: italic;
+  color: #807c7c;
 `;
 
 const Select = styled.select`
@@ -553,8 +579,8 @@ const slideInTag = keyframes`
 const ChipContainer = styled(motion.div)`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  animation: ${slideInTag} 0.3s ease;
+  /* gap: 0.5rem; */
+  /* animation: ${slideInTag} 0.3s ease; */
 `;
 
 const Chip = styled.div`
@@ -569,7 +595,6 @@ const Chip = styled.div`
   align-items: center;
   gap: 8px;
   animation: ${slideInTag} 0.3s ease;
-
 `;
 
 const Remove = styled.span`
@@ -585,7 +610,7 @@ const Input = styled.input`
   font-family: inherit;
   width: 90%;
   transition: all 0.3s ease;
-  margin-top: 0.5rem;
+  /* margin-top: -0.rem; */
 `;
 
 const TextStatic = styled(motion.div)`
@@ -600,4 +625,3 @@ const TagText = styled(motion.div)`
   color: #333;
   white-space: pre-wrap;
 `;
-

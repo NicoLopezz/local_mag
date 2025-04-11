@@ -1,19 +1,19 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Category_Card } from "../../molecules/cards/Category_Card";
+import { Role_Card } from "../../molecules/cards/Role_Card";
 import { Add_Role_Card } from "../../molecules/cards/Add_Role_Card";
 
-interface Category {
+interface Role {
   title: string;
   description: string;
   imageUrl: string;
   href: string;
-  stock: number;
+  empleados: number;
 }
 
 interface Props {
-  categories: Category[];
-  onCategorySelect: (category: string) => void;
+  categories: Role[];
+  onCategorySelect: (role: string) => void;
   onAddCategory: () => void;
   selectedCategory?: string | null;
 }
@@ -28,20 +28,20 @@ export const Roles_Empleados_List: FC<Props> = ({
     <Container>
       <Title>Roles</Title>
       <Divider />
-      <Categories_Container>
-        <Category_Wrapper>
+      <Roles_Container>
+        <Role_Wrapper>
           <Add_Role_Card onAddRole={onAddCategory} />
-        </Category_Wrapper>
-        {categories.map((category, index) => (
-          <Category_Wrapper key={index}>
-            <Category_Card
-              {...category}
-              isSelected={selectedCategory === category.title}
-              onSelect={() => onCategorySelect(category.title)}
+        </Role_Wrapper>
+        {categories.map((role, index) => (
+          <Role_Wrapper key={index}>
+            <Role_Card
+              {...role}
+              isSelected={selectedCategory === role.title}
+              onSelect={() => onCategorySelect(role.title)}
             />
-          </Category_Wrapper>
+          </Role_Wrapper>
         ))}
-      </Categories_Container>
+      </Roles_Container>
     </Container>
   );
 };
@@ -65,15 +65,13 @@ const Divider = styled.hr`
   margin-bottom: 15px;
 `;
 
-const Categories_Container = styled.div`
-
-display: flex;
+const Roles_Container = styled.div`
+  display: flex;
   overflow-x: auto;
   padding: 10px 0;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
   gap: 20px;
-  
 
   &::-webkit-scrollbar {
     height: 6px;
@@ -85,7 +83,4 @@ display: flex;
   }
 `;
 
-const Category_Wrapper = styled.div`
-
-`;
-
+const Role_Wrapper = styled.div``;

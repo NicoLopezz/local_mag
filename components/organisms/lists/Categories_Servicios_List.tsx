@@ -1,6 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Category_Card } from "../../molecules/cards/Category_Card";
+import { Category_Service_Card } from "../../molecules/cards/Category_Service_Card";
 import { Add_Category_Card } from "../../molecules/cards/Add_Category_Card";
 
 interface Category {
@@ -8,7 +8,6 @@ interface Category {
   description: string;
   imageUrl: string;
   href: string;
-  stock: number;
 }
 
 interface Props {
@@ -34,7 +33,7 @@ export const Categories_Servicios_List: FC<Props> = ({
         </Category_Wrapper>
         {categories.map((category, index) => (
           <Category_Wrapper key={index}>
-            <Category_Card
+            <Category_Service_Card
               {...category}
               isSelected={selectedCategory === category.title}
               onSelect={() => onCategorySelect(category.title)}
@@ -66,14 +65,12 @@ const Divider = styled.hr`
 `;
 
 const Categories_Container = styled.div`
-
-display: flex;
+  display: flex;
   overflow-x: auto;
   padding: 10px 0;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
   gap: 20px;
-  
 
   &::-webkit-scrollbar {
     height: 6px;
@@ -85,8 +82,4 @@ display: flex;
   }
 `;
 
-const Category_Wrapper = styled.div`
-  /* flex: 0 0 calc(100% / 6 - 16px);
-  max-width: calc(100% / 6 - 16px); */
-`;
-
+const Category_Wrapper = styled.div``;

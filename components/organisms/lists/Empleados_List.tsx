@@ -1,47 +1,46 @@
 import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { Product_Card } from "../../molecules/cards/Product_Card";
+import { Empleado_Card } from "../../molecules/cards/Empleado_Card";
 import { Add_Empleado_Card } from "../../molecules/cards/Add_Empleado_Card";
 
-interface Product {
-  title: string;
-  description: string;
+interface Empleado {
+  name: string;
+  role: string;
   imageUrl: string;
-  href: string;
-  productCode: string;
-  stock: number;
+  email: string;
+  phone: string;
 }
 
 interface Props {
-  products: Product[];
+  products: Empleado[];
   onAddProduct: () => void;
 }
 
 export const Empleados_List: FC<Props> = ({ products, onAddProduct }) => {
-  const [selectedProductCode, setSelectedProductCode] = useState<string | null>(null);
+  const [selectedEmpleado, setSelectedEmpleado] = useState<string | null>(null);
 
-  const handleSelect = (productCode: string) => {
-    setSelectedProductCode((prev) => (prev === productCode ? null : productCode));
+  const handleSelect = (email: string) => {
+    setSelectedEmpleado((prev) => (prev === email ? null : email));
   };
 
   return (
     <Container>
       <Title>Empleados</Title>
       <Divider />
-      <Products_Container>
-        <Product_Wrapper>
+      <Empleados_Container>
+        <Empleado_Wrapper>
           <Add_Empleado_Card onAddRole={onAddProduct} />
-        </Product_Wrapper>
-        {products.map((product, index) => (
-          <Product_Wrapper key={index}>
-            <Product_Card
-              {...product}
-              isSelected={selectedProductCode === product.productCode}
-              onSelect={handleSelect}
+        </Empleado_Wrapper>
+        {products.map((empleado, index) => (
+          <Empleado_Wrapper key={index}>
+            <Empleado_Card
+              {...empleado}
+              isSelected={selectedEmpleado === empleado.email}
+              onSelect={() => handleSelect(empleado.email)}
             />
-          </Product_Wrapper>
+          </Empleado_Wrapper>
         ))}
-      </Products_Container>
+      </Empleados_Container>
     </Container>
   );
 };
@@ -76,7 +75,7 @@ const Divider = styled.hr`
   margin-bottom: 15px;
 `;
 
-const Products_Container = styled.div`
+const Empleados_Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -98,7 +97,7 @@ const Products_Container = styled.div`
   }
 `;
 
-const Product_Wrapper = styled.div`
+const Empleado_Wrapper = styled.div`
   display: flex;
   animation: ${fadeIn} 0.5s ease;
 `;

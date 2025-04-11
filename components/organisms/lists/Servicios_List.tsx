@@ -1,47 +1,45 @@
 import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { Product_Card } from "../../molecules/cards/Product_Card";
+import { Service_Card } from "../../molecules/cards/Service_Card";
 import { Add_Service_Card } from "../../molecules/cards/Add_Service_Card";
 
-interface Product {
+interface Service {
   title: string;
   description: string;
   imageUrl: string;
   href: string;
-  productCode: string;
-  stock: number;
 }
 
 interface Props {
-  products: Product[];
-  onAddProduct: () => void;
+  services: Service[];
+  onAddServicio: () => void;
 }
 
-export const Servicios_List: FC<Props> = ({ products, onAddProduct }) => {
-  const [selectedProductCode, setSelectedProductCode] = useState<string | null>(null);
+export const Servicios_List: FC<Props> = ({ services, onAddServicio }) => {
+  const [selectedServiceTitle, setSelectedServiceTitle] = useState<string | null>(null);
 
-  const handleSelect = (productCode: string) => {
-    setSelectedProductCode((prev) => (prev === productCode ? null : productCode));
+  const handleSelect = (title: string) => {
+    setSelectedServiceTitle((prev) => (prev === title ? null : title));
   };
 
   return (
     <Container>
       <Title>Servicios</Title>
       <Divider />
-      <Products_Container>
-        <Product_Wrapper>
-          <Add_Service_Card onAddProduct={onAddProduct} />
-        </Product_Wrapper>
-        {products.map((product, index) => (
-          <Product_Wrapper key={index}>
-            <Product_Card
-              {...product}
-              isSelected={selectedProductCode === product.productCode}
-              onSelect={handleSelect}
+      <Services_Container>
+        <Service_Wrapper>
+          <Add_Service_Card onAddProduct={onAddServicio} />
+        </Service_Wrapper>
+        {services.map((service, index) => (
+          <Service_Wrapper key={index}>
+            <Service_Card
+              {...service}
+              isSelected={selectedServiceTitle === service.title}
+              onSelect={() => handleSelect(service.title)}
             />
-          </Product_Wrapper>
+          </Service_Wrapper>
         ))}
-      </Products_Container>
+      </Services_Container>
     </Container>
   );
 };
@@ -76,7 +74,7 @@ const Divider = styled.hr`
   margin-bottom: 15px;
 `;
 
-const Products_Container = styled.div`
+const Services_Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -98,7 +96,7 @@ const Products_Container = styled.div`
   }
 `;
 
-const Product_Wrapper = styled.div`
+const Service_Wrapper = styled.div`
   display: flex;
   animation: ${fadeIn} 0.5s ease;
 `;

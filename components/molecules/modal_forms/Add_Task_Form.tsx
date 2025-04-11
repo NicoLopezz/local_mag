@@ -167,7 +167,6 @@ const Styled_Input = styled.input`
   outline: none;
   font-family: inherit;
   transition: border 0.2s;
-
   &::placeholder {
     font-family: inherit;
     color: #888;

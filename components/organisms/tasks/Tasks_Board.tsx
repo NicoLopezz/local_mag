@@ -103,6 +103,24 @@ export const Tasks_Board: FC<Props> = () => {
     ]);
   }, []);
 
+
+  const handleSaveTaskChanges = (updatedTask: Partial<Task> & { title: string }) => {
+    setColumns((prev) =>
+      prev.map((col) => ({
+        ...col,
+        tasks: col.tasks.map((task) =>
+          task.id === selectedTask?.id
+            ? { ...task, ...updatedTask }
+            : task
+        ),
+      }))
+    );
+    setSelectedTask((prev) =>
+      prev ? { ...prev, ...updatedTask } : prev
+    );
+  };
+  
+
   const handleAddQuickTask = (columnId: string, title: string) => {
     setColumns((prev) =>
       prev.map((col) =>
@@ -430,6 +448,7 @@ export const Tasks_Board: FC<Props> = () => {
             status={selectedTask.status || "Paso 1"}
             assigned={selectedTask.assigned || "Sin asignar"}
             tag={selectedTask.tag || ""}
+            onSaveChanges={handleSaveTaskChanges}
             onStatusChange={(newStatus) => {
               setColumns((prev) =>
                 prev.map((col) => ({

@@ -5,16 +5,16 @@ import { Categories_Servicios_List } from "../../components/organisms/lists/Cate
 import { Servicios_List } from "../../components/organisms/lists/Servicios_List";
 import { Add_Servicio_Modal } from "../../components/organisms/add_modals/Add_Servicio_Modal";
 import { Add_Category_Modal } from "../../components/organisms/add_modals/Add_Category_Modal";
-import { mockData } from "../../mock_data/products";
+import { mockData } from "../../mock_data/servicios";
 import { Toast } from "../../components/atoms/notification/Toast";
 import { useSearch } from "../../context/Search_Context";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
-const Productos: NextPage = () => {
+const Servicios: NextPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [productModalOpen, setProductModalOpen] = useState(false);
+  const [servicioModalOpen, setServicioModalOpen] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -26,14 +26,14 @@ const Productos: NextPage = () => {
     setSelectedCategory((prev) => (prev === category ? null : category));
   };
 
-  const handleAddProduct = () => setProductModalOpen(true);
-  const handleCloseProductModal = () => setProductModalOpen(false);
+  const handleAddServicio = () => setServicioModalOpen(true);
+  const handleCloseServicioModal = () => setServicioModalOpen(false);
 
   const handleOpenCategoryModal = () => setCategoryModalOpen(true);
   const handleCloseCategoryModal = () => setCategoryModalOpen(false);
 
-  const handleProductSubmit = () => {
-    setProductModalOpen(false);
+  const handleServicioSubmit = () => {
+    setServicioModalOpen(false);
     setToastMessage("Servicio creado con éxito");
   };
 
@@ -46,46 +46,41 @@ const Productos: NextPage = () => {
 
   useEffect(() => {
     if (hasSelectedManually.current) return;
-  
+
     if (query.trim() === "") {
       setSelectedCategory(null);
       return;
     }
-  
-    const match = mockData.products.find((product) =>
-      product.title.toLowerCase().includes(query.toLowerCase())
+
+    const match = mockData.services.find((service) =>
+      service.title.toLowerCase().includes(query.toLowerCase())
     );
-  
+
     if (match) {
       setSelectedCategory(match.category);
     } else {
       setSelectedCategory(null);
     }
   }, [query]);
-  
-  
 
   const categoriesFormatted = mockData.categories.map((category) => ({
     title: category.title,
     description: category.description,
     imageUrl: category.imageUrl,
     href: category.href,
-    stock: category.stock,
   }));
 
-  const productsFormatted = mockData.products
+  const servicesFormatted = mockData.services
     .filter(
-      (product) =>
-        (!selectedCategory || product.category === selectedCategory) &&
-        (!query || product.title.toLowerCase().includes(query.toLowerCase()))
+      (service) =>
+        (!selectedCategory || service.category === selectedCategory) &&
+        (!query || service.title.toLowerCase().includes(query.toLowerCase()))
     )
-    .map((product) => ({
-      title: product.title,
-      description: product.description,
-      imageUrl: "/images/default.jpg",
-      href: "#",
-      productCode: product.productCode,
-      stock: product.stock,
+    .map((service) => ({
+      title: service.title,
+      description: service.description,
+      imageUrl: service.imageUrl,
+      href: service.href,
     }));
 
   return (
@@ -100,16 +95,16 @@ const Productos: NextPage = () => {
           />
           <Servicios_List
             key={selectedCategory || query || "all"}
-            products={productsFormatted}
-            onAddProduct={handleAddProduct}
+            services={servicesFormatted}
+            onAddServicio={handleAddServicio}
           />
         </Content_Area>
       </Main_Content>
 
-      {productModalOpen && (
+      {servicioModalOpen && (
         <Add_Servicio_Modal
-          onClose={handleCloseProductModal}
-          onSubmit={handleProductSubmit}
+          onClose={handleCloseServicioModal}
+          onSubmit={handleServicioSubmit}
         />
       )}
       {categoryModalOpen && (
@@ -118,15 +113,12 @@ const Productos: NextPage = () => {
           onSubmit={handleCategorySubmit}
         />
       )}
-      {toastMessage && (
-        <Toast message={toastMessage} onClose={handleCloseToast} />
-      )}
+      {toastMessage && <Toast message={toastMessage} onClose={handleCloseToast} />}
     </Page_Container>
   );
 };
 
 const Page_Container = styled.div`
-
   display: flex;
   width: 100%;
   height: calc(100vh - ${Navbar_Height});
@@ -134,7 +126,6 @@ const Page_Container = styled.div`
 `;
 
 const Main_Content = styled.div`
-  
   display: flex;
   overflow: hidden;
   padding: 0px;
@@ -150,4 +141,4 @@ const Content_Area = styled.div`
   margin-left: 2rem;
 `;
 
-export default Productos;
+export default Servicios;
