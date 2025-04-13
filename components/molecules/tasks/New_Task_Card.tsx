@@ -1,7 +1,5 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { Plus, X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
   onAdd: (taskName: string, description?: string, code?: string) => void;
@@ -38,29 +36,16 @@ export const New_Task_Card: FC<Props> = ({ onAdd, onOpenModal }) => {
             onKeyDown={handleKeyDown}
           />
           <IconButton onClick={input ? handleClear : handleAdd}>
-            <AnimatePresence mode="wait">
-              {input ? (
-                <motion.div
-                  key="x"
-                  initial={{ opacity: 0, scale: 0.3 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.3 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X size={15} />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="plus"
-                  initial={{ opacity: 0, scale: 0.3 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.3 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Plus size={15} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <IconWrapper $visible={input === ""}>
+              <SvgIcon viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </SvgIcon>
+            </IconWrapper>
+            <IconWrapper $visible={input !== ""}>
+              <SvgIcon viewBox="0 0 24 24">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </SvgIcon>
+            </IconWrapper>
           </IconButton>
         </InputContainer>
         <Actions>
@@ -119,6 +104,7 @@ const IconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   cursor: pointer;
   color: #4b5563;
   transition: background 0.2s ease;
@@ -127,10 +113,18 @@ const IconButton = styled.button`
     background: #f3f4f6;
     color: var(--dark-blue);
   }
+`;
 
-  svg {
-    display: block;
-  }
+const IconWrapper = styled.div<{ $visible: boolean }>`
+  position: absolute;
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transform: scale(${({ $visible }) => ($visible ? 1 : 0.3)});
+  transition: opacity 0.2s ease, transform 0.2s ease;
+`;
+
+const SvgIcon = styled.svg`
+  width: 15px;
+  height: 15px;
 `;
 
 const Actions = styled.div`

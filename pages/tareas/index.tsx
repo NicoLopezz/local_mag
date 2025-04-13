@@ -1,9 +1,13 @@
 import type { NextPage } from "next";
-import { useState ,useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
+import { useTasksLogic } from "@/hooks/tasks_handlers/useTasksLogic";
 import { Tasks_Board } from "@/components/organisms/tasks/Tasks_Board";
 import { Priority_View } from "@/components/organisms/tasks/Priority_View";
-import { motion, AnimatePresence } from "framer-motion";
+import { Add_Task_Modal } from "@/components/organisms/add_modals/Add_Task_Modal";
+import { Task_Detail_Modal } from "@/components/molecules/modal_details/Task_Detail_Modal";
+import { Task_Details } from "@/components/organisms/modals_details/tasks/Task_Detail";
+import type { Task, Column } from "@/mock_data/tasks";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
@@ -13,6 +17,20 @@ const Sidebar_Width = "1rem";
 const Tasks: NextPage = () => {
   const [activeTab, setActiveTab] = useState<"all" | "prioridades">("all");
 
+  const {
+    columns,
+    setColumns,
+    selectedTask,
+    isModalOpen,
+    showDetailModal,
+    openAddTaskModal,
+    submitNewTask,
+    openDetailModal,
+    closeDetailModal,
+    saveTaskChanges,
+    updateStatus,
+  } = useTasksLogic();
+
   return (
     <Page_Container>
       <Main_Content>
@@ -20,51 +38,52 @@ const Tasks: NextPage = () => {
           <Board_Wrapper>
             <Page_Title>Tasks</Page_Title>
             <Tabs_Container>
-              <Tab_Button
-                isActive={activeTab === "all"}
-                onClick={() => setActiveTab("all")}
-              >
+              <Tab_Button isActive={activeTab === "all"} onClick={() => setActiveTab("all")}>
                 All Tasks
-                {activeTab === "all" && <Underline layoutId="underline" />}
+                {activeTab === "all" && <Underline />}
               </Tab_Button>
-              <Tab_Button
-                isActive={activeTab === "prioridades"}
-                onClick={() => setActiveTab("prioridades")}
-              >
+              <Tab_Button isActive={activeTab === "prioridades"} onClick={() => setActiveTab("prioridades")}>
                 Prioridades
-                {activeTab === "prioridades" && (
-                  <Underline layoutId="underline" />
-                )}
+                {activeTab === "prioridades" && <Underline />}
               </Tab_Button>
             </Tabs_Container>
 
-            <AnimatePresence mode="wait">
-              {activeTab === "all" && (
-                <Motion_Section
-                  key="all"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Tasks_Board />
-                </Motion_Section>
-              )}
-              {activeTab === "prioridades" && (
-                <Motion_Section
-                  key="prioridades"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Priority_View />
-                </Motion_Section>
-              )}
-            </AnimatePresence>
+            {activeTab === "all" && (
+              <Tasks_Board
+                columns={columns}
+                onColumnsChange={setColumns}
+                onOpenAddTaskModal={openAddTaskModal}
+                onOpenTaskDetail={openDetailModal}
+              />
+            )}
+
+            {activeTab === "prioridades" && <Priority_View />}
           </Board_Wrapper>
         </Content_Area>
       </Main_Content>
+
+      {isModalOpen && (
+        <Add_Task_Modal
+          onClose={closeDetailModal}
+          onSubmit={submitNewTask}
+        />
+      )}
+
+      {showDetailModal && selectedTask && (
+        <Task_Detail_Modal isOpen onClose={closeDetailModal}>
+          <Task_Details
+            title={selectedTask.title}
+            description={selectedTask.description || "Sin descripción"}
+            priority={selectedTask.priority || "Sin prioridad"}
+            status={selectedTask.status || "Paso 1"}
+            assigned={selectedTask.assigned || "Sin asignar"}
+            tag={selectedTask.tag || ""}
+            dueDate={selectedTask.dueDate || new Date().toISOString()}
+            onSaveChanges={saveTaskChanges}
+            onStatusChange={updateStatus}
+          />
+        </Task_Detail_Modal>
+      )}
     </Page_Container>
   );
 };
@@ -104,7 +123,6 @@ const Page_Title = styled.h1`
 `;
 
 const Board_Wrapper = styled.div`
-  /* background-color: blue; */
   overflow-x: auto;
   display: flex;
   flex-direction: column;
@@ -136,7 +154,7 @@ const Tab_Button = styled.button<{ isActive: boolean }>`
   }
 `;
 
-const Underline = styled(motion.div)`
+const Underline = styled.div`
   position: absolute;
   left: 0;
   right: 0;
@@ -144,15 +162,6 @@ const Underline = styled(motion.div)`
   height: 2px;
   background-color: #6c6c6c;
   border-radius: 2px;
-`;
-
-const Text_Prioridades = styled.div`
-  color: #000000;
-  font-size: 1rem;
-`;
-
-const Motion_Section = styled(motion.div)`
-  width: 100%;
 `;
 
 export default Tasks;

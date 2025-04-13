@@ -1,7 +1,9 @@
 import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { useRouter } from "next/router";
 import { Service_Card } from "../../molecules/cards/Service_Card";
 import { Add_Service_Card } from "../../molecules/cards/Add_Service_Card";
+import { Service_Detail } from "../../organisms/modals_details/servicios/Service_Detail";
 
 interface Service {
   title: string;
@@ -16,31 +18,61 @@ interface Props {
 }
 
 export const Servicios_List: FC<Props> = ({ services, onAddServicio }) => {
-  const [selectedServiceTitle, setSelectedServiceTitle] = useState<string | null>(null);
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalServiceTitle, setModalServiceTitle] = useState("");
+
+  const selectedServiceTitle =
+    typeof router.query.service === "string" ? router.query.service : null;
 
   const handleSelect = (title: string) => {
-    setSelectedServiceTitle((prev) => (prev === title ? null : title));
+    const currentTitle = router.query.service;
+    const params = new URLSearchParams(router.query as Record<string, string>);
+
+    const service = services.find((s) => s.title === title);
+
+    if (currentTitle === title) {
+      params.delete("service");
+    } else {
+      params.set("service", title);
+    }
+
+    router.replace(`/servicios?${params.toString()}`);
+
+    if (service && currentTitle !== title) {
+      setModalServiceTitle(service.title);
+      setModalOpen(true);
+    }
   };
 
   return (
-    <Container>
-      <Title>Servicios</Title>
-      <Divider />
-      <Services_Container>
-        <Service_Wrapper>
-          <Add_Service_Card onAddProduct={onAddServicio} />
-        </Service_Wrapper>
-        {services.map((service, index) => (
-          <Service_Wrapper key={index}>
-            <Service_Card
-              {...service}
-              isSelected={selectedServiceTitle === service.title}
-              onSelect={() => handleSelect(service.title)}
-            />
+    <>
+      <Container>
+        <Title>Servicios</Title>
+        <Divider />
+        <Services_Container>
+          <Service_Wrapper>
+            <Add_Service_Card onAddProduct={onAddServicio} />
           </Service_Wrapper>
-        ))}
-      </Services_Container>
-    </Container>
+          {services.map((service, index) => (
+            <Service_Wrapper key={index}>
+              <Service_Card
+                {...service}
+                isSelected={selectedServiceTitle === service.title}
+                onSelect={() => handleSelect(service.title)}
+              />
+            </Service_Wrapper>
+          ))}
+        </Services_Container>
+      </Container>
+
+      {modalOpen && (
+        <Service_Detail
+          // title={modalServiceTitle}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

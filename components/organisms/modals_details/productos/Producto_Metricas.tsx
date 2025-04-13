@@ -1,17 +1,5 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  LineChart,
-  Line,
-  ResponsiveContainer
-} from "recharts";
 
 export const Producto_Metricas: FC = () => {
   const ventasPorSemana = [
@@ -19,51 +7,47 @@ export const Producto_Metricas: FC = () => {
     { semana: "08/03", ventas: 35 },
     { semana: "15/03", ventas: 30 },
     { semana: "22/03", ventas: 45 },
-    { semana: "29/03", ventas: 25 }
+    { semana: "29/03", ventas: 25 },
   ];
 
   const rotacionMensual = [
     { mes: "Ene", rotacion: 80 },
     { mes: "Feb", rotacion: 60 },
     { mes: "Mar", rotacion: 90 },
-    { mes: "Abr", rotacion: 75 }
+    { mes: "Abr", rotacion: 75 },
   ];
 
   const margenBruto = 42;
 
+  const maxVentas = Math.max(...ventasPorSemana.map(v => v.ventas)) || 1;
+  const maxRotacion = Math.max(...rotacionMensual.map(r => r.rotacion)) || 1;
+
   return (
-    <Motion_Container
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
-    >
+    <Container>
       <Section>
         <Title>Ventas semanales</Title>
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={ventasPorSemana}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="semana" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="ventas" stroke="#007acc" strokeWidth={2} />
-          </LineChart>
-        </ResponsiveContainer>
+        <ChartWrapper>
+          {ventasPorSemana.map((v, i) => (
+            <BarWrapper key={i}>
+              <Bar $height={(v.ventas / maxVentas) * 100} />
+              <Label>{v.semana}</Label>
+            </BarWrapper>
+          ))}
+        </ChartWrapper>
       </Section>
 
       <Divider />
 
       <Section>
         <Title>Rotación mensual</Title>
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={rotacionMensual}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="rotacion" fill="#2a9d8f" />
-          </BarChart>
-        </ResponsiveContainer>
+        <ChartWrapper>
+          {rotacionMensual.map((r, i) => (
+            <BarWrapper key={i}>
+              <Bar $height={(r.rotacion / maxRotacion) * 100} $color="#2a9d8f" />
+              <Label>{r.mes}</Label>
+            </BarWrapper>
+          ))}
+        </ChartWrapper>
       </Section>
 
       <Divider />
@@ -73,11 +57,11 @@ export const Producto_Metricas: FC = () => {
         <KPI_Value>{margenBruto}%</KPI_Value>
         <KPI_Description>Rentabilidad sobre costo promedio</KPI_Description>
       </KPIBox>
-    </Motion_Container>
+    </Container>
   );
 };
 
-const Motion_Container = styled(motion.div)`
+const Container = styled.div`
   flex: 2;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -90,7 +74,16 @@ const Motion_Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  animation: fadeIn 0.4s ease;
+  animation: fadeInUp 0.3s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `;
 
 const Section = styled.div``;
@@ -106,6 +99,39 @@ const Divider = styled.hr`
   border: none;
   border-top: 1px solid #e0e0e0;
   margin: 1.5rem 0;
+`;
+
+const ChartWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  border-radius: 8px;
+`;
+
+const BarWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+`;
+
+const Bar = styled.div<{ $height: number; $color?: string }>`
+  width: 30px;
+  height: ${({ $height }) => $height}%;
+  background-color: ${({ $color }) => $color || "#007acc"};
+  border-radius: 6px 6px 0 0;
+  transition: height 0.4s ease;
+`;
+
+const Label = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #555;
 `;
 
 const KPIBox = styled.div`

@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Empleado_Card } from "../../molecules/cards/Empleado_Card";
 import { Add_Empleado_Card } from "../../molecules/cards/Add_Empleado_Card";
+import { Empleado_Detail } from "../../organisms/modals_details/empleados/Empleados_Detail";
+import { useRouter } from "next/router";
 
 interface Empleado {
   name: string;
@@ -17,31 +19,61 @@ interface Props {
 }
 
 export const Empleados_List: FC<Props> = ({ products, onAddProduct }) => {
-  const [selectedEmpleado, setSelectedEmpleado] = useState<string | null>(null);
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalEmpleadoName, setModalEmpleadoName] = useState("");
+
+  const selectedEmail =
+    typeof router.query.email === "string" ? router.query.email : null;
 
   const handleSelect = (email: string) => {
-    setSelectedEmpleado((prev) => (prev === email ? null : email));
+    const currentEmail = router.query.email;
+    const params = new URLSearchParams(router.query as Record<string, string>);
+
+    const empleado = products.find((p) => p.email === email);
+
+    if (currentEmail === email) {
+      params.delete("email");
+    } else {
+      params.set("email", email);
+    }
+
+    router.replace(`/empleados?${params.toString()}`);
+
+    if (empleado && currentEmail !== email) {
+      setModalEmpleadoName(empleado.name);
+      setModalOpen(true);
+    }
   };
 
   return (
-    <Container>
-      <Title>Empleados</Title>
-      <Divider />
-      <Empleados_Container>
-        <Empleado_Wrapper>
-          <Add_Empleado_Card onAddRole={onAddProduct} />
-        </Empleado_Wrapper>
-        {products.map((empleado, index) => (
-          <Empleado_Wrapper key={index}>
-            <Empleado_Card
-              {...empleado}
-              isSelected={selectedEmpleado === empleado.email}
-              onSelect={() => handleSelect(empleado.email)}
-            />
+    <>
+      <Container>
+        <Title>Empleados</Title>
+        <Divider />
+        <Empleados_Container>
+          <Empleado_Wrapper>
+            <Add_Empleado_Card onAddRole={onAddProduct} />
           </Empleado_Wrapper>
-        ))}
-      </Empleados_Container>
-    </Container>
+          {products.map((empleado, index) => (
+            <Empleado_Wrapper key={index}>
+              <Empleado_Card
+                {...empleado}
+                isSelected={selectedEmail === empleado.email}
+                onSelect={() => handleSelect(empleado.email)}
+              />
+            </Empleado_Wrapper>
+          ))}
+        </Empleados_Container>
+      </Container>
+
+      {modalOpen && (
+        <Empleado_Detail
+          // name={modalEmpleadoName}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

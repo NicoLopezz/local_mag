@@ -1,7 +1,6 @@
 import { FC, useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Modal_Tab_Button } from "@/components/atoms/modal/Modal_Tab_Button";
-import { motion } from "framer-motion";
 
 interface Props {
   tabs: string[];
@@ -37,20 +36,7 @@ export const Modal_Tab_Navigation: FC<Props> = ({ tabs, activeTab, onTabChange }
           {tab}
         </Modal_Tab_Button>
       ))}
-
-      <Active_Indicator
-        layout
-        initial={false}
-        animate={{
-          left: indicatorStyle.left,
-          width: indicatorStyle.width,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 30,
-        }}
-      />
+      <Active_Indicator style={{ left: indicatorStyle.left, width: indicatorStyle.width }} />
     </Tabs_Container>
   );
 };
@@ -66,10 +52,11 @@ const Tabs_Container = styled.div`
   border-bottom: 1px solid #eee;
 `;
 
-const Active_Indicator = styled(motion.div)`
+const Active_Indicator = styled.div`
   position: absolute;
   bottom: -1px;
   height: 3px;
   background-color: #222;
   border-radius: 4px;
+  transition: left 0.3s ease, width 0.3s ease;
 `;

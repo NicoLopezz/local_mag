@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import styled, { keyframes } from "styled-components";
 import Image from "next/image";
-import { FaInstagram, FaFacebookF, FaGlobe } from "react-icons/fa";  // Usando react-icons para redes sociales
+import { Facebook_Icon , Globe_Icon , Instagram_Icon } from "@/components/atoms/icons/empresa_icons/redes"; 
 
 export default function EmpresaPage() {
   const { empresa } = useRouter().query;
@@ -47,7 +47,7 @@ export default function EmpresaPage() {
                 <h3>Social Media</h3>
                 <SocialMediaItem>
                   <IconBlock>
-                    <FaInstagram size={30} color="white" />
+                    <Instagram_Icon/>
                   </IconBlock>
                   <UrlInput
                     type="url"
@@ -56,7 +56,7 @@ export default function EmpresaPage() {
                 </SocialMediaItem>
                 <SocialMediaItem>
                   <IconBlock>
-                    <FaFacebookF size={30} color="white" />
+                    <Facebook_Icon />
                   </IconBlock>
                   <UrlInput
                     type="url"
@@ -65,7 +65,7 @@ export default function EmpresaPage() {
                 </SocialMediaItem>
                 <SocialMediaItem>
                   <IconBlock>
-                    <FaGlobe size={30} color="white" />
+                    <Globe_Icon  />
                   </IconBlock>
                   <UrlInput
                     type="url"
@@ -81,6 +81,7 @@ export default function EmpresaPage() {
   );
 }
 
+
 const Navbar_Height = "4rem";
 const Sidebar_Width = "6rem";
 
@@ -95,6 +96,7 @@ const Wrapper = styled.div`
   justify-content: center;  
   align-items: center;      
 `;
+
 
 const Content = styled.div`
   display: flex;
@@ -223,5 +225,5 @@ const UrlInput = styled.input`
 const Divider = styled.div`
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 1px solid #ccc; /* Estilo de la línea divisoria */
+  border-top: 1px solid #ccc; 
 `;

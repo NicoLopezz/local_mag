@@ -1,19 +1,10 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import styled, { keyframes } from "styled-components";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { useAddTaskForm, TaskInput } from "@/hooks/tasks_handlers/usedTasksForm";
 
 interface Props {
   onSubmit: (task: TaskInput) => void;
   initialData?: TaskInput;
-}
-
-interface TaskInput {
-  title: string;
-  description: string;
-  priority?: string;
-  dueDate?: string;
-  assignee?: string;
-  tags?: string;
 }
 
 const Form_Title: FC<{ children: string }> = ({ children }) => {
@@ -21,53 +12,19 @@ const Form_Title: FC<{ children: string }> = ({ children }) => {
 };
 
 export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
-  const [form, setForm] = useState({
-    title: initialData?.title || "",
-    description: initialData?.description || "",
-    priority: initialData?.priority,
-    dueDate: initialData?.dueDate || "",
-    assignee: initialData?.assignee || "",
-    tags: initialData?.tags || "",
-  });
-
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [tagInput, setTagInput] = useState("");
-  const [tagList, setTagList] = useState<string[]>(
-    form.tags ? form.tags.split(",").map(tag => tag.trim()) : []
-  );
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handlePrioritySelect = (value: string) => {
-    setForm((prev) => ({ ...prev, priority: value }));
-  };
-
-  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && tagInput.trim()) {
-      e.preventDefault();
-      if (!tagList.includes(tagInput.trim())) {
-        setTagList((prev) => [...prev, tagInput.trim()]);
-      }
-      setTagInput("");
-    }
-  };
-
-  const handleTagRemove = (tag: string) => {
-    setTagList((prev) => prev.filter((t) => t !== tag));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ ...form, tags: tagList.join(",") });
-  };
+  const {
+    form,
+    showAdvanced,
+    setShowAdvanced,
+    tagInput,
+    setTagInput,
+    tagList,
+    handleChange,
+    handlePrioritySelect,
+    handleTagKeyDown,
+    handleTagRemove,
+    handleSubmit,
+  } = useAddTaskForm(initialData, onSubmit);
 
   const priorityLevels = ["Baja", "Media", "Alta"];
   const selectedIndex = form.priority ? priorityLevels.indexOf(form.priority) : -1;
@@ -94,7 +51,29 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
       <Divider onClick={() => setShowAdvanced(!showAdvanced)}>
         <Line />
         <ChevronButton type="button">
-          {showAdvanced ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          {showAdvanced ? (
+            <ChevronIcon viewBox="0 0 24 24">
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M18 15l-6-6-6 6"
+              />
+            </ChevronIcon>
+          ) : (
+            <ChevronIcon viewBox="0 0 24 24">
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 9l6 6 6-6"
+              />
+            </ChevronIcon>
+          )}
         </ChevronButton>
         <Line />
       </Divider>
@@ -106,9 +85,7 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
               <Priority_Text selected={form.priority === level}>{level}</Priority_Text>
             </Priority_Label>
           ))}
-          {form.priority && (
-            <Animated_Underline index={selectedIndex} />
-          )}
+          {form.priority && <Animated_Underline index={selectedIndex} />}
         </Priority_Selector>
 
         <Styled_Input
@@ -130,7 +107,16 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
             <Tag key={tag}>
               {tag}
               <RemoveTag onClick={() => handleTagRemove(tag)}>
-                <X size={12} />
+                <CloseIcon viewBox="0 0 24 24">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M18 6L6 18M6 6l12 12"
+                  />
+                </CloseIcon>
               </RemoveTag>
             </Tag>
           ))}
@@ -149,6 +135,10 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
     </Form_Container>
   );
 };
+
+// Styled components idénticos al archivo anterior...
+// (no los repito para que no sea redundante, pero son exactamente los mismos)
+
 
 const Form_Container = styled.form`
   display: flex;
@@ -175,6 +165,16 @@ const Styled_Input = styled.input`
   &:focus {
     border-color: #555;
   }
+`;
+
+const CloseIcon = styled.svg`
+  width: 12px;
+  height: 12px;
+`;
+
+const ChevronIcon = styled.svg`
+  width: 18px;
+  height: 18px;
 `;
 
 const Styled_Textarea = styled.textarea`

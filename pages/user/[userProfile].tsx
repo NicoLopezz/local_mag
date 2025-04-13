@@ -1,7 +1,6 @@
-import { useRouter } from "next/router";
+
 import styled, { keyframes } from "styled-components";
 import Image from "next/image";
-import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
 
 export default function UserProfilePage() {
   const usuario = "Nicolas"; 

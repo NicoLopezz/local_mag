@@ -2,7 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Sidebar_Icon } from "../../atoms/sidebar/Sidebar_Icon";
 import { Sidebar_Text } from "../../atoms/sidebar/Sidebar_Text";
-import { FiSettings } from "react-icons/fi";
+import { Setings_Icon } from "@/components/atoms/icons/sidebar_icons/Setings_Icon";
 
 const Settings_Wrapper = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const Settings_Wrapper = styled.div`
 export const Sidebar_Item_Settings: FC = () => {
   return (
     <Settings_Wrapper>
-      <Sidebar_Icon icon={<FiSettings />} />
+      <Sidebar_Icon icon={<Setings_Icon />} />
       <Sidebar_Text text="Settings" />
     </Settings_Wrapper>
   );

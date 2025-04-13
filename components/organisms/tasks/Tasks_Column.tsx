@@ -7,15 +7,9 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
+import type { Task } from "@/mock_data/tasks";
 
-interface Task {
-  id: string;
-  title: string;
-  tag?: string;
-  priority?: string;
-  assigned?: string;
-  status?: string; // Added status property
-}
+
 
 interface Props {
   id: string;
@@ -52,13 +46,15 @@ export const Tasks_Column: FC<Props> = ({
         ? items.findIndex((t) => t.id === overTaskId)
         : items.length;
 
-      items.splice(index, 0, {
-        id: "__placeholder__",
-        title: "",
-        tag: "",
-        priority: "",
-        assigned: "",
-      });
+        items.splice(index, 0, {
+          id: "__placeholder__",
+          title: "",
+          tag: "",
+          priority: "",
+          assigned: "",
+          dueDate: new Date().toISOString()
+        });
+        
     }
 
     return items;
@@ -90,6 +86,8 @@ export const Tasks_Column: FC<Props> = ({
                 status={task.status} 
                 onOpenModal={() => onOpenTaskModal(task)}
                 onMoveTask={onMoveTask}
+                dueDate={task.dueDate}
+
                 />
               )
             )}

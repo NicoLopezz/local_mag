@@ -1,29 +1,40 @@
 import type { AppProps } from "next/app";
-import { Main_Layout } from "../components/main/Main_Layout";
-import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Main_Layout } from "../components/main/Main_Layout";
 import { SearchProvider } from "../context/Search_Context";
+import styled from "styled-components";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const [routeKey, setRouteKey] = useState(router.route);
+
+  useEffect(() => {
+    setRouteKey(router.route);
+  }, [router.route]);
 
   return (
     <SearchProvider>
       <Main_Layout>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={router.route}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-          >
-            <Component {...pageProps} />
-          </motion.div>
-        </AnimatePresence>
+        <FadeWrapper key={routeKey}>
+          <Component {...pageProps} />
+        </FadeWrapper>
       </Main_Layout>
     </SearchProvider>
   );
 }
 
 export default MyApp;
+
+const FadeWrapper = styled.div`
+  animation: fadeIn 0.3s ease-in-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;

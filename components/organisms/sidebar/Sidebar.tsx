@@ -3,11 +3,20 @@ import styled from "styled-components";
 import { Sidebar_Item } from "../../molecules/sidebar/Sidebar_Item";
 import { Sidebar_Item_Logo } from "../../molecules/sidebar/Sidebar_Item_Logo";
 import { Sidebar_Item_Settings } from "../../molecules/sidebar/Sidebar_Item_Settings";
-import { FiUsers, FiUserCheck, FiCheckSquare, FiFileText, FiRefreshCcw, FiBox, FiZap, FiTrendingUp } from "react-icons/fi";
-import { FaBalanceScale } from "react-icons/fa";
+import {
+  Productos_Icon,
+  Servicios_Icon,
+  Finanzas_Icon,
+  Clientes_Icon,
+  Procesos_Icon,
+  Empleados_Icon,
+  Informes_Icon,
+  Tareas_Icon,
+  Legales_Icon,
+} from "@/components/atoms/icons/sidebar_icons";
 
 export const Sidebar: FC = () => {
-  const empresa = "Distribuidora RLL"; 
+  const empresa = "Distribuidora RLL";
 
   return (
     <Sidebar_Container>
@@ -45,13 +54,13 @@ const Sidebar_Items_Wrapper = styled.div`
 `;
 
 const sidebar_items = [
-  { icon: <FiBox />, text: "Productos", href: "/productos" },
-  { icon: <FiZap />, text: "Servicios", href: "/servicios" },
-  { icon: <FiTrendingUp />, text: "Finanzas", href: "/finanzas" },
-  { icon: <FiUsers />, text: "Clientes", href: "/clientes" },
-  { icon: <FiRefreshCcw />, text: "Procesos", href: "/procesos" },
-  { icon: <FiUserCheck />, text: "Empleados", href: "/empleados" },
-  { icon: <FiFileText />, text: "Informes", href: "/informes" },
-  { icon: <FiCheckSquare />, text: "Tareas", href: "/tareas" },
-  { icon: <FaBalanceScale />, text: "Legales", href: "/legales" }
+  { icon: <Productos_Icon />, text: "Productos", href: "/productos" },
+  { icon: <Servicios_Icon />, text: "Servicios", href: "/servicios" },
+  { icon: <Finanzas_Icon />, text: "Finanzas", href: "/finanzas" },
+  { icon: <Clientes_Icon />, text: "Clientes", href: "/clientes" },
+  { icon: <Procesos_Icon />, text: "Procesos", href: "/procesos" },
+  { icon: <Empleados_Icon />, text: "Empleados", href: "/empleados" },
+  { icon: <Informes_Icon />, text: "Informes", href: "/informes" },
+  { icon: <Tareas_Icon />, text: "Tareas", href: "/tareas" },
+  { icon: <Legales_Icon />, text: "Legales", href: "/legales" }
 ];

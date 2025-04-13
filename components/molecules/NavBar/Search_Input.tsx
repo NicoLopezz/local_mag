@@ -1,7 +1,8 @@
 import { FC, useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { FaSearch, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/router";
+import {Close_Icon} from "@/components/atoms/icons/Close_Icon";
+import { Search_Icon } from "@/components/atoms/icons/Search_Icon";
 
 export const SearchInput: FC = () => {
   const router = useRouter();
@@ -29,23 +30,22 @@ export const SearchInput: FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-  
+
     if (value.trim() === "") {
       router.replace("/productos");
       return;
     }
-  
+
     const params = new URLSearchParams();
-  
     params.set("search", value);
-  
+
     if (router.query.category) {
       params.set("category", router.query.category as string);
     }
-  
+
     router.replace(`/productos?${params.toString()}`);
   };
-  
+
   const handleClear = () => {
     setInputValue("");
     inputRef.current?.focus();
@@ -55,7 +55,7 @@ export const SearchInput: FC = () => {
   const showClear = inputValue.trim() !== "";
 
   return (
-    <SearchWrapper focused={focused}>
+    <Search_Wrapper focused={focused}>
       <Input
         ref={inputRef}
         type="text"
@@ -65,15 +65,19 @@ export const SearchInput: FC = () => {
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
-      <IconContainer>
-        <SearchIcon visible={!showClear} />
-        <ClearIcon visible={showClear} onClick={handleClear} />
-      </IconContainer>
-    </SearchWrapper>
+      <Icon_Container>
+        <Search_Icon />
+        {showClear && (
+          <Clear_Icon onClick={handleClear}>
+            <Close_Icon />
+          </Clear_Icon>
+        )}
+      </Icon_Container>
+    </Search_Wrapper>
   );
 };
 
-const SearchWrapper = styled.div<{ focused: boolean }>`
+const Search_Wrapper = styled.div<{ focused: boolean }>`
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
@@ -82,7 +86,6 @@ const SearchWrapper = styled.div<{ focused: boolean }>`
   background-color: #f9f9f9;
   width: ${({ focused }) => (focused ? "320px" : "180px")};
   transition: width 0.3s ease;
-
 `;
 
 const Input = styled.input`
@@ -95,27 +98,19 @@ const Input = styled.input`
   flex-grow: 1;
 `;
 
-const IconContainer = styled.div`
+const Icon_Container = styled.div`
   position: relative;
   width: 16px;
   height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-const SearchIcon = styled(FaSearch)<{ visible: boolean }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: opacity 0.2s ease;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  color: #666;
-`;
-
-const ClearIcon = styled(FaTimes)<{ visible: boolean }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: opacity 0.2s ease;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  color: red;
+const Clear_Icon = styled.div`
   cursor: pointer;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

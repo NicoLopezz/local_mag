@@ -1,6 +1,5 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
 
 interface Props {
   status: string;
@@ -16,18 +15,20 @@ export const Task_Progress_Mini: FC<Props> = ({ status }) => {
 
   const validSteps = ["Paso 1", "Paso 2", "Paso 3", "Paso 4"];
   const step = validSteps.includes(status) ? statusSteps[status as keyof typeof statusSteps] : 1;
-  console.log("status recibido en mini:", status, "→ step:", step);
   const fillPercent = step > 0 ? ((step - 1) / 3) * 100 : 0;
 
+  const [fillWidth, setFillWidth] = useState(0);
+
+  useEffect(() => {
+    setFillWidth(fillPercent);
+  }, [fillPercent]);
+
   if (!validSteps.includes(status)) return null;
+
   return (
     <ProgressContainer>
       <Track />
-      <Fill
-        initial={{ width: 0 }}
-        animate={{ width: `${fillPercent}%` }}
-        transition={{ duration: 0.6, ease: [0.42, 0, 0.58, 1] }}
-      />
+      <Fill style={{ width: `${fillWidth}%` }} />
       {[1, 2, 3, 4].map((s, idx) => (
         <Step
           key={s}
@@ -62,7 +63,7 @@ const Track = styled.div`
   z-index: 0;
 `;
 
-const Fill = styled(motion.div)`
+const Fill = styled.div`
   position: absolute;
   top: 50%;
   left: 0;
@@ -71,6 +72,7 @@ const Fill = styled(motion.div)`
   border-radius: 4px;
   transform: translateY(-50%);
   transform-origin: left;
+  transition: width 0.6s ease;
   z-index: 1;
 `;
 

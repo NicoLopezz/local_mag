@@ -1,5 +1,6 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
+import type { Task, Column } from "@/mock_data/tasks";
 import { Tasks_Column } from "@/components/organisms/tasks/Tasks_Column";
 import { New_Column_Card } from "@/components/molecules/tasks/New_Column_Card";
 import { Task_Card } from "@/components/molecules/tasks/Task_Card";
@@ -15,115 +16,34 @@ import {
   useSensors,
   rectIntersection,
 } from "@dnd-kit/core";
-import { Add_Task_Modal } from "@/components/organisms/add_modals/Add_Task_Modal";
-import { Task_Detail_Modal } from "@/components/molecules/modal_details/Task_Detail_Modal";
-import { Task_Details } from "@/components/organisms/modals_details/tasks/Task_Detail";
 
-interface Task {
-  id: string;
-  title: string;
-  tag?: string;
-  priority?: string;
-  assigned?: string;
-  description?: string;
-  status?: string;
+
+
+interface Props {
+  columns: Column[];
+  onColumnsChange: (columns: Column[]) => void;
+  onOpenAddTaskModal: (columnId: string) => void;
+  onOpenTaskDetail: (task: Task) => void;
 }
 
-interface Column {
-  id: string;
-  title: string;
-  tasks: Task[];
-}
-
-interface Props {}
-
-export const Tasks_Board: FC<Props> = () => {
-  const [columns, setColumns] = useState<Column[]>([]);
+export const Tasks_Board: FC<Props> = ({
+  columns,
+  onColumnsChange,
+  onOpenAddTaskModal,
+  onOpenTaskDetail,
+}) => {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [overTaskId, setOverTaskId] = useState<string | null>(null);
   const [overColumnId, setOverColumnId] = useState<string | null>(null);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [targetColumnId, setTargetColumnId] = useState<string | null>(null);
-
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
 
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
     useSensor(TouchSensor)
   );
 
-  useEffect(() => {
-    setColumns([
-      {
-        id: "priorities",
-        title: "Prioridades",
-        tasks: [
-          {
-            id: crypto.randomUUID(),
-            title: "Servidor en Render de test",
-            tag: "Infraestructura",
-            priority: "Alta",
-            assigned: "Nicolás",
-            description: "Subir el entorno a producción con validaciones",
-            status: "Paso 1",
-          },
-          {
-            id: crypto.randomUUID(),
-            title: "Crear vista de tareas",
-            tag: "Frontend",
-            priority: "Media",
-            assigned: "Camila",
-            description: "Diseñar y desarrollar UI de tareas con drag & drop",
-            status: "Paso 2",
-          },
-        ],
-      },
-      {
-        id: "in_progress",
-        title: "In Progress",
-        tasks: [
-          {
-            id: crypto.randomUUID(),
-            title: "Conectar login con backend",
-            tag: "Auth",
-            priority: "Alta",
-            assigned: "Nicolás",
-            description: "Integrar login con autenticación JWT y cookies",
-            status: "Paso 4",
-          },
-        ],
-      },
-      {
-        id: "delivered",
-        title: "Done",
-        tasks: [],
-      },
-    ]);
-  }, []);
-
-
-  const handleSaveTaskChanges = (updatedTask: Partial<Task> & { title: string }) => {
-    setColumns((prev) =>
-      prev.map((col) => ({
-        ...col,
-        tasks: col.tasks.map((task) =>
-          task.id === selectedTask?.id
-            ? { ...task, ...updatedTask }
-            : task
-        ),
-      }))
-    );
-    setSelectedTask((prev) =>
-      prev ? { ...prev, ...updatedTask } : prev
-    );
-  };
-  
-
   const handleAddQuickTask = (columnId: string, title: string) => {
-    setColumns((prev) =>
-      prev.map((col) =>
+    onColumnsChange(
+      columns.map((col) =>
         col.id === columnId
           ? {
               ...col,
@@ -137,101 +57,46 @@ export const Tasks_Board: FC<Props> = () => {
                   assigned: "Sin asignar",
                   description: "Descripción generada automáticamente",
                   status: "Paso 1",
+                  dueDate: "23/08/25"
                 },
               ],
             }
           : col
       )
     );
-  };
-
-  const handleOpenModal = (columnId: string) => {
-    setTargetColumnId(columnId);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setTargetColumnId(null);
   };
 
   const handleMoveTask = (taskId: string, direction: "next" | "last") => {
-    setColumns((prev) => {
-      const currentColumnIndex = prev.findIndex((col) =>
-        col.tasks.some((t) => t.id === taskId)
-      );
+    const currentColumnIndex = columns.findIndex((col) =>
+      col.tasks.some((t) => t.id === taskId)
+    );
+    if (currentColumnIndex === -1) return;
 
-      if (currentColumnIndex === -1) return prev;
+    const currentColumn = columns[currentColumnIndex];
+    const task = currentColumn.tasks.find((t) => t.id === taskId);
+    if (!task) return;
 
-      const currentColumn = prev[currentColumnIndex];
-      const task = currentColumn.tasks.find((t) => t.id === taskId);
-      if (!task) return prev;
-
-      const newColumns = [...prev];
-      newColumns[currentColumnIndex].tasks = currentColumn.tasks.filter(
-        (t) => t.id !== taskId
-      );
-
-      const targetIndex =
-        direction === "next"
-          ? Math.min(currentColumnIndex + 1, newColumns.length - 1)
-          : newColumns.length - 1;
-
-      newColumns[targetIndex].tasks = [...newColumns[targetIndex].tasks, task];
-
-      return newColumns;
-    });
-  };
-
-  const handleSubmitModal = (task: {
-    title: string;
-    description?: string;
-    priority?: string;
-    dueDate?: string;
-    assignee?: string;
-    tags?: string;
-  }) => {
-    if (!targetColumnId) return;
-
-    setColumns((prev) =>
-      prev.map((col) =>
-        col.id === targetColumnId
-          ? {
-              ...col,
-              tasks: [
-                ...col.tasks,
-                {
-                  id: crypto.randomUUID(),
-                  title: task.title,
-                  tag: task.tags || "",
-                  priority: task.priority || "Sin prioridad",
-                  assigned: task.assignee || "Sin asignar",
-                  description: task.description || "Sin descripción",
-                  status: "Paso 1",
-                },
-              ],
-            }
-          : col
-      )
+    const newColumns = [...columns];
+    newColumns[currentColumnIndex].tasks = currentColumn.tasks.filter(
+      (t) => t.id !== taskId
     );
 
-    setIsModalOpen(false);
-    setTargetColumnId(null);
-  };
+    const targetIndex =
+      direction === "next"
+        ? Math.min(currentColumnIndex + 1, newColumns.length - 1)
+        : newColumns.length - 1;
 
-  const handleOpenTaskDetail = (task: Task) => {
-    setSelectedTask(task);
-    setShowDetailModal(true);
-  };
+    newColumns[targetIndex].tasks = [
+      ...newColumns[targetIndex].tasks,
+      task,
+    ];
 
-  const handleCloseTaskDetail = () => {
-    setSelectedTask(null);
-    setShowDetailModal(false);
+    onColumnsChange(newColumns);
   };
 
   const handleAddColumn = (title: string) => {
-    setColumns((prev) => [
-      ...prev,
+    onColumnsChange([
+      ...columns,
       {
         id: crypto.randomUUID(),
         title,
@@ -241,35 +106,14 @@ export const Tasks_Board: FC<Props> = () => {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
     const task = columns
       .flatMap((col) => col.tasks)
-      .find((t) => t.id === active.id);
-    console.log("📦 active.id recibido en dragStart:", active.id);
-    console.log(
-      "🧱 todas las tasks disponibles:",
-      columns.flatMap((col) => col.tasks)
-    );
-
-    if (task) {
-      const cloned = {
-        id: task.id,
-        title: task.title,
-        tag: task.tag || "",
-        priority: task.priority || "",
-        assigned: task.assigned || "",
-        description: task.description || "",
-        status: task.status || "",
-      };
-      console.log("🎯 Clonado para DragOverlay:", cloned);
-      setActiveTask(cloned);
-    }
-    
+      .find((t) => t.id === event.active.id);
+    if (task) setActiveTask(task);
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { over } = event;
-
     if (!over) {
       setOverTaskId(null);
       setOverColumnId(null);
@@ -277,7 +121,6 @@ export const Tasks_Board: FC<Props> = () => {
     }
 
     const overId = over.id.toString();
-
     const columnWithOverTask = columns.find((col) =>
       col.tasks.some((task) => task.id === overId)
     );
@@ -317,8 +160,10 @@ export const Tasks_Board: FC<Props> = () => {
       col.tasks.some((t) => t.id === over.id)
     );
 
+    const newColumns = [...columns];
+
     if (overIsTask) {
-      const overColumn = columns.find((col) =>
+      const overColumn = newColumns.find((col) =>
         col.tasks.some((t) => t.id === over.id)
       );
       if (!overColumn) return;
@@ -327,26 +172,31 @@ export const Tasks_Board: FC<Props> = () => {
         const oldIndex = activeColumn.tasks.findIndex(
           (t) => t.id === active.id
         );
-        const newIndex = overColumn.tasks.findIndex((t) => t.id === over.id);
+        const newIndex = overColumn.tasks.findIndex(
+          (t) => t.id === over.id
+        );
         const reorderedTasks = [...activeColumn.tasks];
         const [task] = reorderedTasks.splice(oldIndex, 1);
         reorderedTasks.splice(newIndex, 0, task);
-
-        setColumns((prev) =>
-          prev.map((col) =>
-            col.id === activeColumn.id ? { ...col, tasks: reorderedTasks } : col
+        onColumnsChange(
+          newColumns.map((col) =>
+            col.id === activeColumn.id
+              ? { ...col, tasks: reorderedTasks }
+              : col
           )
         );
       } else {
         const newActiveTasks = activeColumn.tasks.filter(
           (t) => t.id !== active.id
         );
-        const overIndex = overColumn.tasks.findIndex((t) => t.id === over.id);
+        const overIndex = overColumn.tasks.findIndex(
+          (t) => t.id === over.id
+        );
         const newOverTasks = [...overColumn.tasks];
         newOverTasks.splice(overIndex, 0, movedTask);
 
-        setColumns((prev) =>
-          prev.map((col) => {
+        onColumnsChange(
+          newColumns.map((col) => {
             if (col.id === activeColumn.id)
               return { ...col, tasks: newActiveTasks };
             if (col.id === overColumn.id)
@@ -357,15 +207,15 @@ export const Tasks_Board: FC<Props> = () => {
       }
     } else {
       const columnId = over.id.toString().replace("column-", "");
-      const targetColumn = columns.find((col) => col.id === columnId);
+      const targetColumn = newColumns.find((col) => col.id === columnId);
       if (!targetColumn) return;
 
       const newActiveTasks = activeColumn.tasks.filter(
         (t) => t.id !== active.id
       );
 
-      setColumns((prev) =>
-        prev.map((col) => {
+      onColumnsChange(
+        newColumns.map((col) => {
           if (col.id === activeColumn.id)
             return { ...col, tasks: newActiveTasks };
           if (col.id === targetColumn.id)
@@ -381,91 +231,49 @@ export const Tasks_Board: FC<Props> = () => {
   };
 
   return (
-    <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={rectIntersection}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <Wrapper>
-          <Board>
-            {columns.map((column) => (
-              <Tasks_Column
-                key={column.id}
-                id={`column-${column.id}`}
-                title={column.title}
-                tasks={column.tasks}
-                onAddTask={(taskName) =>
-                  handleAddQuickTask(column.id, taskName)
-                }
-                onMoveTask={handleMoveTask}
-                onOpenModal={() => handleOpenModal(column.id)}
-                onOpenTaskModal={handleOpenTaskDetail}
-                activeTaskId={activeTask?.id}
-                overTaskId={overTaskId}
-                isOver={overColumnId === column.id}
-              />
-            ))}
-            <New_Column_Card onAdd={handleAddColumn} />
-          </Board>
-        </Wrapper>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={rectIntersection}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <Wrapper>
+        <Board>
+          {columns.map((column) => (
+            <Tasks_Column
+              key={column.id}
+              id={`column-${column.id}`}
+              title={column.title}
+              tasks={column.tasks}
+              onAddTask={(taskName) => handleAddQuickTask(column.id, taskName)}
+              onMoveTask={handleMoveTask}
+              onOpenModal={() => onOpenAddTaskModal(column.id)}
+              onOpenTaskModal={onOpenTaskDetail}
+              activeTaskId={activeTask?.id}
+              overTaskId={overTaskId}
+              isOver={overColumnId === column.id}
+            />
+          ))}
+          <New_Column_Card onAdd={handleAddColumn} />
+        </Board>
+      </Wrapper>
 
-        <DragOverlay>
-          {activeTask && (
-            <>
-              {console.log("🎯 activeTask en overlay:", activeTask)}
-              <Task_Card
-                id={activeTask.id}
-                title={activeTask.title}
-                tag={activeTask.tag}
-                priority={activeTask.priority}
-                assigned={activeTask.assigned}
-                status={activeTask.status}
-              />
-            </>
-          )}
-        </DragOverlay>
-      </DndContext>
-
-      {isModalOpen && (
-        <Add_Task_Modal
-          onClose={handleCloseModal}
-          onSubmit={handleSubmitModal}
-        />
-      )}
-
-      {showDetailModal && selectedTask && (
-        <Task_Detail_Modal
-          isOpen={showDetailModal}
-          onClose={handleCloseTaskDetail}
-        >
-          <Task_Details
-            title={selectedTask.title}
-            description={selectedTask.description || "Sin descripción"}
-            priority={selectedTask.priority || "Sin prioridad"}
-            status={selectedTask.status || "Paso 1"}
-            assigned={selectedTask.assigned || "Sin asignar"}
-            tag={selectedTask.tag || ""}
-            onSaveChanges={handleSaveTaskChanges}
-            onStatusChange={(newStatus) => {
-              setColumns((prev) =>
-                prev.map((col) => ({
-                  ...col,
-                  tasks: col.tasks.map((t) =>
-                    t.id === selectedTask.id ? { ...t, status: newStatus } : t
-                  ),
-                }))
-              );
-              setSelectedTask((prev) =>
-                prev ? { ...prev, status: newStatus } : prev
-              );
-            }}
+      <DragOverlay>
+        {activeTask && (
+          <Task_Card
+            id={activeTask.id}
+            title={activeTask.title}
+            tag={activeTask.tag}
+            priority={activeTask.priority}
+            assigned={activeTask.assigned}
+            status={activeTask.status}
+            
+            
           />
-        </Task_Detail_Modal>
-      )}
-    </>
+        )}
+      </DragOverlay>
+    </DndContext>
   );
 };
 

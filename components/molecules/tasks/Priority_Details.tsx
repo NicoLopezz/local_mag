@@ -1,7 +1,5 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { AnimatePresence, motion } from "framer-motion";
-import { CalendarIcon, InfoIcon, CheckCircleIcon } from "lucide-react";
 
 interface Task {
   id: string;
@@ -19,12 +17,7 @@ interface Props {
 
 export const Priority_Details: FC<Props> = ({ task }) => {
   return (
-    <MotionCard
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 8 }}
-      transition={{ duration: 0.3 }}
-    >
+    <Card>
       <Header>
         <Title>{task.title}</Title>
         {task.status && <Status $status={task.status}>{task.status}</Status>}
@@ -32,7 +25,7 @@ export const Priority_Details: FC<Props> = ({ task }) => {
 
       <Section>
         <Label>
-          <InfoIcon size={16} />
+          <InfoIcon />
           Descripción
         </Label>
         <Value>{task.description || "Sin descripción."}</Value>
@@ -40,7 +33,7 @@ export const Priority_Details: FC<Props> = ({ task }) => {
 
       <Section>
         <Label>
-          <CalendarIcon size={16} />
+          <CalendarIcon />
           Fechas
         </Label>
         <Dates>
@@ -55,11 +48,28 @@ export const Priority_Details: FC<Props> = ({ task }) => {
           <Tag>{task.tag}</Tag>
         </Section>
       )}
-    </MotionCard>
+    </Card>
   );
 };
 
-const MotionCard = styled(motion.div)`
+const InfoIcon = () => (
+  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="16" x2="12" y2="12" />
+    <line x1="12" y1="8" x2="12.01" y2="8" />
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
+const Card = styled.div`
   background: white;
   border-radius: 12px;
   border: 1px solid #e4e4e7;
@@ -68,6 +78,16 @@ const MotionCard = styled(motion.div)`
   flex-direction: column;
   gap: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  animation: fadeInUp 0.3s ease forwards;
+  opacity: 0;
+  transform: translateY(8px);
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `;
 
 const Header = styled.div`
@@ -114,6 +134,10 @@ const Label = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
+
+  svg {
+    stroke: #6b7280;
+  }
 `;
 
 const Value = styled.p`

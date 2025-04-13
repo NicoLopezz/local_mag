@@ -1,8 +1,14 @@
-import { FC } from "react";
-import styled from "styled-components";
-import { motion } from "framer-motion";
+import { FC, useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
 
 export const Producto_Proveedores: FC = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 10);
+    return () => clearTimeout(timer);
+  }, []);
+
   const proveedores = [
     {
       nombre: "Distribuidora Sur S.A.",
@@ -25,12 +31,7 @@ export const Producto_Proveedores: FC = () => {
   ];
 
   return (
-    <Motion_Container
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
-    >
+    <Container $mounted={mounted}>
       {proveedores.map((prov, i) => (
         <ProveedorBox key={i}>
           <Title>{prov.nombre}</Title>
@@ -49,11 +50,22 @@ export const Producto_Proveedores: FC = () => {
           </List>
         </ProveedorBox>
       ))}
-    </Motion_Container>
+    </Container>
   );
 };
 
-const Motion_Container = styled(motion.div)`
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const Container = styled.div<{ $mounted: boolean }>`
   flex: 2;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -63,22 +75,10 @@ const Motion_Container = styled(motion.div)`
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
   height: 80%;
   overflow-y: auto;
-  animation: fadeIn 0.4s ease;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  animation: ${({ $mounted }) => ($mounted ? fadeIn : "none")} 0.3s ease;
 `;
 
 const ProveedorBox = styled.div`

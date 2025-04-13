@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { X } from "lucide-react";
 
 interface Props {
   onAdd: (title: string) => void;
@@ -36,7 +35,15 @@ export const New_Column_Card: FC<Props> = ({ onAdd }) => {
           <Actions>
             <AddButton onClick={handleAdd}>Agregar columna</AddButton>
             <CancelButton onClick={handleCancel}>
-              <X size={20} />
+              <CloseIcon viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M18 6L6 18M6 6l12 12"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </CloseIcon>
             </CancelButton>
           </Actions>
         </Form>
@@ -121,4 +128,9 @@ const CreateTrigger = styled.button`
   cursor: pointer;
   text-align: left;
   padding: 0;
+`;
+
+const CloseIcon = styled.svg`
+  width: 20px;
+  height: 20px;
 `;

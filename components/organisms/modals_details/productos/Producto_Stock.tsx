@@ -1,6 +1,5 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
 
 export const Producto_Stock: FC = () => {
   const stockTotal = 30;
@@ -24,12 +23,7 @@ export const Producto_Stock: FC = () => {
   const diasRestantes = Math.floor(stockTotal / (consumoSemanal / 7));
 
   return (
-    <Motion_Container
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
-    >
+    <Container>
       <Section>
         <Title>Stock actual</Title>
         <Stock_Number low={stockTotal < stockMinimo}>{stockTotal} unidades</Stock_Number>
@@ -83,11 +77,11 @@ export const Producto_Stock: FC = () => {
           ))}
         </List>
       </Section>
-    </Motion_Container>
+    </Container>
   );
 };
 
-const Motion_Container = styled(motion.div)`
+const Container = styled.div`
   flex: 2;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -98,12 +92,11 @@ const Motion_Container = styled(motion.div)`
   height: 80%;
   overflow-y: auto;
   animation: fadeIn 0.4s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  animation-fill-mode: forwards;
 
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
     to {
       opacity: 1;
       transform: translateY(0);

@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { FaBell } from "react-icons/fa";
+import {Bell_Icon} from "@/components/atoms/icons/Bell_Icon";
 
 const IconWrapper = styled.div`
   position: relative;
@@ -13,16 +13,17 @@ const Badge = styled.span`
   position: absolute;
   top: -5px;
   right: -5px;
-  background: red;
-  color: white;
+  background: #ffffff;
+  color: #000000;
   font-size: 0.7rem;
   font-weight: bold;
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 0.1px solid #02203f;
 `;
 
 export const NotificationBell: FC = () => {
@@ -30,7 +31,7 @@ export const NotificationBell: FC = () => {
 
   return (
     <IconWrapper>
-      <FaBell />
+      <Bell_Icon />
       {count > 0 && <Badge>{count}</Badge>}
     </IconWrapper>
   );
