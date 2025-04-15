@@ -7,23 +7,32 @@ import { Add_Servicio_Modal } from "../../components/organisms/add_modals/Add_Se
 import { Add_Category_Modal } from "../../components/organisms/add_modals/Add_Category_Modal";
 import { mockData } from "../../mock_data/servicios";
 import { Toast } from "../../components/atoms/notification/Toast";
-import { useSearch } from "../../context/Search_Context";
+import { useRouter } from "next/router";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
 const Servicios: NextPage = () => {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [servicioModalOpen, setServicioModalOpen] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const { query } = useSearch();
-  const hasSelectedManually = useRef(false);
+  const search = typeof router.query.search === "string" ? router.query.search : "";
+  const serivicio = typeof router.query.serivicio === "string" ? router.query.serivicio : null;
 
   const handleCategorySelect = (category: string) => {
-    hasSelectedManually.current = true;
-    setSelectedCategory((prev) => (prev === category ? null : category));
+    const isSame = serivicio === category;
+    const newCategory = isSame ? undefined : category;
+
+    router.replace({
+      pathname: "/servicios",
+      query: {
+        ...router.query,
+        serivicio: newCategory,
+      },
+    });
   };
 
   const handleAddServicio = () => setServicioModalOpen(true);
@@ -45,23 +54,39 @@ const Servicios: NextPage = () => {
   const handleCloseToast = () => setToastMessage(null);
 
   useEffect(() => {
-    if (hasSelectedManually.current) return;
+    if (!search.trim()) return;
 
-    if (query.trim() === "") {
-      setSelectedCategory(null);
-      return;
-    }
-
-    const match = mockData.services.find((service) =>
-      service.title.toLowerCase().includes(query.toLowerCase())
+    const filtered = mockData.services.filter((service) =>
+      service.title.toLowerCase().includes(search.toLowerCase())
     );
 
-    if (match) {
-      setSelectedCategory(match.category);
-    } else {
-      setSelectedCategory(null);
+    const uniqueCategories = [...new Set(filtered.map((s) => s.category))];
+
+    const params = new URLSearchParams();
+    params.set("search", search);
+
+    if (uniqueCategories.length === 1) {
+      const detectedCategory = uniqueCategories[0];
+      params.set("serivicio", detectedCategory);
+    } else if (router.query.serivicio) {
+      params.set("serivicio", router.query.serivicio as string);
     }
-  }, [query]);
+
+    if (filtered.length === 1) {
+      const service = filtered[0];
+      const title = service.title;
+      const category = service.category;
+      params.set("search", title);
+      params.set("serivicio", category);
+    }
+
+    const newUrl = `/servicios?${params.toString()}`;
+    const currentUrl = router.asPath;
+
+    if (currentUrl !== newUrl) {
+      router.replace(newUrl);
+    }
+  }, [search]);
 
   const categoriesFormatted = mockData.categories.map((category) => ({
     title: category.title,
@@ -73,8 +98,8 @@ const Servicios: NextPage = () => {
   const servicesFormatted = mockData.services
     .filter(
       (service) =>
-        (!selectedCategory || service.category === selectedCategory) &&
-        (!query || service.title.toLowerCase().includes(query.toLowerCase()))
+        (!serivicio || service.category === serivicio) &&
+        (!search || service.title.toLowerCase().includes(search.toLowerCase()))
     )
     .map((service) => ({
       title: service.title,
@@ -91,10 +116,10 @@ const Servicios: NextPage = () => {
             categories={categoriesFormatted}
             onCategorySelect={handleCategorySelect}
             onAddCategory={handleOpenCategoryModal}
-            selectedCategory={selectedCategory}
+            selectedCategory={serivicio}
           />
           <Servicios_List
-            key={selectedCategory || query || "all"}
+            key={serivicio || search || "all"}
             services={servicesFormatted}
             onAddServicio={handleAddServicio}
           />

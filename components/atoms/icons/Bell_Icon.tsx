@@ -1,9 +1,13 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-export const Bell_Icon: FC = () => {
+interface Props {
+  onClick: () => void;
+}
+
+export const Bell_Icon: FC<Props> = ({onClick}) => {
   return (
-    <Svg
+    <Svg onClick={onClick}
       stroke="currentColor"
       fill="currentColor"
       stroke-width="0"

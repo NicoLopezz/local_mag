@@ -14,11 +14,11 @@ interface Empleado {
 }
 
 interface Props {
-  products: Empleado[];
-  onAddProduct: () => void;
+  empleado: Empleado[];
+  onAddEmpleado: () => void;
 }
 
-export const Empleados_List: FC<Props> = ({ products, onAddProduct }) => {
+export const Empleados_List: FC<Props> = ({ empleado, onAddEmpleado }) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalEmpleadoName, setModalEmpleadoName] = useState("");
@@ -30,18 +30,14 @@ export const Empleados_List: FC<Props> = ({ products, onAddProduct }) => {
     const currentEmail = router.query.email;
     const params = new URLSearchParams(router.query as Record<string, string>);
 
-    const empleado = products.find((p) => p.email === email);
-
-    if (currentEmail === email) {
-      params.delete("email");
-    } else {
-      params.set("email", email);
-    }
+    const empleados = empleado.find((p) => p.email === email);
 
     router.replace(`/empleados?${params.toString()}`);
 
     if (empleado && currentEmail !== email) {
-      setModalEmpleadoName(empleado.name);
+      if (empleados) {
+        setModalEmpleadoName(empleados.name);
+      }
       setModalOpen(true);
     }
   };
@@ -53,9 +49,9 @@ export const Empleados_List: FC<Props> = ({ products, onAddProduct }) => {
         <Divider />
         <Empleados_Container>
           <Empleado_Wrapper>
-            <Add_Empleado_Card onAddRole={onAddProduct} />
+            <Add_Empleado_Card onAddRole={onAddEmpleado} />
           </Empleado_Wrapper>
-          {products.map((empleado, index) => (
+          {empleado.map((empleado, index) => (
             <Empleado_Wrapper key={index}>
               <Empleado_Card
                 {...empleado}
@@ -89,10 +85,11 @@ const fadeIn = keyframes`
 `;
 
 const Container = styled.div`
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
   padding: 20px 0;
   margin-top: -10px;
+  margin-right: -0.1rem
 `;
 
 const Title = styled.h2`

@@ -7,23 +7,33 @@ import { Add_Empleado_Modal } from "../../components/organisms/add_modals/Add_Em
 import { Add_Rol_Modal } from "../../components/organisms/add_modals/Add_Rol_Modal";
 import { mockData } from "../../mock_data/empleados";
 import { Toast } from "../../components/atoms/notification/Toast";
-import { useSearch } from "../../context/Search_Context";
+import { useRouter } from "next/router";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
 const Empleados: NextPage = () => {
-  const [selectedRol, setSelectedRol] = useState<string | null>(null);
+  const router = useRouter();
   const [empleadoModalOpen, setEmpleadoModalOpen] = useState(false);
   const [rolModalOpen, setRolModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const { query } = useSearch();
-  const hasSelectedManually = useRef(false);
+  const search =
+    typeof router.query.search === "string" ? router.query.search : "";
+  const rol =
+    typeof router.query.roles === "string" ? router.query.roles : null;
 
-  const handleRolSelect = (rol: string) => {
-    hasSelectedManually.current = true;
-    setSelectedRol((prev) => (prev === rol ? null : rol));
+  const handleRolSelect = (rolSelected: string) => {
+    const isSame = rol === rolSelected;
+    const newRol = isSame ? undefined : rolSelected;
+
+    router.replace({
+      pathname: "/empleados",
+      query: {
+        ...router.query,
+        roles: newRol,
+      },
+    });
   };
 
   const handleAddEmpleado = () => setEmpleadoModalOpen(true);
@@ -45,23 +55,39 @@ const Empleados: NextPage = () => {
   const handleCloseToast = () => setToastMessage(null);
 
   useEffect(() => {
-    if (hasSelectedManually.current) return;
+    if (!search.trim()) return;
 
-    if (query.trim() === "") {
-      setSelectedRol(null);
-      return;
-    }
-
-    const match = mockData.roles.find((rol) =>
-      rol.title.toLowerCase().includes(query.toLowerCase())
+    const filtered = mockData.empleados.filter((empleado) =>
+      empleado.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    if (match) {
-      setSelectedRol(match.title);
-    } else {
-      setSelectedRol(null);
+    const uniqueRoles = [...new Set(filtered.map((e) => e.role))];
+
+    const params = new URLSearchParams();
+    params.set("search", search);
+
+    if (uniqueRoles.length === 1) {
+      const detectedRol = uniqueRoles[0];
+      params.set("roles", detectedRol);
+    } else if (router.query.roles) {
+      params.set("roles", router.query.roles as string);
     }
-  }, [query]);
+
+    if (filtered.length === 1) {
+      const empleado = filtered[0];
+      const name = empleado.name;
+      const role = empleado.role;
+      params.set("search", name);
+      params.set("roles", role);
+    }
+
+    const newUrl = `/empleados?${params.toString()}`;
+    const currentUrl = router.asPath;
+
+    if (currentUrl !== newUrl) {
+      router.replace(newUrl);
+    }
+  }, [search]);
 
   const rolesFormatted = mockData.roles.map((rol) => ({
     title: rol.title,
@@ -74,15 +100,15 @@ const Empleados: NextPage = () => {
   const empleadosFormatted = mockData.empleados
     .filter(
       (empleado) =>
-        (!selectedRol || empleado.role === selectedRol) &&
-        (!query || empleado.name.toLowerCase().includes(query.toLowerCase()))
+        (!rol || empleado.role === rol) &&
+        (!search || empleado.name.toLowerCase().includes(search.toLowerCase()))
     )
     .map((empleado) => ({
       name: empleado.name,
       role: empleado.role,
-      email: empleado.email,
       phone: empleado.phone,
       imageUrl: empleado.imageUrl,
+      email: empleado.email, // Include the email property
     }));
 
   return (
@@ -93,12 +119,12 @@ const Empleados: NextPage = () => {
             categories={rolesFormatted}
             onCategorySelect={handleRolSelect}
             onAddCategory={handleOpenRolModal}
-            selectedCategory={selectedRol}
+            selectedCategory={rol}
           />
           <Empleados_List
-            key={selectedRol || query || "all"}
-            products={empleadosFormatted}
-            onAddProduct={handleAddEmpleado}
+            key={rol || search || "all"}
+            empleado={empleadosFormatted}
+            onAddEmpleado={handleAddEmpleado}
           />
         </Content_Area>
       </Main_Content>
@@ -110,9 +136,14 @@ const Empleados: NextPage = () => {
         />
       )}
       {rolModalOpen && (
-        <Add_Rol_Modal onClose={handleCloseRolModal} onSubmit={handleRolSubmit} />
+        <Add_Rol_Modal
+          onClose={handleCloseRolModal}
+          onSubmit={handleRolSubmit}
+        />
       )}
-      {toastMessage && <Toast message={toastMessage} onClose={handleCloseToast} />}
+      {toastMessage && (
+        <Toast message={toastMessage} onClose={handleCloseToast} />
+      )}
     </Page_Container>
   );
 };

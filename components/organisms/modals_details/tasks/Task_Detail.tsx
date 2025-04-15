@@ -26,6 +26,7 @@ interface Props {
     tag: string;
     endDate: Date;
     dueDate: string;
+  
   }) => void;
 }
 

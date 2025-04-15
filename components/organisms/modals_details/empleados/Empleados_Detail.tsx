@@ -12,10 +12,14 @@ interface Props {
 
 export const Empleado_Detail: FC<Props> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Detalles");
-
   const { query } = useRouter();
-  const email = typeof query.email === "string" ? query.email : "";
-  const empleado = mockData.empleados.find((e) => e.email === email);
+
+  const name = typeof query.name === "string" ? query.name : "";
+  const role = typeof query.role === "string" ? query.role : "";
+
+  const empleado = mockData.empleados.find(
+    (e) => e.name === name && e.role === role
+  );
 
   return (
     <Base_Details_Modal
@@ -30,7 +34,7 @@ export const Empleado_Detail: FC<Props> = ({ onClose }) => {
             alt={empleado.name}
             width={400}
             height={400}
-            style={{borderRadius: "20px" , objectFit: "cover" }}
+            style={{ borderRadius: "20px", objectFit: "cover" }}
           />
         )
       }

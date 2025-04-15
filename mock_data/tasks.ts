@@ -1,4 +1,4 @@
-export interface Task {
+  export interface Task {
     id: string;
     title: string;
     tag?: string;
@@ -7,6 +7,7 @@ export interface Task {
     description?: string;
     status?: string;
     dueDate: string;
+    endDate?: Date;
   }
   
   export interface Column {
@@ -21,17 +22,17 @@ export interface Task {
       title: "Prioridades",
       tasks: [
         {
-          id: crypto.randomUUID(),
+          id: "1",
           title: "Servidor en Render de test",
           tag: "Infraestructura",
           priority: "Alta",
-          assigned: "Nicolás",
+          assigned: "Ruben",
           description: "Subir el entorno a producción con validaciones",
           status: "Paso 1",
           dueDate: "2025-12-25"
         },
         {
-          id: crypto.randomUUID(),
+          id: "2",
           title: "Crear vista de tareas",
           tag: "Frontend",
           priority: "Media",
@@ -47,7 +48,7 @@ export interface Task {
       title: "In Progress",
       tasks: [
         {
-          id: crypto.randomUUID(),
+          id: "3",
           title: "Conectar login con backend",
           tag: "Auth",
           priority: "Alta",

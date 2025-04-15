@@ -1,61 +1,38 @@
-import { useState } from "react";
-import type { Column, Task } from "@/mock_data/tasks";
+import { useState, useMemo } from "react";
 import { initialTasks } from "@/mock_data/tasks";
+import { Column, Task } from "@/mock_data/tasks";
 
 export const useTasksLogic = () => {
-  const [columns, setColumns] = useState<Column[]>(initialTasks);
+  const [originalColumns, setOriginalColumns] = useState<Column[]>(initialTasks);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [targetColumnId, setTargetColumnId] = useState<string | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
-  const openAddTaskModal = (colId: string) => {
-    setTargetColumnId(colId);
-    setIsModalOpen(true);
-  };
+  const columns = useMemo(() => {
+    if (selectedUsers.length === 0) return originalColumns;
+    
+    return originalColumns.map(column => ({
+      ...column,
+      tasks: column.tasks.filter(task => 
+        task.assigned && selectedUsers.includes(task.assigned)
+      )
+    }));
+  }, [originalColumns, selectedUsers]);
 
-  const submitNewTask = (task: {
-    title: string;
-    description?: string;
-    priority?: string;
-    dueDate?: string;
-    assignee?: string;
-    tags?: string;
-  }) => {
-    if (!targetColumnId) return;
+  const openAddTaskModal = () => setIsModalOpen(true);
+  const closeDetailModal = () => setShowDetailModal(false);
 
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      title: task.title,
-      tag: task.tags || "",
-      priority: task.priority || "Sin prioridad",
-      assigned: task.assignee || "Sin asignar",
-      description: task.description || "Sin descripción",
-      status: "Paso 1",
-      dueDate: task.dueDate || new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
-    };
-
-    setColumns((prev) =>
-      prev.map((col) =>
-        col.id === targetColumnId
-          ? { ...col, tasks: [...col.tasks, newTask] }
-          : col
+  const submitNewTask = (newTask: Omit<Task, 'id'>) => {
+    const taskWithId = { ...newTask, id: crypto.randomUUID() };
+    setOriginalColumns(prevColumns => 
+      prevColumns.map(column => 
+        column.id === "priorities"
+          ? { ...column, tasks: [...column.tasks, taskWithId] }
+          : column
       )
     );
     setIsModalOpen(false);
-    setTargetColumnId(null);
-  };
-
-  const saveTaskChanges = (updatedTask: Partial<Task> & { title: string }) => {
-    setColumns((prev) =>
-      prev.map((col) => ({
-        ...col,
-        tasks: col.tasks.map((task) =>
-          task.id === selectedTask?.id ? { ...task, ...updatedTask } : task
-        )
-      }))
-    );
-    setSelectedTask((prev) => (prev ? { ...prev, ...updatedTask } : prev));
   };
 
   const openDetailModal = (task: Task) => {
@@ -63,26 +40,38 @@ export const useTasksLogic = () => {
     setShowDetailModal(true);
   };
 
-  const closeDetailModal = () => {
-    setSelectedTask(null);
-    setShowDetailModal(false);
-  };
-
-  const updateStatus = (newStatus: string) => {
-    setColumns((prev) =>
-      prev.map((col) => ({
-        ...col,
-        tasks: col.tasks.map((t) =>
-          t.id === selectedTask?.id ? { ...t, status: newStatus } : t
+  const saveTaskChanges = (updatedTask: Task) => {
+    setOriginalColumns(prevColumns =>
+      prevColumns.map(column => ({
+        ...column,
+        tasks: column.tasks.map(task =>
+          task.id === updatedTask.id ? {
+            ...task,
+            ...updatedTask,
+            dueDate: updatedTask.endDate 
+              ? updatedTask.endDate.toISOString() 
+              : updatedTask.dueDate
+          } : task
         )
       }))
     );
-    setSelectedTask((prev) => (prev ? { ...prev, status: newStatus } : prev));
+    setShowDetailModal(false);
+  };
+
+  const updateStatus = (taskId: string, newStatus: string) => {
+    setOriginalColumns(prevColumns =>
+      prevColumns.map(column => ({
+        ...column,
+        tasks: column.tasks.map(task =>
+          task.id === taskId ? { ...task, status: newStatus } : task
+        )
+      }))
+    );
   };
 
   return {
     columns,
-    setColumns,
+    setColumns: setOriginalColumns,
     selectedTask,
     isModalOpen,
     showDetailModal,
@@ -91,6 +80,7 @@ export const useTasksLogic = () => {
     openDetailModal,
     closeDetailModal,
     saveTaskChanges,
-    updateStatus
+    updateStatus,
+    setSelectedUsers,
   };
 };

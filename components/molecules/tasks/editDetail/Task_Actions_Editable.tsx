@@ -1,5 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { Delete_Icon} from "@/components/atoms/icons/Delete_Icon";
+import { Save_Icon } from "@/components/atoms/icons/Save_Icon";
 
 interface Props {
   showSave: boolean;
@@ -12,21 +14,12 @@ export const Task_Actions_EditDetail: FC<Props> = ({ showSave, onSave, onDelete 
     <Actions>
       {showSave && (
         <Button onClick={onSave}>
-          <SvgIcon viewBox="0 0 24 24">
-            <path d="M17 3H7a2 2 0 0 0-2 2v14l5-2 5 2V5a2 2 0 0 0-2-2z" fill="currentColor" />
-          </SvgIcon>
+          <Save_Icon/>
           Guardar
         </Button>
       )}
       <DeleteButton onClick={onDelete}>
-        <SvgIcon viewBox="0 0 24 24">
-          <path
-            d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m-1 0v12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6h10z"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-          />
-        </SvgIcon>
+        <Delete_Icon/>
         Eliminar
       </DeleteButton>
     </Actions>
@@ -41,7 +34,8 @@ const Actions = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #000000e4;
+  background-color: #000000;
+  gap: 5px;
   color: white;
   font-weight: 400;
   padding: 12px 16px;
@@ -55,12 +49,13 @@ const Button = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #1c3aa9;
+    background-color: #008732;
   }
 `;
 
 const DeleteButton = styled.button`
   background-color: #000000;
+  gap: 5px;
   color: white;
   padding: 12px 16px;
   border: none;

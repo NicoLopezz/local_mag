@@ -1,16 +1,11 @@
 import { FC, useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/router";
 import { Close_Icon } from "@/components/atoms/icons/Close_Icon";
 import { Search_Icon } from "@/components/atoms/icons/Search_Icon";
 
-export const SearchInput: FC = () => {
-  const router = useRouter();
+export const Search_TaskBar: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const currentPath = router.pathname;
-  const search = typeof router.query.search === "string" ? router.query.search : "";
-  const [inputValue, setInputValue] = useState(search);
+  const [inputValue, setInputValue] = useState("");
   const [focused, setFocused] = useState(false);
 
   const handleFocus = () => setFocused(true);
@@ -21,39 +16,13 @@ export const SearchInput: FC = () => {
     }
   };
 
-  useEffect(() => {
-    setInputValue(search);
-    if (search.trim() !== "") {
-      setFocused(true);
-    }
-  }, [search]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-
-    if (value.trim() === "") {
-      router.replace(currentPath);
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.set("search", value);
-
-    const filterKey = getFilterKey(currentPath);
-    const filterValue = router.query[filterKey];
-
-    if (filterKey && typeof filterValue === "string") {
-      params.set(filterKey, filterValue);
-    }
-
-    router.replace(`${currentPath}?${params.toString()}`);
+    setInputValue(e.target.value);
   };
 
   const handleClear = () => {
     setInputValue("");
     inputRef.current?.focus();
-    router.replace(currentPath);
   };
 
   const showClear = inputValue.trim() !== "";
@@ -63,7 +32,7 @@ export const SearchInput: FC = () => {
       <Input
         ref={inputRef}
         type="text"
-        placeholder="Buscar..."
+        placeholder="Filtrar..."
         value={inputValue}
         onChange={handleChange}
         onFocus={handleFocus}
@@ -82,21 +51,15 @@ export const SearchInput: FC = () => {
   );
 };
 
-const getFilterKey = (path: string): string => {
-  if (path.includes("/productos")) return "category";
-  if (path.includes("/empleados")) return "roles";
-  if (path.includes("/servicios")) return "tipo";
-  return "";
-};
-
 const Search_Wrapper = styled.div<{ focused: boolean }>`
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
-  border-radius: 20px;
+  border-radius: 5px;
   padding: 5px 20px;
   background-color: #f9f9f9;
-  width: ${({ focused }) => (focused ? "320px" : "180px")};
+  width: 9rem;
+  /* width: ${({ focused }) => (focused ? "320px" : "180px")}; */
   transition: width 0.3s ease;
 `;
 
@@ -108,6 +71,7 @@ const Input = styled.input`
   font-size: 1rem;
   width: 100%;
   flex-grow: 1;
+  height: 10px;
 `;
 
 const Icon_Container = styled.div`
@@ -121,6 +85,7 @@ const Icon_Container = styled.div`
 
 const Clear_Icon = styled.div`
   cursor: pointer;
+  color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;

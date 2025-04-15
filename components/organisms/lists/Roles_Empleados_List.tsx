@@ -47,10 +47,11 @@ export const Roles_Empleados_List: FC<Props> = ({
 };
 
 const Container = styled.div`
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
   padding: 20px 0;
   margin-top: 1rem;
+  margin-right: 10px
 `;
 
 const Title = styled.h2`
