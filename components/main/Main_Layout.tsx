@@ -11,18 +11,7 @@ interface Props {
   children: ReactNode;
 }
 
-const Layout_Container = styled.div`
-  display: flex;
-  width: 100%;
-  height: calc(100vh - ${Navbar_Height});
-  overflow-y: hidden;
-`;
 
-const Content = styled.div`
-  flex-grow: 1;
-  padding-top: 1rem;
-  
-`;
 
 export const Main_Layout: FC<Props> = ({ children }) => {
   return (
@@ -35,3 +24,17 @@ export const Main_Layout: FC<Props> = ({ children }) => {
     </Layout_Container>
   );
 };
+
+
+const Layout_Container = styled.div`
+  display: flex;
+  width: 100%;
+  height: calc(100vh - ${Navbar_Height});
+  overflow-y: hidden;
+`;
+
+const Content = styled.div`
+  flex-grow: 1;
+  padding-top: 1rem;
+  
+`;

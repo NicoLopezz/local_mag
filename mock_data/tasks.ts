@@ -40,29 +40,551 @@
           description: "Diseñar y desarrollar UI de tareas con drag & drop",
           status: "Paso 2",
           dueDate: "2025-06-25"
-        }
-      ]
-    },
-    {
-      id: "in_progress",
-      title: "In Progress",
-      tasks: [
+        },
         {
-          id: "3",
-          title: "Conectar login con backend",
-          tag: "Auth",
-          priority: "Alta",
-          assigned: "Nicolás",
-          description: "Integrar login con autenticación JWT y cookies",
-          status: "Paso 4",
-          dueDate: "2025-05-25"
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
+        },
+        {
+          id: "2",
+          title: "Crear vista de tareas",
+          tag: "Frontend",
+          priority: "Media",
+          assigned: "Camila",
+          description: "Diseñar y desarrollar UI de tareas con drag & drop",
+          status: "Paso 2",
+          dueDate: "2025-06-25"
         }
+      
       ]
-    },
-    {
-      id: "delivered",
-      title: "Done",
-      tasks: []
     }
+    // {
+    //   id: "in_progress",
+    //   title: "In Progress",
+    //   tasks: [
+    //     {
+    //       id: "3",
+    //       title: "Conectar login con backend",
+    //       tag: "Auth",
+    //       priority: "Alta",
+    //       assigned: "Nicolás",
+    //       description: "Integrar login con autenticación JWT y cookies",
+    //       status: "Paso 4",
+    //       dueDate: "2025-05-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     }
+    //   ]
+    // },
+    // {
+    //   id: "delivered",
+    //   title: "Done",
+    //   tasks: [
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     },
+    //     {
+    //       id: "2",
+    //       title: "Crear vista de tareas",
+    //       tag: "Frontend",
+    //       priority: "Media",
+    //       assigned: "Camila",
+    //       description: "Diseñar y desarrollar UI de tareas con drag & drop",
+    //       status: "Paso 2",
+    //       dueDate: "2025-06-25"
+    //     }
+    //   ]
+    // }
   ];
   

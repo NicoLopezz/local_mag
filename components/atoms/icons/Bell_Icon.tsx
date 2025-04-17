@@ -10,7 +10,6 @@ export const Bell_Icon: FC<Props> = ({onClick}) => {
     <Svg onClick={onClick}
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
       viewBox="0 0 448 512"
       height="1em"
       width="1em"

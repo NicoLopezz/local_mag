@@ -1,7 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Stock_Control } from "../../atoms/cards/Stock_Control";
+import { useTransactions } from "@/context/Transacciones_Context";
 
 interface Props {
   title: string;
@@ -12,6 +13,9 @@ interface Props {
   stock: number;
   isSelected: boolean;
   onSelect: (productCode: string) => void;
+  category: string;
+  onTransactionCommit: (decrease: number, title: string) => void;
+
 }
 
 export const Product_Card: FC<Props> = ({
@@ -21,12 +25,61 @@ export const Product_Card: FC<Props> = ({
   productCode,
   stock,
   isSelected,
+  category,
   onSelect,
+  onTransactionCommit,
 }) => {
   const [currentStock, setCurrentStock] = useState(stock);
+  const pendingActions = useRef<{increase: number; decrease: number}>({ increase: 0, decrease: 0 });
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const stockRef = useRef(currentStock);
+  const { addSaleTransaction } = useTransactions();
 
-  const handleIncrease = () => setCurrentStock((prev) => prev + 1);
-  const handleDecrease = () => setCurrentStock((prev) => (prev > 0 ? prev - 1 : 0));
+  useEffect(() => {
+    stockRef.current = currentStock;
+  }, [currentStock]);
+
+  const handleIncrease = useCallback(() => {
+    const newStock = stockRef.current + 1;
+    setCurrentStock(newStock);
+    pendingActions.current.increase += 1;
+    schedulePendingAction();
+  }, []);
+
+  const handleDecrease = useCallback(() => {
+    const newStock = Math.max(stockRef.current - 1, 0);
+    setCurrentStock(newStock);
+    pendingActions.current.decrease += 1;
+    schedulePendingAction();
+  }, [title, productCode, category, addSaleTransaction]);
+
+  const schedulePendingAction = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  
+    timerRef.current = setTimeout(() => {
+      if (pendingActions.current.decrease > 0) {
+        addSaleTransaction({
+          title,
+          productCode,
+          category,
+          units: pendingActions.current.decrease
+        });
+        onTransactionCommit(pendingActions.current.decrease, title);
+        pendingActions.current.decrease = 0;
+
+      }
+    }, 600);
+  }, [title, productCode, category, addSaleTransaction, onTransactionCommit]);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -34,19 +87,23 @@ export const Product_Card: FC<Props> = ({
   };
 
   return (
-    <Card_Container isSelected={isSelected} onClick={handleClick}>
+    <Card_Container isSelected={isSelected}>
       <Card_Image>
         <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
       </Card_Image>
-      <Card_Content>
+      <Card_Content onClick={handleClick}>
         <Card_Title>{title}</Card_Title>
-        <Card_Description>{description}</Card_Description>
-        <Product_Code>{productCode}</Product_Code>
+        {/* <Product_Code>{productCode}</Product_Code> */}
       </Card_Content>
-      <Stock_Control stock={currentStock} onIncrease={handleIncrease} onDecrease={handleDecrease} />
+      <Stock_Control 
+        stock={currentStock} 
+        onIncrease={handleIncrease} 
+        onDecrease={handleDecrease} 
+      />
     </Card_Container>
   );
 };
+
 
 const Card_Container = styled.div<{ isSelected: boolean }>`
   display: flex;

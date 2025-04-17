@@ -8,13 +8,23 @@ interface Props {
 }
 
 export const Stock_Control: FC<Props> = ({ stock, onIncrease, onDecrease }) => {
+  const handleDecreaseClick = () => {
+    onDecrease();
+  };
+
   return (
     <Stock_Container>
       <Stock_Value>{stock}</Stock_Value>
-      <Stock_Button onClick={onDecrease}>-</Stock_Button>
+      <Stock_Button 
+        onClick={handleDecreaseClick}
+        aria-label="Disminuir stock"
+      >
+        -
+      </Stock_Button>
     </Stock_Container>
   );
 };
+
 
 const Stock_Container = styled.div`
   display: flex;

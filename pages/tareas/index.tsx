@@ -205,6 +205,7 @@ const Filter_Content = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  z-index: 9999999;
 `;
 
 const Selected_Priorities = styled.div`

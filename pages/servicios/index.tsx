@@ -138,7 +138,6 @@ const Servicios: NextPage = () => {
           onSubmit={handleCategorySubmit}
         />
       )}
-      {toastMessage && <Toast message={toastMessage} onClose={handleCloseToast} />}
     </Page_Container>
   );
 };

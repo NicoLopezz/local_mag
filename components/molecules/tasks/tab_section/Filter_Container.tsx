@@ -105,7 +105,7 @@ const Selected_Options_Container = styled.div`
   gap: 0.3rem;
   margin-left: 0.5rem;
   position: relative;
-  z-index: 100000;
+  z-index: 9999999;
   max-width: 300px;
   overflow-x: auto;
   scrollbar-width: thin;

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState ,useEffect } from "react";
 import styled from "styled-components";
 
 interface NotificationItem {
@@ -10,12 +10,14 @@ interface NotificationItem {
   isRead: boolean;
 }
 
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onUnreadCountChange?: (count: number) => void;
 }
 
-export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose }) => {
+export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose , onUnreadCountChange }) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
       id: 1,
@@ -60,15 +62,22 @@ export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose }) => {
   ]);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
+  useEffect(() => {
+    if (onUnreadCountChange) {
+      onUnreadCountChange(unreadCount);
+    }
+  }, [unreadCount, onUnreadCountChange]);
 
   const markAllAsRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+    const updatedNotifications = notifications.map(n => ({ ...n, isRead: true }));
+    setNotifications(updatedNotifications);
   };
 
   const toggleReadStatus = (id: number) => {
-    setNotifications(notifications.map(n => 
+    const updatedNotifications = notifications.map(n => 
       n.id === id ? { ...n, isRead: !n.isRead } : n
-    ));
+    );
+    setNotifications(updatedNotifications);
   };
 
   return (

@@ -1,25 +1,44 @@
 import { FC } from "react";
-import styled from "styled-components";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import styled, { css } from "styled-components";
 
 interface Props {
   id: string;
   title: string;
   isSelected: boolean;
   onClick: () => void;
+  isDragging?: boolean;
+  isHovered?: boolean;
+  hoverDirection?: "above" | "below" | null;
+  onDragStart: () => void;
+  onDragEnter: (e: React.DragEvent) => void;
+  onDragEnd: () => void;
 }
 
-export const Priority_Item: FC<Props> = ({ id, title, isSelected, onClick }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-
+export const Priority_Item: FC<Props> = ({ 
+  id, 
+  title, 
+  isSelected, 
+  onClick,
+  isDragging = false,
+  isHovered = false,
+  hoverDirection = null,
+  onDragStart,
+  onDragEnter,
+  onDragEnd
+}) => {
   return (
-    <Card
-      ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
+    <Container
+      draggable
       isSelected={isSelected}
+      isDragging={isDragging}
+      isHovered={isHovered}
+      hoverDirection={hoverDirection}
+      onDragStart={onDragStart}
+      onDragEnter={onDragEnter}
+      onDragEnd={onDragEnd}
+      onDragOver={(e) => e.preventDefault()}
     >
-      <Grab {...listeners} {...attributes}>
+      <Grab>
         <Dot /><Dot />
         <Dot /><Dot />
         <Dot /><Dot />
@@ -27,11 +46,16 @@ export const Priority_Item: FC<Props> = ({ id, title, isSelected, onClick }) => 
       <Content onClick={onClick}>
         <Title>{title}</Title>
       </Content>
-    </Card>
+    </Container>
   );
 };
 
-const Card = styled.div<{ isSelected: boolean }>`
+const Container = styled.div<{
+  isSelected: boolean;
+  isDragging: boolean;
+  isHovered: boolean;
+  hoverDirection: "above" | "below" | null;
+}>`
   display: flex;
   align-items: center;
   padding: 12px;
@@ -39,6 +63,37 @@ const Card = styled.div<{ isSelected: boolean }>`
   background-color: ${({ isSelected }) => (isSelected ? "#f0f0f0" : "#fff")};
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  ${({ isDragging }) => isDragging && css`
+    opacity: 0.5;
+    cursor: grabbing;
+  `}
+
+  ${({ isHovered, hoverDirection }) => isHovered && css`
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #007bff;
+      ${hoverDirection === "above" ? css`top: -5px;` : css`bottom: -5px;`}
+    }
+
+    ${hoverDirection === "above" && css`
+      margin-bottom: 16px;
+    `}
+
+    ${hoverDirection === "below" && css`
+      margin-top: 16px;
+    `}
+  `}
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 const Grab = styled.div`
@@ -51,6 +106,10 @@ const Grab = styled.div`
   user-select: none;
   width: 16px;
   height: 24px;
+  
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 const Dot = styled.div`

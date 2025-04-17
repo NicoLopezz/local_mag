@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import styled from "styled-components";
 import { useRouter } from "next/router";
@@ -7,21 +7,21 @@ import { Product_List } from "../../components/organisms/lists/Products_List";
 import { Add_Product_Modal } from "../../components/organisms/add_modals/Add_Product_Modal";
 import { Add_Category_Modal } from "../../components/organisms/add_modals/Add_Category_Modal";
 import { mockData } from "../../mock_data/products";
-import { Toast } from "../../components/atoms/notification/Toast";
+import { useToast } from "@/context/Toast_Context";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
-
-
 const Productos: NextPage = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const search = typeof router.query.search === "string" ? router.query.search : "";
-  const category = typeof router.query.category === "string" ? router.query.category : null;
+  const search =
+    typeof router.query.search === "string" ? router.query.search : "";
+  const category =
+    typeof router.query.category === "string" ? router.query.category : null;
 
   const handleCategorySelect = (categorySelected: string) => {
     const isSame = category === categorySelected;
@@ -38,21 +38,18 @@ const Productos: NextPage = () => {
 
   const handleAddProduct = () => setProductModalOpen(true);
   const handleCloseProductModal = () => setProductModalOpen(false);
-
   const handleOpenCategoryModal = () => setCategoryModalOpen(true);
   const handleCloseCategoryModal = () => setCategoryModalOpen(false);
 
   const handleProductSubmit = () => {
     setProductModalOpen(false);
-    setToastMessage("Producto creado con éxito");
+    showToast("Producto creado con éxito");
   };
 
   const handleCategorySubmit = () => {
     setCategoryModalOpen(false);
-    setToastMessage("Categoría creada con éxito");
+    showToast("Categoría creada con éxito");
   };
-
-  const handleCloseToast = () => setToastMessage(null);
 
   const categoriesFormatted = mockData.categories.map((category) => ({
     title: category.title,
@@ -77,41 +74,38 @@ const Productos: NextPage = () => {
       stock: product.stock,
     }));
 
-    useEffect(() => {
-      if (!search.trim()) return;
-    
-      const filtered = mockData.products.filter((product) =>
-        product.title.toLowerCase().includes(search.toLowerCase())
-      );
-    
-      const uniqueCategories = [...new Set(filtered.map((p) => p.category))];
-    
-      const params = new URLSearchParams();
-      params.set("search", search);
-    
-      if (uniqueCategories.length === 1) {
-        const detectedCategory = uniqueCategories[0];
-        params.set("category", detectedCategory);
-      } else if (router.query.category) {
-        // si antes había categoría pero ahora no hay única, la quitamos
-        params.set("category", router.query.category as string);
-      }
-    
-      if (filtered.length === 1) {
-        const product = filtered[0];
-        const newCode = product.productCode;
-        params.set("productCode", newCode);
-      }
-    
-      const newUrl = `/productos?${params.toString()}`;
-      const currentUrl = router.asPath;
-    
-      if (currentUrl !== newUrl) {
-        router.replace(newUrl);
-      }
-    }, [search]);
-    
-    
+  useEffect(() => {
+    if (!search.trim()) return;
+
+    const filtered = mockData.products.filter((product) =>
+      product.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    const uniqueCategories = [...new Set(filtered.map((p) => p.category))];
+
+    const params = new URLSearchParams();
+    params.set("search", search);
+
+    if (uniqueCategories.length === 1) {
+      const detectedCategory = uniqueCategories[0];
+      params.set("category", detectedCategory);
+    } else if (router.query.category) {
+      params.set("category", router.query.category as string);
+    }
+
+    if (filtered.length === 1) {
+      const product = filtered[0];
+      const newCode = product.productCode;
+      params.set("productCode", newCode);
+    }
+
+    const newUrl = `/productos?${params.toString()}`;
+    const currentUrl = router.asPath;
+
+    if (currentUrl !== newUrl) {
+      router.replace(newUrl);
+    }
+  }, [search]);
 
   return (
     <Page_Container>
@@ -127,6 +121,9 @@ const Productos: NextPage = () => {
             key={category || search || "all"}
             products={productsFormatted}
             onAddProduct={handleAddProduct}
+            onTransactionCommit={(unitsSold, title) =>
+              showToast(`${unitsSold} unidades de ${title} registradas`)
+            }
           />
         </Content_Area>
       </Main_Content>
@@ -143,14 +140,9 @@ const Productos: NextPage = () => {
           onSubmit={handleCategorySubmit}
         />
       )}
-      {toastMessage && (
-        <Toast message={toastMessage} onClose={handleCloseToast} />
-      )}
     </Page_Container>
   );
 };
-
-
 
 const Page_Container = styled.div`
   display: flex;

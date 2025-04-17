@@ -6,10 +6,9 @@ export const Finanzas_Icon: FC = () => {
     <Svg
       stroke="currentColor"
       fill="none"
-      stroke-width="2"
+      
       viewBox="0 0 24 24"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      
       height="1em"
       width="1em"
       xmlns="http://www.w3.org/2000/svg"

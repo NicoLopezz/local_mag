@@ -103,11 +103,12 @@ export const Tasks_Column: FC<Props> = ({
 };
 
 const Column = styled.div`
+
   flex-shrink: 0;
   background-color: #e7e7e74e;
   border-radius: 12px;
   padding: 10px;
-  width: 250px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;

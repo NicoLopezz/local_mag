@@ -231,13 +231,15 @@ export const Tasks_Board: FC<Props> = ({
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={rectIntersection}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
+    // <DndContext
+    //   sensors={sensors}
+    //   collisionDetection={rectIntersection}
+    //   onDragStart={handleDragStart}
+    //   onDragOver={handleDragOver}
+    //   onDragEnd={handleDragEnd}
+    // >
+    <>
+    
       <Wrapper>
         <Board>
           {columns.map((column) => (
@@ -255,7 +257,7 @@ export const Tasks_Board: FC<Props> = ({
               isOver={overColumnId === column.id}
             />
           ))}
-          <New_Column_Card onAdd={handleAddColumn} />
+          {/* <New_Column_Card onAdd={handleAddColumn} /> */}
         </Board>
       </Wrapper>
 
@@ -273,12 +275,15 @@ export const Tasks_Board: FC<Props> = ({
           />
         )}
       </DragOverlay>
-    </DndContext>
+      </>
+    // </DndContext>
   );
 };
 
 const Wrapper = styled.div`
-  max-width: 1500px;
+  /* max-width: 1500px; */
+  /* background-color: red; */
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
@@ -288,6 +293,7 @@ const Wrapper = styled.div`
 `;
 
 const Board = styled.div`
+width: 100%;
   display: flex;
   flex-direction: row;
   gap: 24px;

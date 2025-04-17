@@ -1,60 +1,46 @@
-
-import { FC, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import { FC } from "react";
+import styled, { keyframes, css } from "styled-components";
 
 interface Props {
   message: string;
   onClose: () => void;
-  duration?: number;
+  visible: boolean;
 }
 
-export const Toast: FC<Props> = ({ message, onClose, duration = 3000 }) => {
-  useEffect(() => {
-    const timeout = setTimeout(onClose, duration);
-    return () => clearTimeout(timeout);
-  }, [onClose, duration]);
-
-  return (
-    <Toast_Container>
-      {message}
-    </Toast_Container>
-  );
+export const Toast: FC<Props> = ({ message, visible }) => {
+  return <Toast_Container visible={visible}>{message}</Toast_Container>;
 };
 
 const slideIn = keyframes`
-  0% {
+  from {
     transform: translateX(100%);
     opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0);
-  }
-`;
-
-const slideOut = keyframes`
-  from {
-    transform: translateX(0);
-    opacity: 1;
   }
   to {
-    transform: translateX(100%);
-    opacity: 0;
+    transform: translateX(0);
+    opacity: 1;
   }
 `;
 
-const Toast_Container = styled.div`
+const Toast_Container = styled.div<{ visible: boolean }>`
   position: fixed;
-  top: 1rem;
+  top: 0.5rem;
   right: 1rem;
   background-color: #333;
   color: #fff;
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   font-size: 0.95rem;
-  z-index: 2000;
-  animation: ${slideIn} 0.3s ease-out, ${slideOut} 0.3s ease-in 2.7s forwards;
+  z-index: 99999999;
+  animation: ${slideIn} 0.3s ease-out;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transform: ${({ visible }) => (visible ? "translateX(0)" : "translateX(100%)")};
+
+  @media (max-width: 768px) {
+    right: 50%;
+    transform: ${({ visible }) => (visible ? "translateX(50%)" : "translateX(150%)")};
+    top: 1rem;
+  }
 `;

@@ -17,9 +17,10 @@ interface Product {
 interface Props {
   products: Product[];
   onAddProduct: () => void;
+  onTransactionCommit: (stock: number, title: string) => void;
 }
 
-export const Product_List: FC<Props> = ({ products, onAddProduct }) => {
+export const Product_List: FC<Props> = ({ products, onAddProduct, onTransactionCommit }) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalProductTitle, setModalProductTitle] = useState("");
@@ -61,9 +62,10 @@ export const Product_List: FC<Props> = ({ products, onAddProduct }) => {
           {products.map((product, index) => (
             <Product_Wrapper key={index}>
               <Product_Card
-                {...product}
-                isSelected={selectedProductCode === product.productCode}
-                onSelect={handleSelect}
+              category={""} {...product}
+              isSelected={selectedProductCode === product.productCode}
+              onSelect={handleSelect}
+              onTransactionCommit={onTransactionCommit}
               />
             </Product_Wrapper>
           ))}

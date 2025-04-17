@@ -1,12 +1,35 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import {Bell_Icon} from "@/components/atoms/icons/Bell_Icon";
+import { Bell_Icon } from "@/components/atoms/icons/Bell_Icon";
 import { Notifications_Sidebar } from "./Notifications_Sidebar";
 
-const IconWrapper = styled.div`
+
+
+export const NotificationBell: FC = () => {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0); 
+  
+  return (
+    <>
+      <IconContainer onClick={() => setSidebarOpen(true)}>
+        <Bell_Icon onClick={() => setSidebarOpen(true)} />
+        {unreadCount > 0 && (
+          <Badge>{unreadCount > 9 ? '9+' : unreadCount}</Badge>
+        )}
+      </IconContainer>
+      
+      <Notifications_Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onUnreadCountChange={setUnreadCount} 
+      />
+    </>
+  );
+};
+
+const IconContainer = styled.div`
   position: relative;
-  font-size: 1.2rem;
-  color: #333;
+  display: inline-block;
   cursor: pointer;
 `;
 
@@ -24,18 +47,5 @@ const Badge = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* border: 0.1px solid #02203f; */
+  z-index: 1;
 `;
-
-export const NotificationBell: FC = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  return (
-    <>
-      <Bell_Icon onClick={() => setSidebarOpen(true)} />
-      <Notifications_Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
-    </>
-  );
-};
