@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Finanzas_Board } from "@/components/organisms/finanzas/Finanzas_Board";
 
 
+
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
@@ -38,7 +39,8 @@ const Content_Area = styled.div`
   flex-direction: column;
   padding: 20px;
   max-width: calc(100vw - ${Sidebar_Width});
-  margin-left: 7rem;
+  margin-left: 6rem;
+  margin-top: 1rem;
 `;
 
 export default Finanzas;

@@ -1,5 +1,7 @@
 import styled from "styled-components";
+
 import { useTransactions } from "@/context/Transacciones_Context";
+
 
 interface Transaction {
   time: string;
@@ -11,7 +13,7 @@ interface Transaction {
 interface FinanzasBoardProps {
   activeTab?: "day" | "week" | "month" | "year";
   date?: Date;
-}
+}   
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("es-ES", {
@@ -54,6 +56,9 @@ export const Finanzas_Board = ({
 
   
   const balanceNeto = totalIngresos - totalEgresos;
+
+
+
 
   return (
     <BoardWrapper>
@@ -194,7 +199,7 @@ const Column = styled.div`
 
 const ColumnHeader = styled.div`
   padding: 1rem;
-  background: #2c3e50;
+  background: #000000;
   color: white;
   font-weight: 600;
   text-align: center;

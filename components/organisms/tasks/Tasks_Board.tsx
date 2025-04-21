@@ -256,6 +256,7 @@ export const Tasks_Board: FC<Props> = ({
               overTaskId={overTaskId}
               isOver={overColumnId === column.id}
             />
+            
           ))}
           {/* <New_Column_Card onAdd={handleAddColumn} /> */}
         </Board>

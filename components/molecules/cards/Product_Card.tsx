@@ -33,7 +33,7 @@ export const Product_Card: FC<Props> = ({
   const pendingActions = useRef<{increase: number; decrease: number}>({ increase: 0, decrease: 0 });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const stockRef = useRef(currentStock);
-  const { addSaleTransaction } = useTransactions();
+  const { addTransaction } = useTransactions();
 
   useEffect(() => {
     stockRef.current = currentStock;
@@ -51,7 +51,7 @@ export const Product_Card: FC<Props> = ({
     setCurrentStock(newStock);
     pendingActions.current.decrease += 1;
     schedulePendingAction();
-  }, [title, productCode, category, addSaleTransaction]);
+  }, [title, productCode, category, addTransaction]);
 
   const schedulePendingAction = useCallback(() => {
     if (timerRef.current) {
@@ -60,7 +60,7 @@ export const Product_Card: FC<Props> = ({
   
     timerRef.current = setTimeout(() => {
       if (pendingActions.current.decrease > 0) {
-        addSaleTransaction({
+        addTransaction("ingreso", {
           title,
           productCode,
           category,
@@ -71,7 +71,7 @@ export const Product_Card: FC<Props> = ({
 
       }
     }, 600);
-  }, [title, productCode, category, addSaleTransaction, onTransactionCommit]);
+  }, [title, productCode, category, addTransaction, onTransactionCommit]);
 
   useEffect(() => {
     return () => {

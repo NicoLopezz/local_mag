@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Main_Layout } from "../components/main/Main_Layout";
 import { SearchProvider } from "../context/Search_Context";
 import { TransactionsProvider } from "@/context/Transacciones_Context";
+import { PedidosProvider } from "@/context/Pedidos_Contex";
 import { ToastProvider } from "@/context/Toast_Context";
 
 import styled from "styled-components";
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SearchProvider>
       <TransactionsProvider>
+      <PedidosProvider>
         <ToastProvider>
           <Main_Layout>
             <FadeWrapper key={routeKey}>
@@ -26,6 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             </FadeWrapper>
           </Main_Layout>
         </ToastProvider>
+      </PedidosProvider>
       </TransactionsProvider>
     </SearchProvider>
   );

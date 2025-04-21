@@ -15,7 +15,7 @@ const Sidebar_Width = "1rem";
 const Productos: NextPage = () => {
   const router = useRouter();
   const { showToast } = useToast();
-  const [productModalOpen, setProductModalOpen] = useState(false);
+  
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
   const search =
@@ -36,8 +36,10 @@ const Productos: NextPage = () => {
     });
   };
 
+  const [productModalOpen, setProductModalOpen] = useState(false);
   const handleAddProduct = () => setProductModalOpen(true);
   const handleCloseProductModal = () => setProductModalOpen(false);
+
   const handleOpenCategoryModal = () => setCategoryModalOpen(true);
   const handleCloseCategoryModal = () => setCategoryModalOpen(false);
 

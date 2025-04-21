@@ -142,7 +142,7 @@ const Empleados: NextPage = () => {
         />
       )}
       {toastMessage && (
-        <Toast message={toastMessage} onClose={handleCloseToast} />
+        <Toast message={toastMessage} onClose={handleCloseToast} visible={false} />
       )}
     </Page_Container>
   );

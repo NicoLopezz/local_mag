@@ -60,7 +60,7 @@ const sidebar_items = [
   { icon: <Clientes_Icon />, text: "Clientes", href: "/clientes" },
   { icon: <Procesos_Icon />, text: "Procesos", href: "/procesos" },
   { icon: <Empleados_Icon />, text: "Empleados", href: "/empleados" },
-  { icon: <Informes_Icon />, text: "Informes", href: "/informes" },
+  { icon: <Informes_Icon />, text: "Pedidos", href: "/pedidos" },
   { icon: <Tareas_Icon />, text: "Tareas", href: "/tareas" },
   { icon: <Legales_Icon />, text: "Legales", href: "/legales" }
 ];
