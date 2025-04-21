@@ -15,6 +15,7 @@ interface ProductoPedido {
   quantity: number;
   description?: string;
   imageUrl?: string;
+  price?: number; 
 }
 
 export const Producto_Stock: FC = () => {
@@ -127,19 +128,22 @@ export const Producto_Stock: FC = () => {
       title: product.title,
       quantity: unidadesAAgregar,
       description: product.description,
-      imageUrl: product.imageUrl
+      imageUrl: product.imageUrl,
     };
   
     
     const pedidoAbierto = pedidos.find(p => p.status === "abierto");
     
     if (pedidoAbierto) {
-      agregarProductoAPedido(pedidoAbierto.id, productoParaPedido);
+      agregarProductoAPedido(pedidoAbierto.id, {
+        ...productoParaPedido,
+        price: productoParaPedido.price ?? 0, // Ensure price is a number
+      });
       showToast(`Producto agregado al pedido de ${pedidoAbierto.proveedorName}`);
     } else {
       crearNuevoPedido({
         proveedorName: "Proveedor General",
-        productos: [productoParaPedido]
+        // productos: [productoParaPedido]
       });
       showToast(`Producto agregado a nuevo pedido`);
     }

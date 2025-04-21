@@ -27,18 +27,19 @@ export const Add_Pedido_Form: FC<PedidoFormProps> = ({ onSubmit }) => {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+  const time = new Date().toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-    // Generamos la hora actual automáticamente
-    const time = new Date().toLocaleTimeString("es-ES", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formData = {
+    ...form,
+    time,
+  };
 
-    onSubmit({
-      ...form,
-      time,
-    });
+  console.log("🚀 Datos DEL FORMULARIO:", formData); // <-- AQUÍ VERÁS LO QUE ENVÍA EL FORM
+  onSubmit(formData);
   };
 
   return (

@@ -25,9 +25,7 @@ export const Pedidos_Board = ({
 }: PedidoBoardProps) => {
   const { pedidos, agregarProductoAPedido, crearNuevoPedido } = usePedidos();
   const [selectedPedidoId, setSelectedPedidoId] = useState<string | null>(null);
-  
 
-  // Calculate order statistics
   const totalPedidos = pedidos.length;
   const pedidosAbiertos = pedidos.filter((p) => p.status === "abierto").length;
   const pedidosCerrados = pedidos.filter(
@@ -38,19 +36,29 @@ export const Pedidos_Board = ({
   const [pedidoModalOpen, setPedidoModalOpen] = useState(false);
   const handleAddPedido = () => setPedidoModalOpen(true);
   const handleClosePedidoModal = () => setPedidoModalOpen(false);
-  const handleProductSubmit = () => {
-    setPedidoModalOpen(false);
-    showToast("Producto creado con éxito");
+
+  const handlePedidoSubmit = (pedidoData: {
+    proveedorName: string;
+    status: "abierto" | "cerrado" | "cancelado";
+    time?: string;
+  }) => {
+    crearNuevoPedido({
+      proveedorName: pedidoData.proveedorName,
+      status: pedidoData.status,
+      productos: [],
+    });
+    showToast("Pedido creado con éxito");
   };
 
-  // const handleAddPedido = () => {
-  //   crearNuevoPedido({
-  //     proveedorName: "Nuevo Proveedor"
-  //   });
-  // };
-
   const handlePedidoClick = (pedidoId: string) => {
-    setSelectedPedidoId(pedidoId);
+    const pedidoSeleccionado = pedidos.find((pedido) => pedido.id === pedidoId);
+    if (pedidoSeleccionado) {
+      console.log("Detalles del pedido:", pedidoSeleccionado);
+      setSelectedPedidoId(pedidoId);
+    } else {
+      console.log("No se encontró el pedido con ID:", pedidoId);
+      setSelectedPedidoId(null);
+    }
   };
 
   const selectedPedido = pedidos.find((p) => p.id === selectedPedidoId);
@@ -81,21 +89,17 @@ export const Pedidos_Board = ({
                   proveedorName={pedido.proveedorName}
                   productos={pedido.productos}
                   onClick={() => handlePedidoClick(pedido.id)}
-                  onAddProduct={(product) =>
-                    agregarProductoAPedido(pedido.id, product)
-                  }
+                  id={""}
                 />
               ))}
-              <AddButton onClick={handleAddPedido}>+ Añadir Pedido</AddButton>
+              <AddButton onClick={handleAddPedido}>Añadir Pedido</AddButton>
             </PedidosList>
-             
+
             {pedidoModalOpen && (
-              
-                <Add_Pedido_Item
-                  onClose={handleClosePedidoModal}
-                  onSubmit={handleProductSubmit}
-                />
-              
+              <Add_Pedido_Item
+                onClose={handleClosePedidoModal}
+                onSubmit={handlePedidoSubmit}
+              />
             )}
           </Column>
 
@@ -103,27 +107,63 @@ export const Pedidos_Board = ({
             <ColumnHeader>DETALLE</ColumnHeader>
             <DetailContent>
               {selectedPedido ? (
-                <>
-                  <h3>Pedido #{selectedPedido.id}</h3>
-                  <p>Proveedor: {selectedPedido.proveedorName}</p>
-                  <p>Estado: {selectedPedido.status}</p>
-                  <p>Hora: {selectedPedido.time}</p>
-                  <h4>Productos:</h4>
-                  <ul>
-                    {selectedPedido.productos.map((producto) => (
-                      <li key={producto.id}>
-                        {producto.title} - Cantidad: {producto.quantity}
-                      </li>
-                    ))}
-                  </ul>
-                  {selectedPedido.productos.length > 0 && (
-                    <p>
-                      <strong>Total: </strong>
-                    </p>
+                <PedidoDetails>
+                  <DetailHeader>
+                    <OrderId>Pedido #{selectedPedido.id}</OrderId>
+                    <Status $status={selectedPedido.status}>
+                      {selectedPedido.status.toUpperCase()}
+                    </Status>
+                  </DetailHeader>
+
+                  <DetailInfo>
+                    <InfoItem>
+                      <InfoLabel>Proveedor:</InfoLabel>
+                      <InfoValue>{selectedPedido.proveedorName}</InfoValue>
+                    </InfoItem>
+                    <InfoItem>
+                      <InfoLabel>Hora:</InfoLabel>
+                      <InfoValue>{selectedPedido.time}</InfoValue>
+                    </InfoItem>
+                  </DetailInfo>
+
+                  <SectionTitle>Productos</SectionTitle>
+                  {selectedPedido.productos.length > 0 ? (
+                    <ProductList>
+                      {selectedPedido.productos.map((producto) => (
+                        <ProductItem key={producto.id}>
+                          <ProductName>{producto.title}</ProductName>
+                          <ProductQuantity>
+                            Cantidad: {producto.quantity}
+                          </ProductQuantity>
+                        </ProductItem>
+                      ))}
+                    </ProductList>
+                  ) : (
+                    <NoProducts>
+                      No se agregaron productos a este pedido.
+                    </NoProducts>
                   )}
-                </>
+
+                  {selectedPedido.productos.length > 0 && (
+                    <TotalInfo>
+                      <TotalLabel>Total:</TotalLabel>
+                      <TotalValue>
+                        $
+                        {selectedPedido.productos
+                          .reduce(
+                            (sum, product) =>
+                              sum + (product.price || 0) * product.quantity,
+                            0
+                          )
+                          .toFixed(2)}
+                      </TotalValue>
+                    </TotalInfo>
+                  )}
+                </PedidoDetails>
               ) : (
-                <p>Seleccione un pedido para ver los detalles</p>
+                <EmptyState>
+                  Seleccione un pedido para ver los detalles
+                </EmptyState>
               )}
             </DetailContent>
           </Column>
@@ -151,7 +191,6 @@ export const Pedidos_Board = ({
   );
 };
 
-// Styled Components
 const BoardWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -185,7 +224,7 @@ const AddButton = styled.button`
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 400;
   cursor: pointer;
   width: 25%;
@@ -275,7 +314,7 @@ const DetailContent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #7f8c8d;
+  /* color: #7f8c8d; */
 `;
 
 const StatsColumn = styled.div`
@@ -309,4 +348,122 @@ const StatsRow = styled.div<{ $highlight?: boolean }>`
   &:last-child {
     border-bottom: none;
   }
+`;
+
+const PedidoDetails = styled.div`
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  width: 90%;
+  height:100%;
+`;
+
+const DetailHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+`;
+
+const OrderId = styled.h3`
+  font-size: 1.5rem;
+  color: #343a40;
+  margin: 0;
+`;
+
+const Status = styled.span<{ $status: "abierto" | "cerrado" | "cancelado" }>`
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: ${({ $status }) =>
+    $status === "abierto" ? "#28a745" : $status === "cerrado" ? "#007bff" : "#dc3545"};
+  background-color: ${({ $status }) =>
+    $status === "abierto" ? "#ffffff" : $status === "cerrado" ? "#e9ecef" : "#e9ecef"};
+`;
+
+const DetailInfo = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+`;
+
+const InfoLabel = styled.strong`
+  width: 90px;
+  color: #495057;
+  margin-right: 0.5rem;
+`;
+
+const InfoValue = styled.span`
+  color: #212529;
+`;
+
+const SectionTitle = styled.h4`
+  font-size: 1.2rem;
+  color: #343a40;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 0.5rem;
+`;
+
+const ProductList = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+const ProductItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e9ecef;
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const ProductName = styled.span`
+  font-weight: 500;
+  color: #212529;
+`;
+
+const ProductQuantity = styled.span`
+  color: #6c757d;
+`;
+
+const TotalInfo = styled.div`
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
+const TotalLabel = styled.strong`
+  font-size: 1.1rem;
+  color: #343a40;
+  margin-right: 1rem;
+`;
+
+const TotalValue = styled.span`
+  font-size: 1.1rem;
+  color: #198754;
+  font-weight: bold;
+`;
+
+const EmptyState = styled.p`
+  color: #6c757d;
+  font-style: italic;
+`;
+
+const NoProducts = styled.p`
+  color: #6c757d;
 `;

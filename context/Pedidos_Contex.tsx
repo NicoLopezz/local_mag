@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface ProductoPedido {
+  price: number;
   id: string;
   title: string;
   quantity: number;
@@ -11,20 +12,20 @@ interface ProductoPedido {
 interface Pedido {
   id: string;
   time: string;
-  status: "abierto" | "cerrado" | "cancelado"; // Asegúrate que coincida con tus estados
+  status: "abierto" | "cerrado" | "cancelado"; 
   proveedorName: string;
   productos: ProductoPedido[];
 }
 
 interface PedidosContextType {
-  pedidos: Pedido[];
-  agregarProductoAPedido: (pedidoId: string, producto: ProductoPedido) => void;
-  crearNuevoPedido: (pedidoData: {
-    proveedorName: string;
-    productos?: ProductoPedido[];
-  }) => Pedido;
-}
-
+    pedidos: Pedido[];
+    agregarProductoAPedido: (pedidoId: string, producto: ProductoPedido) => void;
+    crearNuevoPedido: (pedidoData: {
+      proveedorName: string;
+      status?: "abierto" | "cerrado" | "cancelado"; 
+      productos?: ProductoPedido[];
+    }) => Pedido;
+  }
 const PedidosContext = createContext<PedidosContextType | undefined>(undefined);
 
 
@@ -82,16 +83,18 @@ export const PedidosProvider = ({ children }: { children: ReactNode }) => {
 
   const crearNuevoPedido = (pedidoData: {
     proveedorName: string;
+    status?: "abierto" | "cerrado" | "cancelado"; 
     productos?: ProductoPedido[];
   }) => {
     const newPedido: Pedido = {
       id: Date.now().toString(),
       time: new Date().toLocaleTimeString(),
-      status: "abierto",
+      status: pedidoData.status || "abierto", 
       proveedorName: pedidoData.proveedorName,
       productos: pedidoData.productos || []
     };
-    
+  
+    console.log("🛠️ Pedido CREADO en contexto:", newPedido);
     setPedidos(prev => [...prev, newPedido]);
     return newPedido;
   };

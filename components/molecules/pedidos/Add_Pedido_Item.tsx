@@ -6,14 +6,38 @@ import { Close_Button } from "../../atoms/modal/Close_Button";
 import { Add_Pedido_Form } from "../../molecules/modal_forms/Add_Pedido_Form";
 
 interface AddPedidoItemProps {
-  onClick?: () => void;
-  onClose: () => void;
-  onSubmit: () => void;
-}
+    onClose: () => void;
+    onSubmit: (pedido: {
+      proveedorName: string;
+      status: "abierto" | "cerrado" | "cancelado";
+      time?: string;
+    }) => void;  // <- Ahora acepta el objeto completo
+  }
 
-export const Add_Pedido_Item = ({ onClose, onClick, onSubmit}: AddPedidoItemProps) => {
-    const [closing, setClosing] = useState(false);
+export const Add_Pedido_Item = ({
+  onClose,
+  onSubmit,
+}: AddPedidoItemProps) => {
+  const [closing, setClosing] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  
+  const [proveedorName, setProveedorName] = useState("");
+
+  const handleSubmit = (pedidoData: {
+    proveedorName: string;
+    status: "abierto" | "cerrado" | "cancelado";
+    time?: string;
+  }) => {
+    console.log("📦 Datos RECIBIDOS en el modal:", pedidoData); // <-- AQUÍ VERÁS LO QUE RECIBE EL MODAL
+    
+    if (!pedidoData.proveedorName.trim()) {
+      alert("Ingresa un nombre de proveedor");
+      return;
+    }
+    
+    onSubmit(pedidoData);
+    setClosing(true);
+  };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -34,31 +58,26 @@ export const Add_Pedido_Item = ({ onClose, onClick, onSubmit}: AddPedidoItemProp
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, []);
-  
-  
-  
-    return (
-        <Modal_Overlay
-        onClick={handleOverlayClick}
-        className={closing ? "closing" : ""}
-        onAnimationEnd={handleAnimationEnd}
-      >
-        <Modal_Content ref={contentRef}>
-          <Close_Button onClick={() => setClosing(true)}>×</Close_Button>
-  
-          <Add_Pedido_Form
-            onSubmit={() => {
-              onSubmit();
-              setClosing(true);
-            }}
-          />
-        </Modal_Content>
-      </Modal_Overlay>
+
+  return (
+    <Modal_Overlay
+      onClick={handleOverlayClick}
+      className={closing ? "closing" : ""}
+      onAnimationEnd={handleAnimationEnd}
+    >
+      <Modal_Content ref={contentRef}>
+        <Close_Button onClick={() => setClosing(true)}>×</Close_Button>
+
+        <Add_Pedido_Form        
+          onSubmit={handleSubmit} 
+        />
+      </Modal_Content>
+    </Modal_Overlay>
   );
 };
 
 const AddPedidoContainer = styled.div`
-  margin-top: 3%;  
+  margin-top: 3%;
   background: #000;
   color: #fff;
   width: 20%;

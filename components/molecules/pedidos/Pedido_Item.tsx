@@ -9,18 +9,20 @@ interface Producto {
     quantity: number;
     price?: number;
   }
-  
+
   interface PedidoItemProps {
+    id: string; 
     time: string;
     status: "abierto" | "cerrado" | "cancelado";
     proveedorName: string;
     productos: Producto[];
     onAddProduct?: (product: Producto) => void;
     onRemoveProduct?: (productId: string) => void;
-    onClick?: () => void;
+    onClick?: (pedidoId: string) => void; 
   }
 
 export const Pedido_Item = ({
+    id, 
     time,
     status,
     proveedorName,
@@ -29,10 +31,10 @@ export const Pedido_Item = ({
     onRemoveProduct,
     onClick,
   }: PedidoItemProps) => {
-    
+
     const [showProducts, setShowProducts] = useState(false);
-  
-    
+
+
     const handleAddExampleProduct = () => {
       if (onAddProduct) {
         onAddProduct({
@@ -45,16 +47,31 @@ export const Pedido_Item = ({
         });
       }
     };
-  
+
+    const handleClickItem = () => {
+      if (onClick) {
+        onClick(id); 
+      }
+    };
+
     return (
-      <PedidoItemContainer $status={status}>
-        <OrderHeader onClick={() => setShowProducts(!showProducts)}>
+      <PedidoItemContainer $status={status} onClick={handleClickItem} style={{ cursor: 'pointer' }}> {/* Adjunta el onClick al contenedor principal */}
+        <OrderHeader >
           <PedidoTime>{time}</PedidoTime>
           <ProveedorName>{proveedorName}</ProveedorName>
           <ProductCount>
             {productos.length} producto{productos.length !== 1 ? 's' : ''}
           </ProductCount>
         </OrderHeader>
+        {showProducts && (
+          <ProductList>
+            {productos.map(producto => (
+              <ProductItem key={producto.id}>
+                {producto.title} - Cantidad: {producto.quantity}
+              </ProductItem>
+            ))}
+          </ProductList>
+        )}
       </PedidoItemContainer>
     );
   };
@@ -88,6 +105,17 @@ const OrderHeader = styled.div`
   width: 100%;
   cursor: pointer;
   gap: 12px;
+`;
+
+const ProductItem = styled.li`
+  font-size: 0.9em;
+  color: #333;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const AddButton = styled.button`
