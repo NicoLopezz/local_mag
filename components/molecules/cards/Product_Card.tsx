@@ -93,7 +93,6 @@ export const Product_Card: FC<Props> = ({
       </Card_Image>
       <Card_Content onClick={handleClick}>
         <Card_Title>{title}</Card_Title>
-        {/* <Product_Code>{productCode}</Product_Code> */}
       </Card_Content>
       <Stock_Control 
         stock={currentStock} 

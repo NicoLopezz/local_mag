@@ -104,7 +104,6 @@ const Label = styled.span`
 
 const QR_Container = styled.div`
   align-self: flex-end;
-  /* margin-top: 2rem; */
 `;
 
 const Mensaje = styled.div`

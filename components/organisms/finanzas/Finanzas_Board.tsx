@@ -1,19 +1,20 @@
 import styled from "styled-components";
-
 import { useTransactions } from "@/context/Transacciones_Context";
-
+import React, { useState } from "react";
+import { Check_Icon } from "@/components/atoms/icons/finanzas_icons/Check_Icon";
 
 interface Transaction {
   time: string;
   type: "ingreso" | "egreso";
   description: string;
   stock: string;
+  id: string;
 }
 
 interface FinanzasBoardProps {
   activeTab?: "day" | "week" | "month" | "year";
   date?: Date;
-}   
+}
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("es-ES", {
@@ -25,40 +26,43 @@ const formatDate = (date: Date): string => {
 };
 
 export const Finanzas_Board = ({
-    activeTab = "day",
-    date = new Date(),
-  }: FinanzasBoardProps) => {
-    const { transactions } = useTransactions();
-    
-    
-    const sortedTransactions = [...transactions].sort((a, b) => {
-      const timeToMinutes = (time: string) => {
-        const [hours, minutes] = time.split(":").map(Number);
-        return hours * 60 + minutes;
-      };
-      return timeToMinutes(a.time) - timeToMinutes(b.time);
+  activeTab = "day",
+  date = new Date(),
+}: FinanzasBoardProps) => {
+  const { transactions } = useTransactions();
+  const [selectedTransactionIds, setSelectedTransactionIds] = useState<Set<string>>(new Set());
+
+  const handleTransactionClick = (id: string) => {
+    const newSelection = new Set(selectedTransactionIds);
+    if (newSelection.has(id)) {
+      newSelection.delete(id);
+    } else {
+      newSelection.add(id);
+    }
+    setSelectedTransactionIds(newSelection);
+  };
+
+
+  const [pedidoModalOpen, setPedidoModalOpen] = useState(false);
+  const handleAddPedido = () => setPedidoModalOpen(true);
+  const calculateDynamicBalance = () => {
+    let totalIngresosSeleccionados = 0;
+    let totalEgresosSeleccionados = 0;
+
+    transactions.forEach((t) => {
+      if (selectedTransactionIds.has(t.id)) {
+        if (t.type === "ingreso") {
+          totalIngresosSeleccionados += Number(t.stock);
+        } else if (t.type === "egreso") {
+          totalEgresosSeleccionados += Number(t.stock);
+        }
+      }
     });
-  
-    
-    const totalUnidades = sortedTransactions
-      .filter(t => t.type === "ingreso")
-      .reduce((sum, t) => sum + Number(t.stock), 0);
 
-  
-  const totalIngresos = sortedTransactions
-    .filter(t => t.type === "ingreso")
-    .reduce((sum, t) => sum + Number(t.stock), 0);
+    return totalIngresosSeleccionados - totalEgresosSeleccionados;
+  };
 
-  
-  const totalEgresos = sortedTransactions
-    .filter(t => t.type === "egreso")
-    .reduce((sum, t) => sum + Number(t.stock), 0);
-
-  
-  const balanceNeto = totalIngresos - totalEgresos;
-
-
-
+  const dynamicBalance = calculateDynamicBalance();
 
   return (
     <BoardWrapper>
@@ -81,12 +85,18 @@ export const Finanzas_Board = ({
               {transactions
                 .filter((t) => t.type === "ingreso")
                 .map((t, i) => (
-                  <TransactionItem key={`ingreso-${i}`} $type="ingreso">
+                  <TransactionItem
+                    key={`ingreso-${i}`}
+                    $type="ingreso"
+                    onClick={() => handleTransactionClick(t.id)}
+                    $isSelected={selectedTransactionIds.has(t.id)}
+                  >
                     <TransactionTime>{t.time}</TransactionTime>
                     <TransactionDesc>{t.description}</TransactionDesc>
                     <TransactionAmount $type="ingreso">
                       {t.stock}
                     </TransactionAmount>
+                    {selectedTransactionIds.has(t.id) && <CheckIcon />}
                   </TransactionItem>
                 ))}
             </TransactionsList>
@@ -98,12 +108,18 @@ export const Finanzas_Board = ({
               {transactions
                 .filter((t) => t.type === "egreso")
                 .map((t, i) => (
-                  <TransactionItem key={`egreso-${i}`} $type="egreso">
+                  <TransactionItem
+                    key={`egreso-${i}`}
+                    $type="egreso"
+                    onClick={() => handleTransactionClick(t.id)}
+                    $isSelected={selectedTransactionIds.has(t.id)}
+                  >
                     <TransactionTime>{t.time}</TransactionTime>
                     <TransactionDesc>{t.description}</TransactionDesc>
                     <TransactionAmount $type="egreso">
                       {t.stock}
                     </TransactionAmount>
+                    {selectedTransactionIds.has(t.id) && <CheckIcon />}
                   </TransactionItem>
                 ))}
             </TransactionsList>
@@ -115,25 +131,35 @@ export const Finanzas_Board = ({
           <BalanceContent>
             <BalanceRow>
               <span>Total Ingresos:</span>
-              <span>${totalIngresos.toFixed(2)}</span>
+              <span>
+                ${transactions
+                  .filter((t) => t.type === "ingreso")
+                  .reduce((sum, t) => sum + Number(t.stock), 0)
+                  .toFixed(2)}
+              </span>
             </BalanceRow>
             <BalanceRow>
               <span>Total Egresos:</span>
-              <span>-${Math.abs(totalEgresos).toFixed(2)}</span>
+              <span>
+                -${Math.abs(
+                  transactions
+                    .filter((t) => t.type === "egreso")
+                    .reduce((sum, t) => sum + Number(t.stock), 0)
+                ).toFixed(2)}
+              </span>
             </BalanceRow>
             <BalanceRow $highlight>
               <span>Balance Neto:</span>
-              <span>${balanceNeto.toFixed(2)}</span>
+              <span>${dynamicBalance.toFixed(2)} (Seleccionado)</span>
             </BalanceRow>
+              <AddButton onClick={handleAddPedido}>Añadir Pedido</AddButton>
+            
           </BalanceContent>
         </BalanceColumn>
       </ContentContainer>
     </BoardWrapper>
   );
 };
-
-
-
 
 const BoardWrapper = styled.div`
   display: flex;
@@ -214,16 +240,19 @@ const TransactionsList = styled.div`
   overflow-y: auto;
 `;
 
-const TransactionItem = styled.div<{ $type: "ingreso" | "egreso" }>`
+const TransactionItem = styled.div<{ $type: "ingreso" | "egreso"; $isSelected?: boolean }>`
   display: flex;
   align-items: center;
   padding: 0.75rem;
-  background: white;
+  background: ${({ $isSelected }) => ($isSelected ? "#f0f8ff" : "white")};
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   border-left: 4px solid
     ${({ $type }) => ($type === "ingreso" ? "#27ae60" : "#e74c3c")};
   gap: 0.5rem;
+  cursor: pointer;
+  position: relative; // Establecer como contenedor relativo
+  overflow: hidden; // Asegurar que el contenido no se desborde por el icono absoluto
 `;
 
 const TransactionTime = styled.div`
@@ -242,6 +271,8 @@ const TransactionDesc = styled.div`
 const TransactionAmount = styled.div<{ $type: "ingreso" | "egreso" }>`
   font-weight: bold;
   color: ${({ $type }) => ($type === "ingreso" ? "#27ae60" : "#e74c3c")};
+  margin-right: 20px; // Espacio para el icono absoluto
+  text-align: right; // Alinea el monto a la derecha
 `;
 
 const BalanceColumn = styled.div`
@@ -275,4 +306,35 @@ const BalanceRow = styled.div<{ $highlight?: boolean }>`
   &:last-child {
     border-bottom: none;
   }
+`;
+
+const AddButton = styled.button`
+  background: #000;
+  margin-top: 10%;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  width: 70%;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background: #1f1f1f;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+`;
+
+const CheckIcon = styled(Check_Icon)`
+  color: green;
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
 `;

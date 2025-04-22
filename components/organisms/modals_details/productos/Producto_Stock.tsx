@@ -96,7 +96,7 @@ export const Producto_Stock: FC = () => {
     }
   };
 
-   // Manejador para guardar cambios de stock
+   
    const handleSave = () => {
     const unitsEntered = stockTotal - initialStock;
     addTransaction("egreso", {
@@ -110,7 +110,7 @@ export const Producto_Stock: FC = () => {
   };
 
 
-  // Manejador para agregar a pedido
+  
   const handleAddPedido = () => {
     if (!product) {
       showToast("Error: Producto no encontrado");
@@ -137,13 +137,13 @@ export const Producto_Stock: FC = () => {
     if (pedidoAbierto) {
       agregarProductoAPedido(pedidoAbierto.id, {
         ...productoParaPedido,
-        price: productoParaPedido.price ?? 0, // Ensure price is a number
+        price: productoParaPedido.price ?? 0,
       });
       showToast(`Producto agregado al pedido de ${pedidoAbierto.proveedorName}`);
     } else {
       crearNuevoPedido({
         proveedorName: "Proveedor General",
-        // productos: [productoParaPedido]
+        
       });
       showToast(`Producto agregado a nuevo pedido`);
     }
@@ -341,7 +341,7 @@ const Tooltip = styled.span`
 `;
 
 const StockButton = styled.button<{ disabled?: boolean }>`
-  position: relative; /* Necesario para posicionar el tooltip */
+  position: relative; 
   background: #2a9d8f;
   background-color: ${(props) => (props.disabled ? "#f0f0f0" : "#2a9d8f")};
   color: ${(props) => (props.disabled ? "#a0a0a0" : "white")};
@@ -359,7 +359,7 @@ const StockButton = styled.button<{ disabled?: boolean }>`
   &:hover {
     background-color: ${(props) => (props.disabled ? "#f0f0f0" : "#21867a")};
 
-    /* Mostrar tooltip solo cuando está deshabilitado */
+    
     ${Tooltip} {
       visibility: ${(props) => (props.disabled ? "visible" : "hidden")};
       opacity: ${(props) => (props.disabled ? 1 : 0)};
