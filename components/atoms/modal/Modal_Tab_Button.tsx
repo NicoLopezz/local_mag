@@ -13,7 +13,7 @@ export const Modal_Tab_Button = styled.button<Props>`
   color: #222;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 1rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
 
   &:hover {
     background-color: #f5f5f5;

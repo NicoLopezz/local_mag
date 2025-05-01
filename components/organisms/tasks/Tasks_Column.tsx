@@ -107,7 +107,7 @@ const Column = styled.div`
   background-color: #e7e7e74e;
   border-radius: 12px;
   padding: 10px;
-  width: 100%;
+  width: 45%;
   display: flex;
   flex-direction: column;
   gap: 12px;

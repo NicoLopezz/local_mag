@@ -15,16 +15,12 @@ export const Stock_Control: FC<Props> = ({ stock, onIncrease, onDecrease }) => {
   return (
     <Stock_Container>
       <Stock_Value>{stock}</Stock_Value>
-      <Stock_Button 
-        onClick={handleDecreaseClick}
-        aria-label="Disminuir stock"
-      >
+      <Stock_Button onClick={handleDecreaseClick} aria-label="Disminuir stock">
         -
       </Stock_Button>
     </Stock_Container>
   );
 };
-
 
 const Stock_Container = styled.div`
   display: flex;
@@ -38,7 +34,7 @@ const Stock_Container = styled.div`
 const Stock_Button = styled.button`
   background-color: transparent;
   border: none;
-  font-size: 1.2rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: bold;
   cursor: pointer;
   width: 30px;
@@ -55,6 +51,6 @@ const Stock_Button = styled.button`
 `;
 
 const Stock_Value = styled.span`
-  font-size: 1rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   font-weight: bold;
 `;

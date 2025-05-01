@@ -7,7 +7,7 @@ interface Props {
 
 const Icon_Wrapper = styled.div`
   position: relative;
-  font-size: 1.2rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   color: #333;
 `;
 
@@ -17,7 +17,7 @@ const Badge = styled.span`
   right: -5px;
   background: red;
   color: white;
-  font-size: 0.7rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   font-weight: bold;
   border-radius: 50%;
   width: 16px;

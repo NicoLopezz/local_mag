@@ -80,20 +80,19 @@ const Card_Content = styled.div`
 `;
 
 const Card_Title = styled.h3`
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: bold;
   margin: 5px 0;
   color: #333;
 `;
 
 const Card_Description = styled.p`
-  font-size: 0.8rem;
-  color: #666;
+font-size: ${({ theme }) => theme.fontSizes.text * 0.8}px;  color: #666;
   margin: 0;
 `;
 
 const Card_Stock = styled.span<{ stock: number }>`
-  font-size: 0.8rem;
+  font-size: ${({ theme }) => theme.fontSizes.text * 0.9}px;
   font-weight: bold;
   color: ${({ stock }) => (stock > 0 ? "#28a745" : "#dc3545")};
 `;

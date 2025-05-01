@@ -66,8 +66,8 @@ export const Finanzas_Board = ({
 
   return (
     <BoardWrapper>
-      <PageTitle>FINANZAS</PageTitle>
-
+      <PageTitle>Finanzas</PageTitle>
+      <Divider/>
       <TabContainer>
         <TabItem $active={activeTab === "day"}>Día</TabItem>
         <TabItem $active={activeTab === "week"}>Semana</TabItem>
@@ -172,7 +172,17 @@ const PageTitle = styled.h1`
   font-size: 2rem;
   margin: 0 0 1rem 0;
   color: #2c3e50;
+  margin-top: 1rem;
 `;
+
+const Divider = styled.hr`
+  border: none;
+  border-bottom: 1px solid #ccc;
+  margin-top: 0.5rem; 
+  margin-bottom: 1.5rem;
+  width: 100%; 
+`;
+
 
 const TabContainer = styled.div`
   display: flex;

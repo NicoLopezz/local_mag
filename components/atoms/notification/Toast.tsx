@@ -26,12 +26,12 @@ const Toast_Container = styled.div<{ visible: boolean }>`
   position: fixed;
   top: 0.5rem;
   right: 1rem;
-  background-color: #333;
+  background-color: ${({ theme }) => theme.colors.button};
   color: #fff;
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  font-size: 0.95rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   z-index: 99999999;
   animation: ${slideIn} 0.3s ease-out;
   transition: opacity 0.4s ease, transform 0.4s ease;

@@ -4,10 +4,7 @@ import { useRouter } from "next/router";
 import { mockData } from "@/mock_data/products";
 import { useTransactions } from "@/context/Transacciones_Context";
 import { useToast } from "@/context/Toast_Context";
-import { usePedidos } from "@/context/Pedidos_Contex";
-import { Add_Pedido_Modal } from "@/components/organisms/add_modals/Add_Pedido_Modal";
-
-
+import { usePedidos } from "@/context/Pedidos_Context";
 
 interface ProductoPedido {
   id: string;
@@ -15,10 +12,18 @@ interface ProductoPedido {
   quantity: number;
   description?: string;
   imageUrl?: string;
-  price?: number; 
+  price?: number;
 }
 
-export const Producto_Stock: FC = () => {
+interface ProductoStockProps {
+  onCloseModal: () => void;
+  onOpenDetailsModal: (productCode: string) => void; 
+}
+
+export const Producto_Stock: FC<ProductoStockProps> = ({
+  onCloseModal,
+  onOpenDetailsModal, 
+}) => {
   const { query } = useRouter();
   const { pedidos, agregarProductoAPedido, crearNuevoPedido } = usePedidos();
   const { showToast } = useToast();
@@ -27,40 +32,24 @@ export const Producto_Stock: FC = () => {
   const product = mockData.products.find((p) => p.productCode === productCode);
 
   const initialStock = product?.stock ?? 0;
-  const title = product?.title;
-  const category = product?.category;
-
   const [stockTotal, setStockTotal] = useState(initialStock);
   const [inputValue, setInputValue] = useState(String(initialStock));
   const [hasChanges, setHasChanges] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const stockMinimo = 15;
   const consumoSemanal = 18;
-  const diasReposicion = 12;
-  const recomendacionPedido = 40;
-  const stockPorSucursal = [
-    { nombre: "Sucursal Centro", cantidad: 10 },
-    { nombre: "Sucursal Norte", cantidad: 8 },
-    { nombre: "Depósito Central", cantidad: 12 },
-  ];
-  const historial = [
-    { fecha: "03/04/2025", tipo: "Salida", cantidad: 5 },
-    { fecha: "01/04/2025", tipo: "Ingreso", cantidad: 20 },
-    { fecha: "28/03/2025", tipo: "Salida", cantidad: 8 },
-  ];
-
+ 
   const { addTransaction } = useTransactions();
 
   useEffect(() => {
     setInputValue(String(stockTotal));
   }, [stockTotal]);
 
-    // Efecto para sincronizar el input con el estado
-    useEffect(() => {
-      setInputValue(String(stockTotal));
-    }, [stockTotal]);
+  useEffect(() => {
+    setInputValue(String(stockTotal));
+  }, [stockTotal]);
 
-  // Manejadores para cambiar el stock
   const handleStockChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value === "" || /^[0-9]*$/.test(value)) {
@@ -72,15 +61,15 @@ export const Producto_Stock: FC = () => {
     }
   };
 
-  
-
   const handleBlur = () => {
-    const numValue = inputValue === "" ? initialStock : Math.max(initialStock, parseInt(inputValue));
+    const numValue =
+      inputValue === ""
+        ? initialStock
+        : Math.max(initialStock, parseInt(inputValue));
     setStockTotal(numValue);
     setInputValue(String(numValue));
     setHasChanges(numValue !== initialStock);
   };
-
 
   const incrementarStock = () => {
     const newValue = stockTotal + 1;
@@ -96,8 +85,7 @@ export const Producto_Stock: FC = () => {
     }
   };
 
-   
-   const handleSave = () => {
+  const handleSave = () => {
     const unitsEntered = stockTotal - initialStock;
     addTransaction("egreso", {
       title: product?.title ?? "Unknown Title",
@@ -109,20 +97,18 @@ export const Producto_Stock: FC = () => {
     setHasChanges(false);
   };
 
-
-  
   const handleAddPedido = () => {
     if (!product) {
-      showToast("Error: Producto no encontrado");
+      setModalOpen(true);
       return;
     }
-  
+
     const unidadesAAgregar = stockTotal - initialStock;
     if (unidadesAAgregar <= 0) {
       showToast("No hay unidades para agregar al pedido");
       return;
     }
-  
+
     const productoParaPedido: ProductoPedido = {
       id: product.productCode,
       title: product.title,
@@ -130,29 +116,58 @@ export const Producto_Stock: FC = () => {
       description: product.description,
       imageUrl: product.imageUrl,
     };
-  
-    
-    const pedidoAbierto = pedidos.find(p => p.status === "abierto");
-    
+
+    const pedidoAbierto = pedidos.find((p) => p.status === "abierto");
+
     if (pedidoAbierto) {
       agregarProductoAPedido(pedidoAbierto.id, {
         ...productoParaPedido,
         price: productoParaPedido.price ?? 0,
       });
-      showToast(`Producto agregado al pedido de ${pedidoAbierto.proveedorName}`);
+      showToast(
+        `Producto agregado al pedido de ${pedidoAbierto.proveedorName}`
+      );
     } else {
       crearNuevoPedido({
         proveedorName: "Proveedor General",
-        
+        status: "abierto",
       });
       showToast(`Producto agregado a nuevo pedido`);
     }
     setHasChanges(false);
+    onCloseModal();
+    onOpenDetailsModal(product.productCode); 
   };
 
 
+  
+  const [activePaymentTab, setActivePaymentTab] = useState("Stock");
+  const producto = mockData.products.find((p) => p.productCode === productCode);
+  
 
-  const diasRestantes = Math.floor(stockTotal / (consumoSemanal / 7));
+  const [selectedProveedor, setSelectedProveedor] = useState("");
+  const proveedoresEjemplo = [
+    "Distribuidora Norte",
+    "Supermercado Centro",
+    "Mayorista del Sur",
+  ];
+
+  const handleProveedorChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const nuevoProveedor = event.target.value;
+    setSelectedProveedor(nuevoProveedor);
+  };
+
+  const [selectedOrdenCompra, setSelectedOrdenCompra] = useState("");
+  const ordenesCompraEjemplo = ["OC-001", "OC-003", "OC-007"];
+
+  const handleOrdenCompraChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const nuevaOrdenCompra = event.target.value;
+    setSelectedOrdenCompra(nuevaOrdenCompra);
+  };
 
   return (
     <Container>
@@ -194,70 +209,143 @@ export const Producto_Stock: FC = () => {
             </SaveButton>
           )}
           {hasChanges && (
-            <SaveButton onClick={handleAddPedido}>Agregar a pedido</SaveButton>
+            <div>
+              <SaveButton onClick={handleAddPedido}>Agregar a pedido</SaveButton>
+            </div>
           )}
         </Btn_Wrapper>
       </Section>
+      <Divider/>
+      <PaymentContentContainer isActive={activePaymentTab === "Stock"}>
+                <PaymentDetails>
+                  <PaymentOptions>
+                    <PaymentLabel>Seleccione proveedor</PaymentLabel>
+                    <PaymentSelect
+                      value={selectedProveedor}
+                      onChange={handleProveedorChange}
+                    >
+                      <option value="" disabled>
+                        Seleccionar proveedor
+                      </option>
+                      {proveedoresEjemplo.map((proveedor) => (
+                        <option key={proveedor} value={proveedor}>
+                          {proveedor}
+                        </option>
+                      ))}
+                    </PaymentSelect>
+                    <QuickPaymentButtons>
+                      <PaymentActions>
+                        <ActionButton disabled={!selectedProveedor}>
+                          Limpiar Selección
+                        </ActionButton>
+                      </PaymentActions>
+                    </QuickPaymentButtons>
+                  </PaymentOptions>
+                  <PaymentOptions>
+                    <PaymentLabel>Orden de compra: </PaymentLabel>
+                    <PaymentSelect
+                      value={selectedOrdenCompra}
+                      onChange={handleOrdenCompraChange}
+                    >
+                      <option value="" disabled>
+                        Orden de compra:
+                      </option>
+                      {ordenesCompraEjemplo.map((orden) => (
+                        <option key={orden} value={orden}>
+                          {orden}
+                        </option>
+                      ))}
+                    </PaymentSelect>
+                    <QuickPaymentButtons>
+                      <PaymentActions>
+                        <ActionButton
+                          onClick={() => console.log("Agregar nueva orden")}
+                        >
+                          Agregar a nueva orden
+                        </ActionButton>
+                      </PaymentActions>
+                    </QuickPaymentButtons>
+                  </PaymentOptions>
 
-      <Divider />
+                </PaymentDetails>
+              </PaymentContentContainer>   
 
-      <Section>
-        <SubTitle>Distribution by branch</SubTitle>
-        <List>
-          {stockPorSucursal.map((s) => (
-            <li key={s.nombre}>
-              <strong>{s.nombre}:</strong> {s.cantidad} units
-            </li>
-          ))}
-        </List>
-      </Section>
-
-      <Divider />
-
-      <Section>
-        <SubTitle>Rotation and estimates</SubTitle>
-        <List>
-          <li>
-            Average days between restocks: <strong>{diasReposicion}</strong>
-          </li>
-          <li>
-            Units sold per week: <strong>{consumoSemanal}</strong>
-          </li>
-          <li>
-            Estimated depletion: <strong>{diasRestantes} days</strong>
-          </li>
-        </List>
-      </Section>
-
-      <Divider />
-
-      <Section>
-        <SubTitle>Order suggestion</SubTitle>
-        <List>
-          <li>
-            Restock: <strong>{recomendacionPedido}</strong> units
-          </li>
-          <li>Next restock: 08/04/2025</li>
-          <li>Automatic restocking: enabled</li>
-        </List>
-      </Section>
-
-      <Divider />
-
-      <Section>
-        <SubTitle>Recent movements</SubTitle>
-        <List>
-          {historial.map((mov, i) => (
-            <li key={i}>
-              {mov.fecha} – <strong>{mov.tipo}</strong> of{" "}
-              <strong>{mov.cantidad}</strong> units
-            </li>
-          ))}
-        </List>
-      </Section>
     </Container>
   );
 };
+
+const PaymentContentContainer = styled.div<{ isActive: boolean }>`
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  transform: translateX(${({ isActive }) => (isActive ? "0" : "10px")});
+  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  max-height: ${({ isActive }) => (isActive ? "500px" : "0")};
+  margin: ${({ isActive }) => (isActive ? "1rem 0" : "0")};
+`;
+
+const PaymentDetails = styled.div`
+  margin-top: 1rem;
+  padding: 1rem 0;
+  align-items: center;
+`;
+
+const PaymentOptions = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const PaymentLabel = styled.label`
+  font-size: 15px;
+  width:70%;
+`;
+
+const PaymentSelect = styled.select`
+  width: 90%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 16px;
+`;
+
+const ActionButton = styled.button<{ primary?: boolean }>`
+  flex: 1;
+  font-size: 12px;
+  padding: 0.65rem;
+  border: none;
+  border-radius: 8px;
+  background: ${({ primary }) => (primary ? "#4478b0" : "#00050a6b")};
+  color: ${({ primary }) => (primary ? "white" : "#ffffff")};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: ${({ primary }) => (primary ? "#0069d9" : "#0a2846")};
+  }
+
+  &:disabled {
+    background: #a71f1f;
+    cursor: not-allowed;
+  }
+`;
+
+const QuickPaymentButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+
+const PaymentActions = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  gap: 10rem;
+  width: 150px;
+`;
+
+
+
 
 const Container = styled.div`
   flex: 2;
@@ -341,7 +429,7 @@ const Tooltip = styled.span`
 `;
 
 const StockButton = styled.button<{ disabled?: boolean }>`
-  position: relative; 
+  position: relative;
   background: #2a9d8f;
   background-color: ${(props) => (props.disabled ? "#f0f0f0" : "#2a9d8f")};
   color: ${(props) => (props.disabled ? "#a0a0a0" : "white")};
@@ -359,7 +447,6 @@ const StockButton = styled.button<{ disabled?: boolean }>`
   &:hover {
     background-color: ${(props) => (props.disabled ? "#f0f0f0" : "#21867a")};
 
-    
     ${Tooltip} {
       visibility: ${(props) => (props.disabled ? "visible" : "hidden")};
       opacity: ${(props) => (props.disabled ? 1 : 0)};
@@ -372,9 +459,8 @@ const StockButton = styled.button<{ disabled?: boolean }>`
 `;
 
 const Btn_Wrapper = styled.div`
-display: flex;
-gap: 10px;
-
+  display: flex;
+  gap: 10px;
 `;
 
 const StockLine = styled.div`

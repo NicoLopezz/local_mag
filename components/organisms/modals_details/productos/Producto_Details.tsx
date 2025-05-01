@@ -6,6 +6,7 @@ import { Producto_Detalles } from "./Producto_Detalles";
 import { Producto_Stock } from "./Producto_Stock";
 import { Producto_Proveedores } from "./Producto_Proveedores";
 import { Producto_Metricas } from "./Producto_Metricas";
+import { Producto_Historial } from "./Producto_Historial";
 import { mockData } from "@/mock_data/products";
 
 interface Props {
@@ -18,9 +19,13 @@ export const Producto_Detail: FC<Props> = ({ onClose }) => {
   const productCode = typeof query.productCode === "string" ? query.productCode : "";
   const producto = mockData.products.find((p) => p.productCode === productCode);
 
+  const handleOpenDetailsFromStock = () => {
+    setActiveTab("Detalles");
+  };
+
   return (
     <Base_Details_Modal
-      tabs={["Detalles", "Stock", "Proveedores", "Métricas"]}
+      tabs={["Detalles", "Stock", "Proveedores", "Métricas" , "Historial"]}
       activeTab={activeTab}
       onTabChange={setActiveTab}
       onClose={onClose}
@@ -31,15 +36,21 @@ export const Producto_Detail: FC<Props> = ({ onClose }) => {
             alt={producto.title}
             width={520}
             height={520}
-            style={{ objectFit: "contain"}}
+            style={{ objectFit: "contain" }}
           />
         )
       }
     >
       {activeTab === "Detalles" && <Producto_Detalles />}
-      {activeTab === "Stock" && <Producto_Stock />}
+      {activeTab === "Stock" && (
+        <Producto_Stock 
+          onCloseModal={onClose} 
+          onOpenDetailsModal={handleOpenDetailsFromStock} 
+        />
+      )}
       {activeTab === "Proveedores" && <Producto_Proveedores />}
-      {activeTab === "Métricas" && <Producto_Metricas />}
+      {activeTab === "Métricas" && <Producto_Metricas/>}
+      {activeTab === "Historial" && <Producto_Historial/>}
     </Base_Details_Modal>
   );
 };

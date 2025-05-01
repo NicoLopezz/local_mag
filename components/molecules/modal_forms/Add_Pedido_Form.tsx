@@ -37,8 +37,6 @@ export const Add_Pedido_Form: FC<PedidoFormProps> = ({ onSubmit }) => {
     ...form,
     time,
   };
-
-  console.log("🚀 Datos DEL FORMULARIO:", formData); // <-- AQUÍ VERÁS LO QUE ENVÍA EL FORM
   onSubmit(formData);
   };
 

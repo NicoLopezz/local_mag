@@ -9,7 +9,7 @@ export const mockData = {
   ],
   empleados: [
     { id: 1, name: "Lucía Gómez", role: "Gerente General", email: "lucia@empresa.com", phone: "1111-1111", imageUrl: "/images/empleados/persona.png" },
-    { id: 2, name: "Ricardo Díaz", role: "Gerente General", email: "ricardo@empresa.com", phone: "1111-1112", imageUrl: "/images/empleados/ricardo.png" },
+    { id: 2, name: "Ricardo Díaz", role: "Repartidor", email: "ricardo@empresa.com", phone: "1111-1112", imageUrl: "/images/empleados/ricardo.png" },
     { id: 3, name: "Marta Fuentes", role: "Gerente General", email: "marta@empresa.com", phone: "1111-1113", imageUrl: "/images/empleados/persona.png" },
 
     { id: 4, name: "Carlos Pérez", role: "Jefe de Compras", email: "carlos@empresa.com", phone: "2222-2221", imageUrl: "/images/empleados/cpersona.png" },

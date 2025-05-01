@@ -35,7 +35,7 @@ const IconContainer = styled.div`
 
 const Badge = styled.span`
   position: absolute;
-  top: -5px;
+  top: -2px;
   right: -5px;
   background: #e20505;
   color: #ffffff;

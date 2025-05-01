@@ -15,7 +15,7 @@ export const Task_Priority_Tag: FC<Props> = ({ priority }) => {
 
 const Title= styled.h3`
   font-weight: 100;
-  font-size: 12px;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   margin: 0;
   color: var(--dark-blue);
 `;

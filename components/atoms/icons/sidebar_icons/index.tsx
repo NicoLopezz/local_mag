@@ -7,4 +7,7 @@ export { Procesos_Icon } from "./Procesos_Icon";
 export { Productos_Icon } from "./Productos_Icon";
 export { Servicios_Icon } from "./Servicios_Icon";
 export { Tareas_Icon } from "./Tareas_Icon";
+export { Stock_Icon } from "./Stock_Icon";
+export { Envios_Icon } from "./Envios_Icon";
+export { Setings_Icon } from "./Setings_Icon";
 

@@ -21,6 +21,16 @@ interface Props {
 export const Empleados_List: FC<Props> = ({ empleado, onAddEmpleado }) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    const params = new URLSearchParams(router.query as Record<string, string>);
+    params.delete("email");
+    router.replace(`/empleados?${params.toString()}`, undefined, {
+      shallow: true,
+    });
+    setModalOpen(false);
+  };
+
   const [modalEmpleadoName, setModalEmpleadoName] = useState("");
 
   const selectedEmail =
@@ -29,6 +39,8 @@ export const Empleados_List: FC<Props> = ({ empleado, onAddEmpleado }) => {
   const handleSelect = (email: string) => {
     const currentEmail = router.query.email;
     const params = new URLSearchParams(router.query as Record<string, string>);
+
+    params.set("email", email); // <-- corregido: ahora sí actualiza la query
 
     const empleados = empleado.find((p) => p.email === email);
 
@@ -39,6 +51,7 @@ export const Empleados_List: FC<Props> = ({ empleado, onAddEmpleado }) => {
         setModalEmpleadoName(empleados.name);
       }
       setModalOpen(true);
+      window.scrollTo({ top: 0, behavior: "smooth" }); // <-- opcional: scroll arriba suave
     }
   };
 
@@ -64,10 +77,7 @@ export const Empleados_List: FC<Props> = ({ empleado, onAddEmpleado }) => {
       </Container>
 
       {modalOpen && (
-        <Empleado_Detail
-          // name={modalEmpleadoName}
-          onClose={() => setModalOpen(false)}
-        />
+        <Empleado_Detail onClose={handleCloseModal} employeeName={null} />
       )}
     </>
   );
@@ -89,7 +99,7 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 20px 0;
   margin-top: -10px;
-  margin-right: -0.1rem
+  margin-right: -0.1rem;
 `;
 
 const Title = styled.h2`

@@ -7,7 +7,8 @@ export const Modal_Content = styled.div`
   width: 400px;
   max-width: 90%;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-  position: relative;
+  position: absolute;
+  top: 20%;
   animation: scaleIn 0.3s ease-out;
   transform: translateY(0);
 
@@ -24,7 +25,7 @@ export const Modal_Content = styled.div`
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
     font-weight: 600;
     margin-bottom: 1rem;
     text-align: center;

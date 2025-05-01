@@ -7,6 +7,9 @@ import { mockData } from "@/mock_data/products";
 import { TarjetaFormulario } from "@/components/molecules/cobrar/TarjetaFormulario";
 import { TarjetaVisualizacion } from "@/components/molecules/cobrar/TarjetaVisualizacion";
 import { QRCodeCanvas } from "qrcode.react";
+import { Money_Icon } from "@/components/atoms/icons/cobrar_icons/Money_Icon";
+import { Card_Icon } from "@/components/atoms/icons/cobrar_icons/Card_Icon";
+import { Qr_Icon } from "@/components/atoms/icons/cobrar_icons/Qr_Icon";
 
 interface Props {
   onClose: () => void;
@@ -20,8 +23,15 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
     typeof query.productCode === "string" ? query.productCode : "";
   const producto = mockData.products.find((p) => p.productCode === productCode);
   const [cantidad, setCantidad] = useState(1);
-  const precioUnitario = 100;
-  const totalAPagar = cantidad * precioUnitario;
+
+
+
+  //FALTA EL PRECIO UNITARIO POR PRODUCTO.
+  const totalAPagar = cantidad * (producto?.stock ?? 0);
+  // const precioUnitario = 100;
+
+
+  //
 
   const [pagoEfectivo, setPagoEfectivo] = useState<number | undefined>(
     undefined
@@ -35,9 +45,16 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
     pagoEfectivo !== undefined ? pagoEfectivo - totalAPagar : undefined;
 
   const handleCantidadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value, 10);
-    if (!isNaN(value) && value >= 1) {
-      setCantidad(value);
+    const value = event.target.value;
+
+    if (value === "") {
+      setCantidad(0);
+      return;
+    }
+
+    const parsed = parseInt(value, 10);
+    if (!isNaN(parsed) && parsed >= 1) {
+      setCantidad(parsed);
     }
   };
 
@@ -54,7 +71,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
       setContadorActivo(false);
       setContador(null);
       console.log("¡Cancelación automática!");
-      setPagoEfectivo(undefined)
+      setPagoEfectivo(undefined);
     }
   }, [contadorActivo, contador]);
 
@@ -144,14 +161,14 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
               <>
                 <ProductInfo>
                   <span>{producto.title}</span>
-                  <span>${producto.stock}</span>
+                  <span>Precio: ${producto.stock}</span>
                 </ProductInfo>
                 <InputGroup>
                   <label htmlFor="cantidad">Cantidad:</label>
                   <input
                     type="number"
                     id="cantidad"
-                    value={cantidad}
+                    value={cantidad === 0 ? "" : cantidad}
                     onChange={handleCantidadChange}
                     min="1"
                   />
@@ -160,6 +177,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                   <span>Total a cobrar:</span>
                   <span>${totalAPagar.toFixed(2)}</span>
                 </TotalPagar>
+
                 <PaymentMethodTabs>
                   <PaymentTab
                     className={
@@ -167,21 +185,44 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                     }
                     onClick={() => setActivePaymentTab("Efectivo")}
                   >
-                    Efectivo
+                    <PaymentTabContent>
+                      <Money_Icon
+                        onClick={function (): void {
+                          throw new Error("Function not implemented.");
+                        }}
+                      />
+                      <span>Efectivo</span>
+                    </PaymentTabContent>
                   </PaymentTab>
+
                   <PaymentTab
                     className={
                       activePaymentTab === "Tarjeta" ? "is-active" : ""
                     }
                     onClick={() => setActivePaymentTab("Tarjeta")}
                   >
-                    Tarjeta
+                    <PaymentTabContent>
+                      <Card_Icon
+                        onClick={function (): void {
+                          throw new Error("Function not implemented.");
+                        }}
+                      />
+                      <span>Tarjeta</span>
+                    </PaymentTabContent>
                   </PaymentTab>
+
                   <PaymentTab
                     className={activePaymentTab === "QR" ? "is-active" : ""}
                     onClick={() => setActivePaymentTab("QR")}
                   >
-                    QR
+                    <PaymentTabContent>
+                      <Qr_Icon
+                        onClick={function (): void {
+                          throw new Error("Function not implemented.");
+                        }}
+                      />
+                      <span>Qr</span>
+                    </PaymentTabContent>
                   </PaymentTab>
                 </PaymentMethodTabs>
                 <PaymentContentContainer
@@ -240,7 +281,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                         <Divider />
 
                         <SummaryRow>
-                          <span>Cambio/Falta:</span>
+                          <span>Vuelto:</span>
                           <ChangeAmount
                             $status={getChangeStatus(vueltoEfectivo)}
                           >
@@ -292,18 +333,17 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                         level="H"
                         includeMargin={true}
                       />
+                      <Title>Por favor scanee el QR</Title>
                     </QRCodeContainer>
                   </PaymentDetails>
                 </PaymentContentContainer>
                 <Finalizar_Wrapper>
-                  <FinalizarButton
-                  disabled={contadorActivo !== true}
-                  >Finalizar{contadorActivo !== true && (
-                    <Tooltip>Complete los campos</Tooltip>
-                  )}
+                  <FinalizarButton disabled={contadorActivo !== true}>
+                    Finalizar
+                    {contadorActivo !== true && (
+                      <Tooltip>Complete los campos</Tooltip>
+                    )}
                   </FinalizarButton>{" "}
-
-
                   {contadorActivo && contador !== null && (
                     <ContadorCancelacion activo={contador <= 5}>
                       Cancelación automática en {contador} seg
@@ -313,14 +353,6 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
               </>
             )}
           </CobrarSection>
-        )}
-      </TabContentContainer>
-
-      <TabContentContainer active={activeTab === "Stock"}>
-        {activeTab === "Stock" && (
-          <>
-            <p>Contenido de la pestaña de Stock aquí.</p>
-          </>
         )}
       </TabContentContainer>
     </Cobrar_Base_Detail_Modal>
@@ -341,12 +373,11 @@ const PagoJusto = styled.div`
   color: #000;
 `;
 
-const Restan = styled.div`
+const Title = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 0.5rem;
   font-weight: bold;
-  color: #dc3545;
+  font-size: 19px;
 `;
 
 const Finalizar_Wrapper = styled.div`
@@ -574,6 +605,7 @@ const PaymentTab = styled.button`
   color: #555;
   position: relative;
   transition: all 0.2s ease-in-out;
+  gap: 10px;
 
   &::after {
     content: "";
@@ -585,10 +617,12 @@ const PaymentTab = styled.button`
     background: #000;
     transform: scaleX(0);
     transition: transform 0.3s ease-in-out;
+    gap: 10px;
   }
 
   &.is-active {
     color: #000;
+    gap: 10px;
 
     &::after {
       transform: scaleX(1);
@@ -598,6 +632,13 @@ const PaymentTab = styled.button`
   &:hover {
     color: #333;
   }
+`;
+
+const PaymentTabContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
 `;
 
 const QR_Container = styled.div`
@@ -690,12 +731,12 @@ const FinalizarButton = styled.button`
 `;
 
 const QRCodeContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
   padding: 2rem;
   border: 1px dashed #ccc;
   border-radius: 4px;
   font-size: 0.9rem;
   color: #777;
+  gap: 15px;
 `;

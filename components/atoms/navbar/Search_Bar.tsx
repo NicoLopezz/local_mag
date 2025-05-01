@@ -15,7 +15,7 @@ const Input = styled.input`
   outline: none;
   background: transparent;
   padding: 5px;
-  font-size: 1rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   width: 150px;
 `;
 

@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { Pedido_Item } from "@/components/molecules/pedidos/Pedido_Item";
 import { Add_Pedido_Item } from "@/components/molecules/pedidos/Add_Pedido_Item";
-import { usePedidos } from "@/context/Pedidos_Contex";
+import { usePedidos } from "@/context/Pedidos_Context";
 import { useToast } from "@/context/Toast_Context";
+import { Mail_Icon } from "@/components/atoms/icons/finanzas_icons/Mail_Icon";
 
 interface PedidoBoardProps {
   activeTab?: "day" | "week" | "month" | "year";
@@ -23,9 +24,7 @@ export const Pedidos_Board = ({
   activeTab = "day",
   date = new Date(),
 }: PedidoBoardProps) => {
-  const { pedidos, agregarProductoAPedido, crearNuevoPedido } = usePedidos();
-  const [selectedPedidoId, setSelectedPedidoId] = useState<string | null>(null);
-
+  const { pedidos, agregarProductoAPedido, crearNuevoPedido, setPedidoSeleccionadoId } = usePedidos();
   const totalPedidos = pedidos.length;
   const pedidosAbiertos = pedidos.filter((p) => p.status === "abierto").length;
   const pedidosCerrados = pedidos.filter(
@@ -54,19 +53,20 @@ export const Pedidos_Board = ({
     const pedidoSeleccionado = pedidos.find((pedido) => pedido.id === pedidoId);
     if (pedidoSeleccionado) {
       console.log("Detalles del pedido:", pedidoSeleccionado);
-      setSelectedPedidoId(pedidoId);
+      setPedidoSeleccionadoId(pedidoId); // Usamos la función del contexto
     } else {
       console.log("No se encontró el pedido con ID:", pedidoId);
-      setSelectedPedidoId(null);
+      setPedidoSeleccionadoId(null); // Usamos la función del contexto
     }
   };
 
-  const selectedPedido = pedidos.find((p) => p.id === selectedPedidoId);
+  const { pedidoSeleccionadoId } = usePedidos(); // Obtenemos el ID seleccionado del contexto
+  const selectedPedido = pedidos.find((p) => p.id === pedidoSeleccionadoId);
 
   return (
     <BoardWrapper>
-      <PageTitle>PEDIDOS</PageTitle>
-
+      <PageTitle>Pedidos</PageTitle>
+      <Divider />
       <TabContainer>
         <TabItem $active={activeTab === "day"}>Día</TabItem>
         <TabItem $active={activeTab === "week"}>Semana</TabItem>
@@ -89,7 +89,7 @@ export const Pedidos_Board = ({
                   proveedorName={pedido.proveedorName}
                   productos={pedido.productos}
                   onClick={() => handlePedidoClick(pedido.id)}
-                  id={""}
+                  id={pedido.id}
                 />
               ))}
               <AddButton onClick={handleAddPedido}>Añadir Pedido</AddButton>
@@ -110,9 +110,12 @@ export const Pedidos_Board = ({
                 <PedidoDetails>
                   <DetailHeader>
                     <OrderId>Pedido #{selectedPedido.id}</OrderId>
-                    <Status $status={selectedPedido.status}>
-                      {selectedPedido.status.toUpperCase()}
-                    </Status>
+                    <Header_Detail_Wrapper>
+                      <Status $status={selectedPedido.status}>
+                        {selectedPedido.status.toUpperCase()}
+                      </Status>
+                      <Mail_Icon></Mail_Icon>
+                    </Header_Detail_Wrapper>
                   </DetailHeader>
 
                   <DetailInfo>
@@ -159,6 +162,14 @@ export const Pedidos_Board = ({
                       </TotalValue>
                     </TotalInfo>
                   )}
+
+                  <Finalizar_Wrapper>
+                    <FinalizarButton
+                      disabled={selectedPedido.status !== "abierto"}
+                    >
+                      Finalizar
+                    </FinalizarButton>{" "}
+                  </Finalizar_Wrapper>
                 </PedidoDetails>
               ) : (
                 <EmptyState>
@@ -202,20 +213,60 @@ const PageTitle = styled.h1`
   font-size: 2rem;
   margin: 0 0 1rem 0;
   color: #161616;
+  margin-top: 1rem;
 `;
 
-const ModalBackdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+const Divider = styled.hr`
+  border: none;
+  border-bottom: 1px solid #ccc;
+  margin-top: 0.5rem; 
+  margin-bottom: 1.5rem;
+  width: 100%; 
 `;
+
+const Finalizar_Wrapper = styled.div`
+  display: flex;
+  position: absolute;
+  bottom: 30px;
+  left: 50px;
+  gap: 20px;
+`;
+
+const FinalizarButton = styled.button`
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 400;
+  background-color: ${(props) => (props.disabled ? "#f0f0f0" : "#000000")};
+  color: ${(props) => (props.disabled ? "#a0a0a0" : "white")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  width: auto;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+`;
+
+
+const Header_Detail_Wrapper = styled.div`
+display: flex;
+align-items: center;
+gap: 20px;
+`
+
+// const Mail_Icon = styled`
+// color: red;
+// `
+
+
+
 
 const AddButton = styled.button`
   background: #000;
@@ -307,6 +358,7 @@ const PedidosList = styled.div`
 `;
 
 const DetailContent = styled.div`
+  position: relative;
   flex: 1;
   padding: 1rem;
   background: white;
@@ -314,7 +366,6 @@ const DetailContent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* color: #7f8c8d; */
 `;
 
 const StatsColumn = styled.div`
@@ -355,7 +406,7 @@ const PedidoDetails = styled.div`
   background-color: #f8f9fa;
   border-radius: 8px;
   width: 90%;
-  height:100%;
+  height: 100%;
 `;
 
 const DetailHeader = styled.div`
@@ -378,9 +429,17 @@ const Status = styled.span<{ $status: "abierto" | "cerrado" | "cancelado" }>`
   text-transform: uppercase;
   font-size: 0.8rem;
   color: ${({ $status }) =>
-    $status === "abierto" ? "#28a745" : $status === "cerrado" ? "#007bff" : "#dc3545"};
+    $status === "abierto"
+      ? "#28a745"
+      : $status === "cerrado"
+      ? "#eaa606"
+      : "#dc3545"};
   background-color: ${({ $status }) =>
-    $status === "abierto" ? "#ffffff" : $status === "cerrado" ? "#e9ecef" : "#e9ecef"};
+    $status === "abierto"
+      ? "#ffffff"
+      : $status === "cerrado"
+      ? "#ffffff"
+      : "#ffffff"};
 `;
 
 const DetailInfo = styled.div`

@@ -78,7 +78,7 @@ const Container = styled.div<{
       left: 0;
       right: 0;
       height: 2px;
-      background-color: #007bff;
+      background-color: #eb8b0d;
       ${hoverDirection === "above" ? css`top: -5px;` : css`bottom: -5px;`}
     }
 

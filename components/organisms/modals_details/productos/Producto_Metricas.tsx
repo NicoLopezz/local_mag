@@ -25,7 +25,7 @@ export const Producto_Metricas: FC = () => {
   return (
     <Container>
       <Section>
-        <Title>Ventas semanales</Title>
+        <Title>Variacion de Ventas</Title>
         <ChartWrapper>
           {ventasPorSemana.map((v, i) => (
             <BarWrapper key={i}>
@@ -39,7 +39,7 @@ export const Producto_Metricas: FC = () => {
       <Divider />
 
       <Section>
-        <Title>Rotación mensual</Title>
+        <Title>Variacion de Stock</Title>
         <ChartWrapper>
           {rotacionMensual.map((r, i) => (
             <BarWrapper key={i}>

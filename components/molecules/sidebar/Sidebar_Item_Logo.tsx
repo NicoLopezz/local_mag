@@ -9,7 +9,7 @@ interface Props {
   empresa: string;
 }
 
-export const Sidebar_Item_Logo: FC<Props> = ({ logo, alt, empresa }) => {
+export const Company_Logo: FC<Props> = ({ logo, alt, empresa }) => {
   const router = useRouter();
 
   const handleClick = () => {

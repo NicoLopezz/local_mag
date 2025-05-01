@@ -2,53 +2,33 @@ import { FC } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { mockData } from "@/mock_data/empleados";
-import { QRCodeCanvas } from "qrcode.react";
-import Image from "next/image";
 
-export const Empleado_Detalles: FC = () => {
+export const Empleado_Estadisticas: FC = () => {
   const { query } = useRouter();
   const email = typeof query.email === "string" ? query.email : "";
   const empleado = mockData.empleados.find((e) => e.email === email);
+
   if (!empleado) return <Mensaje>No se encontró el empleado</Mensaje>;
 
   return (
-    <Info_Container>
-      
-
-      <Info_Content>
-        <Title>{empleado.name}</Title>
+    <Contacto_Container>
+      <Contacto_Content>
+        <Title>Información de contacto</Title>
         <Divider />
-        <SubTitle>Detalles del empleado</SubTitle>
-        <Details_List>
-          <Item><Label>Rol:</Label> {empleado.role}</Item>
+        <Contact_List>
+          <Item><Label>Nombre:</Label> {empleado.name}</Item>
           <Item><Label>Email:</Label> {empleado.email}</Item>
           <Item><Label>Teléfono:</Label> {empleado.phone}</Item>
-        </Details_List>
-      </Info_Content>
-
-      <QR_Container> 
-        <QRCodeCanvas
-         style={{ position: "relative", bottom: "20px" }}
-          value={`https://tusitio.com/empleados/${encodeURIComponent(empleado.email)}`}
-          size={200}
-          bgColor="#ffffff"
-          fgColor="#000000"
-          level="H"
-          includeMargin={true}
-        />
-      </QR_Container>
-    </Info_Container>
+        </Contact_List>
+      </Contacto_Content>
+    </Contacto_Container>
   );
 };
 
-const Info_Container = styled.div`
+const Contacto_Container = styled.div`
   flex: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   padding: 2rem;
   border-radius: 16px;
-  height: 80%;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
@@ -57,27 +37,16 @@ const Info_Container = styled.div`
   animation: fadeIn 0.4s ease;
 `;
 
-const Imagen_Empleado = styled.div`
-  align-self: center;
-`;
-
-const Info_Content = styled.div`
+const Contacto_Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 `;
 
 const Title = styled.h3`
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #2e2e2e;
-  text-align: center;
-`;
-
-const SubTitle = styled.h4`
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: #555;
 `;
 
 const Divider = styled.hr`
@@ -87,7 +56,7 @@ const Divider = styled.hr`
   margin: 0.25rem 0 0.5rem;
 `;
 
-const Details_List = styled.ul`
+const Contact_List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
@@ -107,10 +76,6 @@ const Item = styled.li`
 const Label = styled.span`
   font-weight: 600;
   color: #333;
-`;
-
-const QR_Container = styled.div`
-  align-self: flex-end;
 `;
 
 const Mensaje = styled.div`

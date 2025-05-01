@@ -1,8 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Sidebar_Item } from "../../molecules/sidebar/Sidebar_Item";
-import { Sidebar_Item_Logo } from "../../molecules/sidebar/Sidebar_Item_Logo";
-import { Sidebar_Item_Settings } from "../../molecules/sidebar/Sidebar_Item_Settings";
+import { Item } from "../../molecules/sidebar/Sidebar_Item";
+import { Company_Logo } from "../../molecules/sidebar/Sidebar_Item_Logo";
 import {
   Productos_Icon,
   Servicios_Icon,
@@ -13,44 +12,53 @@ import {
   Informes_Icon,
   Tareas_Icon,
   Legales_Icon,
+  Stock_Icon,
+  Envios_Icon,
+  Setings_Icon,
 } from "@/components/atoms/icons/sidebar_icons";
 
 export const Sidebar: FC = () => {
-  const empresa = "Distribuidora RLL";
+  const empresa = "Distribuidora Sur S.A.";
 
   return (
     <Sidebar_Container>
-      {empresa && (
-        <Sidebar_Item_Logo logo="/images/logo.png" alt="Local" empresa={empresa} />
-      )}
-      <Sidebar_Items_Wrapper>
+      <List>
         {sidebar_items.map((item, index) => (
-          <Sidebar_Item key={index} icon={item.icon} text={item.text} href={item.href} />
+          <Item
+            key={index}
+            icon={item.icon}
+            text={item.text}
+            href={item.href}
+          />
         ))}
-      </Sidebar_Items_Wrapper>
-      <Sidebar_Item_Settings />
+      </List>
     </Sidebar_Container>
   );
 };
 
 const Sidebar_Container = styled.aside`
   width: 6rem;
-  height: 100vh;
+  height: 90vh;
   position: fixed;
-  top: 0;
+  top: 4rem;
   left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 10002;
+  overflow-y: auto;
+  z-index: 999;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 `;
 
-const Sidebar_Items_Wrapper = styled.div`
+const List = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   align-items: center;
+  font-size: 1.2rem;
 `;
 
 const sidebar_items = [
@@ -62,5 +70,10 @@ const sidebar_items = [
   { icon: <Empleados_Icon />, text: "Empleados", href: "/empleados" },
   { icon: <Informes_Icon />, text: "Pedidos", href: "/pedidos" },
   { icon: <Tareas_Icon />, text: "Tareas", href: "/tareas" },
-  { icon: <Legales_Icon />, text: "Legales", href: "/legales" }
+  { icon: <Legales_Icon />, text: "Legales", href: "/legales" },
+  { icon: <Stock_Icon />, text: "Stock", href: "/stock" },
+  { icon: <Envios_Icon />, text: "Envios", href: "/envios" },
+  { icon: <Setings_Icon />, text: "Settings", href: "/settings" },
 ];
+
+

@@ -11,7 +11,7 @@ export const Task_Tag: FC<Props> = ({ tag }) => {
 };
 
 const Tag = styled.span`
-  font-size: 12px;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: var(--grey);
   margin-top: 4px;
 `;

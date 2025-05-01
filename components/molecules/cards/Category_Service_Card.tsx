@@ -71,12 +71,12 @@ const Card_Content = styled.div`
 `;
 
 const Card_Title = styled.h3`
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.fontSizes.title}px;
   font-weight: bold;
   color: #333;
 `;
 
 const Card_Description = styled.p`
-  font-size: 0.75rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: #666;
 `;

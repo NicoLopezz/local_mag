@@ -8,7 +8,6 @@ export const Producto_Detalles: FC = () => {
   const { query } = useRouter();
   const productCode = typeof query.productCode === "string" ? query.productCode : "";
   const product = mockData.products.find((p) => p.productCode === productCode);
-
   if (!product) return <Mensaje>No se encontró el producto</Mensaje>;
 
   return (

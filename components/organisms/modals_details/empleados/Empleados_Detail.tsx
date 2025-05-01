@@ -1,25 +1,36 @@
 import { FC, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"; 
 import Image from "next/image";
 import { Base_Details_Modal } from "../Base_Details_Modal";
-import { Empleado_Detalles } from "./Empleado_Detalles";
 import { Empleado_Contacto } from "./Empleado_Contacto";
 import { mockData } from "@/mock_data/empleados";
 
 interface Props {
   onClose: () => void;
+  employeeName?: string | null;
 }
 
 export const Empleado_Detail: FC<Props> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Detalles");
   const { query } = useRouter();
+  const emailFromQuery = typeof query.email === "string" ? query.email : null;
 
-  const name = typeof query.name === "string" ? query.name : "";
-  const role = typeof query.role === "string" ? query.role : "";
-
-  const empleado = mockData.empleados.find(
-    (e) => e.name === name && e.role === role
+  const empleadoBase = mockData.empleados.find(
+    (e) => e.email === emailFromQuery
   );
+
+  const empleado = empleadoBase
+    ? {
+        surname: "Generado",
+        age: Math.floor(Math.random() * 30 + 20),
+        children: Math.floor(Math.random() * 3),
+        address: "Calle Falsa 123",
+        dni: (Math.floor(Math.random() * 100000000)).toString(),
+        cuil: "20-" + Math.floor(Math.random() * 100000000) + "-0",
+        category: "A",
+        ...empleadoBase,
+      }
+    : null;
 
   return (
     <Base_Details_Modal
@@ -39,8 +50,12 @@ export const Empleado_Detail: FC<Props> = ({ onClose }) => {
         )
       }
     >
-      {activeTab === "Detalles" && <Empleado_Detalles />}
-      {activeTab === "Contacto" && <Empleado_Contacto />}
+      {activeTab === "Detalles" && empleado && (
+        <Empleado_Contacto empleado={empleado} />
+      )}
+      {!empleado && (
+        <div>No se encontró información para el empleado seleccionado.</div>
+      )}
     </Base_Details_Modal>
   );
 };

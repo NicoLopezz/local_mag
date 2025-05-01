@@ -6,7 +6,7 @@ interface Props {
 }
 
 const Text_Wrapper = styled.span`
-  font-size: 14px;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   font-weight: 500;
   text-decoration: none;
   color: inherit;

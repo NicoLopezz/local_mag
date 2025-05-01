@@ -28,7 +28,7 @@ export const Add_Pedido_Item = ({
     status: "abierto" | "cerrado" | "cancelado";
     time?: string;
   }) => {
-    console.log("📦 Datos RECIBIDOS en el modal:", pedidoData); // <-- AQUÍ VERÁS LO QUE RECIBE EL MODAL
+    console.log("📦 Datos RECIBIDOS en el modal:", pedidoData); 
     
     if (!pedidoData.proveedorName.trim()) {
       alert("Ingresa un nombre de proveedor");

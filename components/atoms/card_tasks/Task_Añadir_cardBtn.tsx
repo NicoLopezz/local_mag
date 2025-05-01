@@ -35,14 +35,8 @@ const Card_Container = styled.div`
   }
 `;
 
-const Add_Icon = styled.div`
-  font-size: 2rem;
-  font-weight: bold;
-  color: #333;
-`;
-
 const Add_Text = styled.p`
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: bold;
   color: #333;
   margin: 8px 0 0 0;

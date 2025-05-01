@@ -6,7 +6,7 @@ export const Close_Button = styled.button`
   right: 12px;
   background: transparent;
   border: none;
-  font-size: 1.5rem;
+  font-size: ${({ theme }) => theme.fontSizes.title}px;
   color: #333;
   cursor: pointer;
   transition: color 0.2s;

@@ -6,7 +6,7 @@ interface Props {
 }
 
 const Name = styled.span`
-  font-size: 1rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: 500;
   color: #333;
 `;

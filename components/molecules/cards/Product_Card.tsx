@@ -3,12 +3,12 @@ import styled from "styled-components";
 import Image from "next/image";
 import { Stock_Control } from "../../atoms/cards/Stock_Control";
 import { useTransactions } from "@/context/Transacciones_Context";
-
 interface Props {
   title: string;
   description: string;
-  imageUrl: string;
+
   href: string;
+  imageUrl: string;
   productCode: string;
   stock: number;
   isSelected: boolean;
@@ -143,20 +143,20 @@ const Card_Content = styled.div`
 `;
 
 const Card_Title = styled.h3`
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: bold;
   margin: 5px 0;
   color: #333;
 `;
 
 const Card_Description = styled.p`
-  font-size: 0.8rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: #666;
   margin: 0;
 `;
 
 const Product_Code = styled.span`
-  font-size: 0.7rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: #888;
   margin-top: 5px;
 `;

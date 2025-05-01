@@ -11,7 +11,7 @@ interface Props {
   href: string;
 }
 
-export const Sidebar_Item: FC<Props> = ({ icon, text, href }) => {
+export const Item: FC<Props> = ({ icon, text, href }) => {
   const { pathname } = useRouter();
   const isActive = pathname === href;
 
@@ -40,6 +40,7 @@ const Item_Container = styled.a<{ $active?: boolean }>`
   transition: all 0.2s ease;
   text-decoration: none;
   color: inherit;
+  font-size: 1.4rem;
 
   &:hover {
     background-color: #f5f5f5;
@@ -59,7 +60,11 @@ const Active_Bar = styled.div<{ $active?: boolean }>`
 `;
 
 const Sidebar_Text_Wrapper = styled.span<{ $active?: boolean }>`
-  font-size: ${({ $active }) => ($active ? "0.95rem" : "0.85rem")};
+  font-size: ${({ theme, $active }) =>
+    $active
+      ? `${theme.fontSizes.text }px`
+      : `${theme.fontSizes.text* 0.9}px`};
+
   font-weight: ${({ $active }) => ($active ? "700" : "500")};
   margin-top: 4px;
   transition: all 0.2s ease;

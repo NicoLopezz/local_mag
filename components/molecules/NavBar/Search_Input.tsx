@@ -66,8 +66,8 @@ export const SearchInput: FC = () => {
         placeholder="Buscar..."
         value={inputValue}
         onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        // onFocus={handleFocus}
+        // onBlur={handleBlur}
         autoComplete="off"
       />
       <Icon_Container>
@@ -96,7 +96,7 @@ const Search_Wrapper = styled.div<{ focused: boolean }>`
   border-radius: 20px;
   padding: 5px 20px;
   background-color: #f9f9f9;
-  width: ${({ focused }) => (focused ? "320px" : "180px")};
+  width: 350px;
   transition: width 0.3s ease;
 `;
 
@@ -105,7 +105,7 @@ const Input = styled.input`
   outline: none;
   background: transparent;
   padding: 5px;
-  font-size: 1rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   width: 100%;
   flex-grow: 1;
 `;

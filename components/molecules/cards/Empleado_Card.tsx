@@ -84,20 +84,20 @@ const Card_Content = styled.div`
 `;
 
 const Card_Title = styled.h3`
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: bold;
   margin: 5px 0;
   color: #333;
 `;
 
 const Card_Description = styled.p`
-  font-size: 0.8rem;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: #666;
   margin: 0;
 `;
 
 const Empleado_Email = styled.span`
-  font-size: 0.7rem;
+  font-size: ${({ theme }) => theme.fontSizes.text * 0.8}px;
   color: #888;
   margin-top: 5px;
 `;

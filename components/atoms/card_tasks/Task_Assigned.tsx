@@ -15,7 +15,7 @@ export const Task_Assigned: FC<Props> = ({ name }) => {
 
 const Title= styled.h3`
   font-weight: 100;
-  font-size: 10px;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   margin: 0;
   color: var(--dark-blue);
   font-style: italic;
