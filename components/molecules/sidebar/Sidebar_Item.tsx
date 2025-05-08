@@ -41,10 +41,12 @@ const Item_Container = styled.a<{ $active?: boolean }>`
   text-decoration: none;
   color: inherit;
   font-size: 1.4rem;
-
   &:hover {
-    background-color: #f5f5f5;
-  }
+  color: ${({ theme }) => theme.colors.text};
+  filter: drop-shadow(0 0 10px ${({ theme }) => theme.colors.text});
+  /* transform: scale(1.05); */
+}
+
 `;
 
 const Active_Bar = styled.div<{ $active?: boolean }>`

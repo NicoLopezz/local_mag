@@ -1,5 +1,8 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
+
+
 
 interface Props {
   description: string;
@@ -8,9 +11,11 @@ interface Props {
 }
 
 export const Task_Description_EditDetail: FC<Props> = ({ description, isEditing, onChange }) => {
+  const { t } = useLang();
+
   return (
     <Section>
-      <Label>Descripción</Label>
+      <Label>{t.tasks.modals.taskDescription.title}</Label>
       <TextArea
         value={description}
         onChange={(e) => onChange(e.target.value)}

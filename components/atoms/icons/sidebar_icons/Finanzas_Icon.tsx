@@ -20,5 +20,5 @@ export const Finanzas_Icon: FC = () => {
 };
 
 const Svg = styled.svg`
-  color: #000000;
+  color: ${({ theme }) => theme.colors.text};
 `;

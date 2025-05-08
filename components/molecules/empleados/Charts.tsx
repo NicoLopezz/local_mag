@@ -2,10 +2,11 @@ import { FC } from "react";
 import styled from "styled-components";
 
 interface ChartProps {
-  data: Array<{ label: string; value: number }>;
-  width?: number;
-  height?: number;
-  color?: string;
+  data: { label: string; value: number }[];
+  xField: string;
+  yField: string;
+  color: string;
+  height: number;
 }
 
 const ChartContainer = styled.div`
@@ -94,7 +95,7 @@ export const LineChart: FC<ChartProps> = ({ data, color = "#4a6bdf" }) => {
         {/* Eje X */}
         <line x1="0" y1="100" x2="100" y2="100" stroke="#ddd" strokeWidth="1" />
         
-        {/* Línea del gráfico */}
+        
         <path
           d={pathData}
           fill="none"
@@ -216,3 +217,4 @@ export const PieChart: FC<ChartProps> = ({ data, color = "#4a6bdf" }) => {
     </ChartContainer>
   );
 };
+

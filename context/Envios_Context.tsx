@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 interface Envio {
   id: string;
   time: string;
-  status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+  status: "pendiente" | "en_camino" | "entregando" | "cancelado";
   clienteName: string;
   direccion: string;
   progress: "25" | "50" | "75" | "100";
@@ -25,7 +25,7 @@ interface EnviosContextType {
   crearNuevoEnvio: (envioData: {
     clienteName: string;
     direccion: string;
-    status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+    status: "pendiente" | "en_camino" | "entregando" | "cancelado";
     progress: "25" | "50" | "75" | "100";
     productos?: ProductoEnvio[];
   }) => Envio;
@@ -66,7 +66,7 @@ const enviosIniciales: Envio[] = [
   {
     id: "e2",
     time: "10:15 AM",
-    status: "entregado",
+    status: "entregando",
     clienteName: "Mayorista Roberto",
     direccion: "Avenida Siempreviva 742",
     progress: "100",
@@ -226,7 +226,7 @@ export const EnviosProvider = ({ children }: { children: ReactNode }) => {
   const crearNuevoEnvio = (envioData: {
     clienteName: string;
     direccion: string;
-    status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+    status: "pendiente" | "en_camino" | "entregando" | "cancelado";
     productos?: ProductoEnvio[];
     progress: "25" | "50" | "75" | "100";
   }) => {

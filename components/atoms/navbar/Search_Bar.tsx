@@ -4,7 +4,6 @@ import styled from "styled-components";
 const Search_Wrapper = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid #ccc;
   border-radius: 20px;
   padding: 5px 10px;
   background-color: #f9f9f9;

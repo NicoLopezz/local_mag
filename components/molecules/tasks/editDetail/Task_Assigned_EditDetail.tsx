@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled, { keyframes } from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   isEditing: boolean;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export const Task_Assigned_EditDetail: FC<Props> = ({ isEditing, assigned, onChange }) => {
+  const { t } = useLang();
   const handleAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && e.currentTarget.value.trim()) {
       onChange(e.currentTarget.value.trim());
@@ -18,8 +20,8 @@ export const Task_Assigned_EditDetail: FC<Props> = ({ isEditing, assigned, onCha
   return (
     <Section>
       <Row>
-        <Label>Asignado a</Label>
-        <ChipContainer>
+      <Label>{t.tasks.modals.taskDescription.assigned}</Label>
+      <ChipContainer>
           {assigned && (
             <Chip>
               {assigned}

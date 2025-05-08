@@ -1,14 +1,11 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-interface Props {
-  onClick: () => void;
-}
 
-export const Money_Icon: FC<Props> = ({ onClick }) => {
+
+export const Money_Icon: FC = () => {
   return (
     <Svg
-      onClick={onClick}
       stroke="currentColor"
       fill="currentColor"
       stroke-width="0"

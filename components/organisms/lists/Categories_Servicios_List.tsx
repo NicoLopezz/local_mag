@@ -2,6 +2,9 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Category_Service_Card } from "../../molecules/cards/Category_Service_Card";
 import { Add_Category_Card } from "../../molecules/cards/Add_Category_Card";
+import { useLang } from "@/context/Language_Context";
+import { Divider} from "@/components/atoms/Divider";
+
 
 interface Category {
   title: string;
@@ -17,15 +20,17 @@ interface Props {
   selectedCategory?: string | null;
 }
 
+
 export const Categories_Servicios_List: FC<Props> = ({
   categories,
   onCategorySelect,
   onAddCategory,
   selectedCategory,
 }) => {
-  return (
+  const { t } = useLang();
+  return (  
     <Container>
-      <Title>Categorías</Title>
+      <Title>{t.services.categories.title}</Title>
       <Divider />
       <Categories_Container>
         <Category_Wrapper>
@@ -56,11 +61,12 @@ const Title = styled.h2`
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Divider = styled.hr`
   border: none;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #cccccc16;
   margin-bottom: 15px;
 `;
 

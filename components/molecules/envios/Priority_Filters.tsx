@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface PriorityFiltersProps {
   selectedPriorities: string[];
@@ -13,11 +14,14 @@ export const Priority_Filters = ({
   onRemovePriority,
   onClearAllPriorities,
 }: PriorityFiltersProps) => {
+
+  const { t } = useLang();
+
   return (
     <FilterContent>
-      <FilterLabel>Filter by:</FilterLabel>
+      <FilterLabel>{t.tasks.filterBy}</FilterLabel>
 
-      {/* Priorities list */}
+      
       {["Baja", "Media", "Alta"].map((priority) => (
         <PriorityItem
           key={priority}
@@ -28,7 +32,7 @@ export const Priority_Filters = ({
         </PriorityItem>
       ))}
 
-      {/* Clear all button */}
+      
       {selectedPriorities.length > 0 && (
         <ClearButton onClick={onClearAllPriorities}>Clear All</ClearButton>
       )}
@@ -45,8 +49,8 @@ const FilterContent = styled.div`
 
 const FilterLabel = styled.span`
   font-weight: 600;
-  color: #555;
-  font-size: 0.9rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const PriorityItem = styled.button<{ $isSelected: boolean }>`

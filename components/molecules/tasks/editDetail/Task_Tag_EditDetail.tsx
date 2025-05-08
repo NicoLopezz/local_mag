@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled, { keyframes } from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   isEditing: boolean;
@@ -7,7 +8,12 @@ interface Props {
   onChange: (val: string) => void;
 }
 
-export const Task_Tags_EditDetail: FC<Props> = ({ isEditing, tags, onChange }) => {
+export const Task_Tags_EditDetail: FC<Props> = ({
+  isEditing,
+  tags,
+  onChange,
+}) => {
+  const { t } = useLang();
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -34,12 +40,15 @@ export const Task_Tags_EditDetail: FC<Props> = ({ isEditing, tags, onChange }) =
   return (
     <Section>
       <Row>
-        <Label>Etiquetas</Label>
+        <Label>{t.tasks.modals.taskDescription.tags}</Label>
+
         <ChipContainer>
           {tagArray.map((tag, i) => (
             <Chip key={i}>
               {tag}
-              {isEditing && <Remove onClick={() => handleRemoveTag(tag)}>×</Remove>}
+              {isEditing && (
+                <Remove onClick={() => handleRemoveTag(tag)}>×</Remove>
+              )}
             </Chip>
           ))}
         </ChipContainer>

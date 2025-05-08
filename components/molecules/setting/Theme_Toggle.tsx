@@ -29,7 +29,7 @@ const ToggleContainer = styled.div<{ active: boolean }>`
   height: 28px;
   border-radius: 999px;
   background-color: ${({ active, theme }) =>
-  active ? theme.colors.toggleOn : theme.colors.toggleOff};
+  active ? theme.colors.toggleOff : theme.colors.toggleOn};
 
   display: flex;
   align-items: center;

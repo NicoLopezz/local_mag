@@ -37,7 +37,8 @@ export const Mail_Icon: FC<Props> = () => {
 };
 
 const Svg = styled.svg`
-  color: currentColor;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
 `;
 
 const TooltipWrapper = styled.div`

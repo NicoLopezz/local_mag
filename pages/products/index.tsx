@@ -28,7 +28,7 @@ const Productos: NextPage = () => {
     const newCategory = isSame ? undefined : categorySelected;
 
     router.replace({
-      pathname: "/productos",
+      pathname: "/products",
       query: {
         ...router.query,
         category: newCategory,
@@ -101,7 +101,7 @@ const Productos: NextPage = () => {
       params.set("productCode", newCode);
     }
 
-    const newUrl = `/productos?${params.toString()}`;
+    const newUrl = `/products?${params.toString()}`;
     const currentUrl = router.asPath;
 
     if (currentUrl !== newUrl) {

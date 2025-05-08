@@ -1,15 +1,20 @@
 import type { NextPage } from "next";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
+
 const Informes: NextPage = () => {
+
+  const { t } = useLang();
+
   return (
     <Page_Container>      
       <Main_Content>
         <Content_Area>
-          <Page_Title>Bienvenido al panel de gestión</Page_Title>
+          <Page_Title>{t.index.title}</Page_Title>
         </Content_Area>
       </Main_Content>
     </Page_Container>

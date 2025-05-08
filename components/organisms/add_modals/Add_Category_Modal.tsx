@@ -1,5 +1,5 @@
-import { FC, useEffect, useRef, useState } from "react";
-import { Modal_Overlay } from "../../atoms/modal/Modal_Overlay";
+import { FC, useEffect, useState } from "react";
+import { Modal } from "../../molecules/modals/Modal";
 import { Modal_Content } from "../../atoms/modal/Modal_Content";
 import { Close_Button } from "../../atoms/modal/Close_Button";
 import { Add_Category_Form } from "../../molecules/modal_forms/Add_Category_Form";
@@ -11,22 +11,21 @@ interface Props {
 
 export const Add_Category_Modal: FC<Props> = ({ onClose, onSubmit }) => {
   const [closing, setClosing] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setClosing(true);
-    }
+  const handleCloseRequest = () => {
+    setClosing(true);
   };
 
   const handleAnimationEnd = () => {
-    if (closing) onClose();
+    if (closing) {
+      onClose();
+    }
   };
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setClosing(true);
+        handleCloseRequest();
       }
     };
     document.addEventListener("keydown", handleEsc);
@@ -34,22 +33,21 @@ export const Add_Category_Modal: FC<Props> = ({ onClose, onSubmit }) => {
   }, []);
 
   return (
-    <Modal_Overlay
-      onClick={handleOverlayClick}
-      className={closing ? "closing" : ""}
-      onAnimationEnd={handleAnimationEnd}
-    >
-      <Modal_Content ref={contentRef}>
-        <Close_Button onClick={() => setClosing(true)}>×</Close_Button>
+    <Modal isOpen={!closing} onClose={handleCloseRequest}>
+      <Modal_Content
+        className={closing ? "closing" : ""}
+        onAnimationEnd={handleAnimationEnd}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Close_Button onClick={handleCloseRequest}>×</Close_Button>
 
         <Add_Category_Form
           onSubmit={() => {
             onSubmit();
-            setClosing(true);
+            handleCloseRequest();
           }}
         />
       </Modal_Content>
-    </Modal_Overlay>
+    </Modal>
   );
 };
-

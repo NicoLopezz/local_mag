@@ -1,4 +1,5 @@
 export interface ThemeColors {
+    modal: string;
     title: string;
     subtitle: string;
     button: string;
@@ -6,6 +7,8 @@ export interface ThemeColors {
     toggleOn: string;
     toggleOff: string;
     background: string;
+    contenedores: string;
+    text: string;
     neutral: {
       light: string;
       DEFAULT: string;
@@ -24,7 +27,8 @@ export interface ThemeColors {
     fontSizes: FontSizes;
   }
   
-  export const createTheme = (colors: ThemeColors): { colors: ThemeColors } => ({
+  export const createTheme = (colors: ThemeColors, fontSizes: FontSizes): AppTheme => ({
     colors,
+    fontSizes,
   });
   

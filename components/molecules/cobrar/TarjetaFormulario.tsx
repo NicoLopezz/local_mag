@@ -1,5 +1,6 @@
 import React, { FC, useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onNumeroTarjetaChange: (value: string) => void;
@@ -22,66 +23,71 @@ export const TarjetaFormulario: FC<Props> = ({
   codSeguridad,
   nombreApellido,
 }) => {
+  const { t } = useLang();
+  
   return (
     <FormularioTarjeta>
       <Campo>
-        <Label htmlFor="numeroTarjeta">Nº de tarjeta *</Label>
+        <Label htmlFor="numeroTarjeta">{t.modals.productos.cobrarCard.numeroTarjeta}</Label>
         <Input
           type="text"
           id="numeroTarjeta"
           value={numeroTarjeta}
           onChange={(e) => onNumeroTarjetaChange(e.target.value)}
-          placeholder="**** **** **** ****"
-          maxLength={19} // Máxima longitud de una tarjeta (incluyendo espacios)
+          placeholder={t.modals.productos.cobrarCard.placeholderNumero}
+          maxLength={19}
         />
       </Campo>
       <FilaDoble>
         <CampoCorto>
-          <Label htmlFor="vencimiento">Vencimiento *</Label>
+          <Label htmlFor="vencimiento">{t.modals.productos.cobrarCard.vencimiento}</Label>
           <Input
             type="text"
             id="vencimiento"
             value={vencimiento}
             onChange={(e) => onVencimientoChange(e.target.value)}
-            placeholder="MM/AA"
+            placeholder={t.modals.productos.cobrarCard.placeholderVencimiento}
             maxLength={5}
           />
         </CampoCorto>
         <CampoCorto>
-          <Label htmlFor="codSeguridad">Cod. seguridad *</Label>
+          <Label htmlFor="codSeguridad">{t.modals.productos.cobrarCard.codSeguridad}</Label>
           <Input
             type="text"
             id="codSeguridad"
             value={codSeguridad}
             onChange={(e) => onCodSeguridadChange(e.target.value)}
-            placeholder="CVV"
-            maxLength={4} // Longitud común del CVV
+            placeholder={t.modals.productos.cobrarCard.placeholderCod}
+            maxLength={4}
           />
         </CampoCorto>
       </FilaDoble>
       <Campo>
-        <Label htmlFor="nombreApellido">Nombre y apellido *</Label>
+        <Label htmlFor="nombreApellido">{t.modals.productos.cobrarCard.nombreApellido}</Label>
         <Input
           type="text"
           id="nombreApellido"
           value={nombreApellido}
           onChange={(e) => onNombreApellidoChange(e.target.value)}
-          placeholder="Como aparece en la tarjeta"
+          placeholder={t.modals.productos.cobrarCard.placeholderNombre}
         />
       </Campo>
       <Campo>
-        <Label htmlFor="pagoConTarjeta">Pago con tarjeta *</Label>
+        <Label htmlFor="pagoConTarjeta">{t.modals.productos.cobrarCard.pagoConTarjeta}</Label>
         <Select id="pagoConTarjeta">
-          <option value="">Seleccione un elemento</option>
-          {/* Aquí podrías cargar tarjetas guardadas del usuario */}
+          <option value="">{t.modals.productos.cobrarCard.selectOption}</option>
         </Select>
       </Campo>
       <CampoCheckbox>
         <Checkbox type="checkbox" id="recordarTarjeta" />
-        <LabelCheckbox htmlFor="recordarTarjeta">Recordar tarjeta</LabelCheckbox>
+        <LabelCheckbox htmlFor="recordarTarjeta">
+          {t.modals.productos.cobrarCard.recordar}
+        </LabelCheckbox>
       </CampoCheckbox>
     </FormularioTarjeta>
   );
+  
+
 };
 
 const FormularioTarjeta = styled.div`

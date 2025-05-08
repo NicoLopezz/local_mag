@@ -111,13 +111,20 @@ const Card_Container = styled.div<{ isSelected: boolean }>`
   height: 150px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #fff;
-  border: ${({ isSelected }) => (isSelected ? "2px solid #02203f" : "1px solid #ddd")};
-  box-shadow: ${({ isSelected }) =>
-    isSelected ? "0 0 10px rgba(0, 123, 255, 0.3)" : "0px 4px 8px rgba(0, 0, 0, 0.05)"};
+
+  background-color: ${({ theme }) => theme.colors.contenedores};
+  border: ${({ isSelected, theme }) =>
+    isSelected
+      ? `2px solid ${theme.colors.contenedores}`
+      : `1px solid ${theme.colors.contenedores}`};
+  box-shadow: ${({ isSelected, theme }) =>
+    isSelected
+      ? `0 0 10px ${theme.colors.title}40`
+      : `0px 4px 8px ${theme.colors.title}10`};
+
+
   transition: all 0.1s ease-in-out;
   text-decoration: none;
-  color: inherit;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
@@ -133,7 +140,7 @@ const Card_Image = styled.div`
   position: relative;
   width: 100%;
   height: 80px;
-  background-color: #f0f0f0;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const Card_Content = styled.div`
@@ -146,17 +153,17 @@ const Card_Title = styled.h3`
   font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: bold;
   margin: 5px 0;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Card_Description = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.text}px;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text};
   margin: 0;
 `;
 
 const Product_Code = styled.span`
   font-size: ${({ theme }) => theme.fontSizes.text}px;
-  color: #888;
+  color: ${({ theme }) => theme.colors.text};
   margin-top: 5px;
 `;

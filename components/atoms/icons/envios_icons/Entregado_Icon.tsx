@@ -1,11 +1,15 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-export const Entregado_Icon: FC = () => {
+interface Props {
+  color?: string;
+}
+
+export const Entregado_Icon: FC<Props> = ({ color = "#000" })=> {
   return (
     <Svg
       stroke="currentColor"
-      fill="currentColor"
+      fill={color}
       stroke-width="0"
       viewBox="0 0 32 32"
       height="1em"
@@ -19,6 +23,4 @@ export const Entregado_Icon: FC = () => {
 
 const Svg = styled.svg`
   color: #000000;
-  background-color: white;
-  border-radius: 50%;
 `;

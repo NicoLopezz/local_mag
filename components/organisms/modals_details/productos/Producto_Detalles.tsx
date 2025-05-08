@@ -3,39 +3,45 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { mockData } from "@/mock_data/products";
 import { QRCodeCanvas } from "qrcode.react";
+import { useLang } from "@/context/Language_Context";
+
 
 export const Producto_Detalles: FC = () => {
   const { query } = useRouter();
   const productCode = typeof query.productCode === "string" ? query.productCode : "";
   const product = mockData.products.find((p) => p.productCode === productCode);
   if (!product) return <Mensaje>No se encontró el producto</Mensaje>;
+  const { t } = useLang();
+
 
   return (
-    <Info_Container>
-      <Info_Content>
-        <Title>{product.title}</Title>
-        <Divider />
-        <SubTitle>Detalles del producto</SubTitle>
-        <Details_List>
-          <Item><Label>Descripción:</Label> {product.description}</Item>
-          <Item><Label>Categoría:</Label> {product.category}</Item>
-          <Item><Label>Stock disponible:</Label> {product.stock}</Item>
-          <Item><Label>Código:</Label> {product.productCode}</Item>
-        </Details_List>
-      </Info_Content>
+  <Info_Container>
+    <Info_Content>
+      <Title>{product.title}</Title>
+      <Divider />
+      <SubTitle>{t.modals.productos.detalles.title}</SubTitle>
+      <Details_List>
+        <Item><Label>{t.modals.productos.detalles.descripcion}:</Label> {product.description}</Item>
+        <Item><Label>{t.modals.productos.detalles.categoria}:</Label> {product.category}</Item>
+        <Item><Label>{t.modals.productos.detalles.stockDisponible}:</Label> {product.stock}</Item>
+        <Item><Label>{t.modals.productos.detalles.codigo}:</Label> {product.productCode}</Item>
+      </Details_List>
+    </Info_Content>
 
-      <QR_Container> 
-        <QRCodeCanvas
-          value={`https://tusitio.com/productos/${product.productCode}`}
-          size={200}
-          bgColor="#ffffff"
-          fgColor="#000000"
-          level="H"
-          includeMargin={true}
-        />
-      </QR_Container>
-    </Info_Container>
-  );
+    <QR_Container> 
+      <QRCodeCanvas
+        value={`https://tusitio.com/products/${product.productCode}`}
+        size={200}
+        bgColor="#ffffff"
+        fgColor="#000000"
+        level="H"
+        includeMargin={true}
+      />
+    </QR_Container>
+  </Info_Container>
+);
+
+
 };
 
 const Info_Container = styled.div`

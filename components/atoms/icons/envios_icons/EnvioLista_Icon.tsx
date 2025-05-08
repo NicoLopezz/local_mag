@@ -1,11 +1,15 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-export const EnvioLista_Icon: FC = () => {
+interface Props {
+  color?: string;
+}
+
+export const EnvioLista_Icon: FC<Props> = ({ color = "#000" }) => {
   return (
-    <Svg
+    <Svg 
       stroke="currentColor"
-      fill="currentColor"
+      fill={color}
       stroke-width="0"
       viewBox="0 0 640 512"
       height="1em"
@@ -17,8 +21,8 @@ export const EnvioLista_Icon: FC = () => {
   );
 };
 
-const Svg = styled.svg`
-  color: #000000;
-  background-color: white;
+const Svg = styled.svg<{ color?: string }>`
+  color: ${({ color }) => color || "#000"};
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   border-radius: 50%;
 `;

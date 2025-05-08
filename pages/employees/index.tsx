@@ -108,7 +108,7 @@ const Empleados: NextPage = () => {
       role: empleado.role,
       phone: empleado.phone,
       imageUrl: empleado.imageUrl,
-      email: empleado.email, // Include the email property
+      email: empleado.email, 
     }));
 
   return (

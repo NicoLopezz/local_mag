@@ -21,7 +21,7 @@ export const Bell_Icon: FC<Props> = ({onClick}) => {
 };
 
 const Svg = styled.svg`
-  color: #000000;
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: -5px;
   transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 

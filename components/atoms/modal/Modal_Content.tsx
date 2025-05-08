@@ -1,22 +1,20 @@
 import styled from "styled-components";
 
 export const Modal_Content = styled.div`
-  background: #ffffff;
-  border-radius: 12px;
+  background-color: ${({ theme }) => theme.colors.modal};
   padding: 2rem;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-  position: absolute;
-  top: 20%;
-  animation: scaleIn 0.3s ease-out;
-  transform: translateY(0);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  animation: fadeInContent 0.2s ease-out;
 
+  &.closing {
+    animation: fadeOutContent 0.2s ease-in forwards;
+  }
 
-  @keyframes scaleIn {
+  @keyframes fadeInContent {
     from {
       opacity: 0;
-      transform: scale(0.9);
+      transform: scale(0.95);
     }
     to {
       opacity: 1;
@@ -24,10 +22,14 @@ export const Modal_Content = styled.div`
     }
   }
 
-  h2 {
-    font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    text-align: center;
+  @keyframes fadeOutContent {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
   }
 `;

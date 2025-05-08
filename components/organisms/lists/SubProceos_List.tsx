@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Product_Card } from "../../molecules/cards/Product_Card";
 import { Add_SubProceso_Card } from "../../molecules/cards/Add_SubProceso_Card";
+import { useLang } from "@/context/Language_Context";
+import { Divider} from "@/components/atoms/Divider";
 
 interface Product {
   title: string;
@@ -19,14 +21,15 @@ interface Props {
 
 export const SubProceos_List: FC<Props> = ({ products, onAddProduct }) => {
   const [selectedProductCode, setSelectedProductCode] = useState<string | null>(null);
-
+  const {t} = useLang();
   const handleSelect = (productCode: string) => {
     setSelectedProductCode((prev) => (prev === productCode ? null : productCode));
+
   };
 
   return (
     <Container>
-      <Title>Sub-Procesos</Title>
+      <Title>{t.subprocesses.title}</Title>
       <Divider />
       <Products_Container>
         <Product_Wrapper>
@@ -35,10 +38,11 @@ export const SubProceos_List: FC<Props> = ({ products, onAddProduct }) => {
         {products.map((product, index) => (
           <Product_Wrapper key={index}>
             <Product_Card
-              {...product}
-              isSelected={selectedProductCode === product.productCode}
-              onSelect={handleSelect}
-            />
+            category={""} onTransactionCommit={function (decrease: number, title: string): void {
+              throw new Error("Function not implemented.");
+            } } {...product}
+            isSelected={selectedProductCode === product.productCode}
+            onSelect={handleSelect}            />
           </Product_Wrapper>
         ))}
       </Products_Container>
@@ -65,15 +69,10 @@ const Container = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
-`;
-
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #ccc;
-  margin-bottom: 15px;
+  color: ${({ theme }) => theme.colors.title};
+  font-size: ${({ theme }) => theme.fontSizes.title * 0.8}px;
 `;
 
 const Products_Container = styled.div`

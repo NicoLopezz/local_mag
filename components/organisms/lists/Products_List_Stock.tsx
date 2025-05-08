@@ -4,6 +4,7 @@ import { Product_Card_Stock} from "../../molecules/cards/Product_Card_Stock";
 import { Add_Product_Card } from "../../molecules/cards/Add_Product_Card";
 import { Producto_Detail } from "../modals_details/productos/Producto_Details";
 import { useRouter } from "next/router";
+import { Divider} from "@/components/atoms/Divider";
 
 interface Product {
   title: string;
@@ -42,7 +43,7 @@ export const Product_List_Stock: FC<Props> = ({ products, onAddProduct, onTransa
       params.set("productCode", productCode);
     }
 
-    router.replace(`/productos?${params.toString()}`);
+    router.replace(`/products?${params.toString()}`);
 
     if (product && currentCode !== productCode) {
       setModalProductTitle(product.title);
@@ -101,16 +102,12 @@ const Container = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+  font-size: ${({ theme }) => theme.fontSizes.title * 0.8}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #ccc;
-  margin-bottom: 15px;
-`;
 
 const Products_Container = styled.div`
   display: flex;

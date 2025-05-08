@@ -49,8 +49,8 @@ const Navbar_Wrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  border-bottom: 1px solid #ddd;
   z-index: 1000;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 
@@ -73,6 +73,7 @@ const Left_Section = styled.div`
   font-weight: 400;
   gap: 10px;
   width: 30%;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Center_Section = styled.div`
@@ -85,8 +86,6 @@ const Center_Section = styled.div`
   width: 100%;
   max-width: 400px;
 `;
-
-
 
 
 const Right_Section = styled.div`

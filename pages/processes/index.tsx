@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import type { NextPage } from "next";
 import styled from "styled-components";
 import { Procesos_List } from "../../components/organisms/lists/Procesos_List";
-import { Empleados_List } from "../../components/organisms/lists/Empleados_List";
 import { SubProceos_List } from "../../components/organisms/lists/SubProceos_List";
 import { Add_SubProceso_Modal } from "../../components/organisms/add_modals/Add_SubProceso_Modal";
 import { Add_Proceso_Modal } from "../../components/organisms/add_modals/Add_Proceso_Modal";
@@ -105,7 +104,7 @@ const Productos: NextPage = () => {
             onAddProduct={handleAddProduct}
           />
         </Content_Area>
-      </Main_Content>
+      </Main_Content>s
 
       {productModalOpen && (
         <Add_SubProceso_Modal
@@ -119,9 +118,9 @@ const Productos: NextPage = () => {
           onSubmit={handleCategorySubmit}
         />
       )}
-      {toastMessage && (
+      {/* {toastMessage && (
         <Toast message={toastMessage} onClose={handleCloseToast} />
-      )}
+      )} */}
     </Page_Container>
   );
 };

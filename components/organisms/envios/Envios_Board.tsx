@@ -12,6 +12,7 @@ import { Filter_Icon } from "@/components/atoms/icons/envios_icons/Filter_Icon";
 import { Cancel_Icon } from "@/components/atoms/icons/envios_icons/Cancel_Icon";
 import { Check_Icon } from "@/components/atoms/icons/envios_icons/Check_Icon";
 import { Pencil_Icon } from "@/components/atoms/icons/tasks_icons/Pencil_Icon";
+import { useLang } from "@/context/Language_Context";
 
 interface PedidoBoardProps {
   activeTab?: "day" | "week" | "month" | "year";
@@ -52,6 +53,8 @@ export const Envios_Board = ({
     string | null
   >(null);
 
+  const { t } = useLang();
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModalEmpleado = (name: string) => {
@@ -68,7 +71,7 @@ export const Envios_Board = ({
   const handleEnvioSubmit = (envioData: {
     clienteName: string;
     direccion: string;
-    status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+    status: "pendiente" | "en_camino" | "entregando" | "cancelado";
     time?: string;
   }) => {
     crearNuevoEnvio({
@@ -93,11 +96,11 @@ export const Envios_Board = ({
   };
 
   const filterRef = useRef<HTMLDivElement>(null);
-  const { envioSeleccionadoId } = useEnvios(); // Obtenemos el ID seleccionado del contexto
+  const { envioSeleccionadoId } = useEnvios();
   const selectedEnvio = envios.find((p) => p.id === envioSeleccionadoId);
   const [showStatusFilter, setShowStatusFilter] = useState(false);
   const [statusFilter, setStatusFilter] = useState<
-    "pendiente" | "en_camino" | "entregado" | "cancelado" | null
+    "pendiente" | "en_camino" | "entregando" | "cancelado" | null
   >(null);
 
   useEffect(() => {
@@ -136,7 +139,7 @@ export const Envios_Board = ({
 
   const handleGuardarCambios = () => {
     if (selectedEnvio) {
-      // Opcionalmente aquí podrías actualizar en Envios_Context
+    
       console.log("Guardando cambios...");
 
       console.log({
@@ -147,8 +150,6 @@ export const Envios_Board = ({
         repartidor: editedRepartidor,
         movil: editedMovil,
       });
-
-      // Simular guardado y salir de modo edición
       setIsEditing(false);
       showToast("Cambios guardados exitosamente");
     }
@@ -174,15 +175,23 @@ export const Envios_Board = ({
   return (
     <BoardWrapper>
       <Wrapper>
-        <PageTitle>Envios</PageTitle>
-        <AddButton onClick={handleAddPedido}>Nuevo Envio</AddButton>
+        <PageTitle>{t.shipments.pageTitle}</PageTitle>
+        <AddButton onClick={handleAddPedido}>
+          {t.shipments.newShipment}
+        </AddButton>
       </Wrapper>
       <Divider />
       <TabContainer>
-        <TabItem $active={activeTab === "day"}>Día</TabItem>
-        <TabItem $active={activeTab === "week"}>Semana</TabItem>
-        <TabItem $active={activeTab === "month"}>Mes</TabItem>
-        <TabItem $active={activeTab === "year"}>Año</TabItem>
+        <TabItem $active={activeTab === "day"}>{t.shipments.tabs.day}</TabItem>
+        <TabItem $active={activeTab === "week"}>
+          {t.shipments.tabs.week}
+        </TabItem>
+        <TabItem $active={activeTab === "month"}>
+          {t.shipments.tabs.month}
+        </TabItem>
+        <TabItem $active={activeTab === "year"}>
+          {t.shipments.tabs.year}
+        </TabItem>
       </TabContainer>
 
       <CurrentDate>{formatDate(date)}</CurrentDate>
@@ -191,11 +200,14 @@ export const Envios_Board = ({
         <ColumnsWrapper>
           <Column>
             <ColumnHeaderWrapper>
-              <ColumnHeader>Lista de envios</ColumnHeader>
+              <ColumnHeader>{t.shipments.listTitle}</ColumnHeader>
 
               {statusFilter && (
                 <ActiveFilter>
-                  <span>Filtrado por: {statusFilter.replace("_", " ")}</span>
+                  <span>
+                    {t.shipments.filteredBy}{" "}
+                    {t.shipments.filterStatuses[statusFilter]}
+                  </span>
                   <RemoveFilterButton onClick={() => setStatusFilter(null)}>
                     ✖
                   </RemoveFilterButton>
@@ -210,7 +222,7 @@ export const Envios_Board = ({
 
               {showStatusFilter && (
                 <StatusFilterContainer ref={filterRef}>
-                  {["pendiente", "en_camino", "entregado", "cancelado"].map(
+                  {["pendiente", "en_camino", "entregando", "cancelado"].map(
                     (status) => (
                       <StatusOption
                         key={status}
@@ -238,16 +250,14 @@ export const Envios_Board = ({
                   const estadoOrden = {
                     en_camino: 0,
                     pendiente: 1,
-                    entregado: 2,
+                    entregando: 2,
                     cancelado: 3,
                   };
 
                   const estadoA = estadoOrden[a.status];
                   const estadoB = estadoOrden[b.status];
 
-                  if (estadoA !== estadoB) {
-                    return estadoA - estadoB;
-                  }
+                  if (estadoA !== estadoB) return estadoA - estadoB;
 
                   const [horaA, minutoA] = a.time.split(":").map(Number);
                   const [horaB, minutoB] = b.time.split(":").map(Number);
@@ -293,13 +303,12 @@ export const Envios_Board = ({
 
           <Column>
             <ColumnHeaderWrapper>
-              <ColumnHeader>Detalles</ColumnHeader>
+              <ColumnHeader>{t.shipments.details}</ColumnHeader>
               {!isEditing && (
                 <EditButton onClick={handleStartEditing}>
                   <Pencil_Icon />
                 </EditButton>
               )}
-
               {isEditing && (
                 <EditActions>
                   <IconButton onClick={handleGuardarCambios}>
@@ -319,16 +328,17 @@ export const Envios_Board = ({
                     <LeftWrapper>
                       <Header_Detail_Wrapper>
                         <Status $status={selectedEnvio.status}>
-                          {selectedEnvio.status.replace("_", " ")}
+                          {t.shipments.filterStatuses[selectedEnvio.status]}
                         </Status>
-                        <OrderId>Envio #{selectedEnvio.id}</OrderId>
+                        <OrderId>
+                          {t.shipments.orderId} #{selectedEnvio.id}
+                        </OrderId>
                       </Header_Detail_Wrapper>
                     </LeftWrapper>
-
                     <FinalizarButton
                       disabled={selectedEnvio.status !== "en_camino"}
                     >
-                      Finalizar
+                      {t.shipments.finalize}
                     </FinalizarButton>
                   </DetailHeader>
 
@@ -336,83 +346,38 @@ export const Envios_Board = ({
                     <InfoItem>
                       <Wrapper_Icon>
                         <Cliente_Icon />
-                        <InfoLabel>Cliente:</InfoLabel>
+                        <InfoLabel>{t.shipments.client}:</InfoLabel>
                       </Wrapper_Icon>
-                      <InfoValue>
-                        {isEditing ? (
-                          <StyledSelect
-                            value={editedCliente}
-                            onChange={(e) => setEditedCliente(e.target.value)}
-                          >
-                            {[
-                              ...new Set(
-                                envios.map((envio) => envio.clienteName)
-                              ),
-                            ].map((cliente) => (
-                              <option key={cliente} value={cliente}>
-                                {cliente}
-                              </option>
-                            ))}
-                          </StyledSelect>
-                        ) : (
-                          selectedEnvio.clienteName
-                        )}
-                      </InfoValue>
+                      <InfoValue>{selectedEnvio.clienteName}</InfoValue>
                     </InfoItem>
 
                     <InfoItem>
                       <WrapperIcon_Time>
                         <Clock_Icon />
-                        <TimeLabel>Salida:</TimeLabel>
+                        <TimeLabel>{t.shipments.departure}:</TimeLabel>
                       </WrapperIcon_Time>
                       <WrapperInfo_Time>
-                        {isEditing ? (
-                          <StyledInput
-                            type="text"
-                            value={editedDestino}
-                            onChange={(e) => setEditedDestino(e.target.value)}
-                          />
-                        ) : (
-                          <TimeText>{selectedEnvio.time}</TimeText>
-                        )}
+                        <TimeText>{selectedEnvio.time}</TimeText>
                         <TimeSeparator>-</TimeSeparator>
-                        <TimeLabel>Llegada:</TimeLabel>
-                        {isEditing ? (
-                          <StyledInput
-                            type="text"
-                            value={editedDestino}
-                            onChange={(e) => setEditedDestino(e.target.value)}
-                          />
-                        ) : (
-                          <TimeText>
-                            {selectedEnvio.status === "entregado"
-                              ? selectedEnvio.time
-                              : selectedEnvio.status.replace("_", " ")}
-                          </TimeText>
-                        )}
+                        <TimeLabel>{t.shipments.arrival}:</TimeLabel>
+                        <TimeText>
+                          {selectedEnvio.status === "entregando"
+                            ? selectedEnvio.time
+                            : t.shipments.filterStatuses[selectedEnvio.status]}
+                        </TimeText>
                       </WrapperInfo_Time>
                     </InfoItem>
 
                     <InfoItem>
                       <Wrapper_Icon>
                         <Ubicacion_Icon />
-                        <InfoLabel>Destino:</InfoLabel>
+                        <InfoLabel>{t.shipments.destination}:</InfoLabel>
                       </Wrapper_Icon>
-                      <InfoValue>
-                        {isEditing ? (
-                          <StyledInput
-                            type="text"
-                            value={editedDestino}
-                            onChange={(e) => setEditedDestino(e.target.value)}
-                          />
-                        ) : (
-                          selectedEnvio.direccion
-                        )}
-                      </InfoValue>
+                      <InfoValue>{selectedEnvio.direccion}</InfoValue>
                     </InfoItem>
 
                     <InfoItem>
-                      <InfoLabel>Repartidor:</InfoLabel>
+                      <InfoLabel>{t.shipments.deliveryMan}:</InfoLabel>
                       <InfoValue>
                         {isEditing ? (
                           <StyledSelect
@@ -445,28 +410,25 @@ export const Envios_Board = ({
                     </InfoItem>
                   </DetailInfo>
 
-                  <SectionTitle>Productos</SectionTitle>
-
+                  <SectionTitle>{t.shipments.products}</SectionTitle>
                   {selectedEnvio.productos.length > 0 ? (
                     <ProductList>
                       {selectedEnvio.productos.map((producto) => (
                         <ProductItem key={producto.id}>
                           <ProductName>{producto.title}</ProductName>
                           <ProductQuantity>
-                            Cantidad: {producto.quantity}
+                            {t.shipments.quantity}: {producto.quantity}
                           </ProductQuantity>
                         </ProductItem>
                       ))}
                     </ProductList>
                   ) : (
-                    <NoProducts>
-                      No se agregaron productos a este pedido.
-                    </NoProducts>
+                    <NoProducts>{t.shipments.noProducts}</NoProducts>
                   )}
 
                   {selectedEnvio.productos.length > 0 && (
                     <TotalInfo>
-                      <TotalLabel>Total:</TotalLabel>
+                      <TotalLabel>{t.shipments.total}:</TotalLabel>
                       <TotalValue>
                         $
                         {selectedEnvio.productos
@@ -481,27 +443,25 @@ export const Envios_Board = ({
                   )}
                 </PedidoDetails>
               ) : (
-                <EmptyState>
-                  Seleccione un pedido para ver los detalles
-                </EmptyState>
+                <EmptyState>{t.shipments.selectShipment}</EmptyState>
               )}
             </DetailContent>
           </Column>
         </ColumnsWrapper>
 
         <StatsColumn>
-          <ColumnHeader2>Estadisticas</ColumnHeader2>
+          <ColumnHeader2>{t.shipments.stats.title}</ColumnHeader2>
           <StatsContent>
             <StatsRow>
-              <span>Total Pedidos:</span>
+              <span>{t.shipments.stats.total}:</span>
               <span>{totalPedidos}</span>
             </StatsRow>
             <StatsRow>
-              <span>Abiertos:</span>
+              <span>{t.shipments.stats.open}:</span>
               <span>{pedidosAbiertos}</span>
             </StatsRow>
             <StatsRow $highlight>
-              <span>Cerrados:</span>
+              <span>{t.shipments.stats.closed}:</span>
               <span>{pedidosCerrados}</span>
             </StatsRow>
           </StatsContent>
@@ -511,16 +471,14 @@ export const Envios_Board = ({
   );
 };
 
-
 const ColumnHeader2 = styled.h2`
-  font-size: 1.5rem;
-  font-weight: bold;
-  background: #333;
-  color: white;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
+  background-color: ${({ theme }) => theme.colors.contenedores};
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
   width: 50%;
-`
+`;
 
 const ActiveFilter = styled.div`
   display: flex;
@@ -529,8 +487,8 @@ const ActiveFilter = styled.div`
   background: #e1e1e15a;
   border-radius: 8px;
   padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
-  color: #000;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 
@@ -541,30 +499,14 @@ const ActiveFilter = styled.div`
   }
 `;
 
-const StyledInput = styled.input`
-  border: none;
-  border-bottom: 1px solid #ccc;
-  background-color: transparent;
-  padding: 4px 6px;
-  font-size: 0.95rem;
-  color: #666;
-  width: 100%;
-  outline: none;
-  transition: border-color 0.2s ease;
-
-  &:focus {
-    border-color: #4caf50;
-    color: #222;
-  }
-`;
 
 const StyledSelect = styled.select`
   border: none;
   border-bottom: 1px solid #ccc;
   background-color: transparent;
   padding: 4px 6px;
-  font-size: 0.95rem;
-  color: #666;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
   width: 100%;
   outline: none;
   appearance: none;
@@ -576,7 +518,10 @@ const StyledSelect = styled.select`
   }
 `;
 
-const PedidosList = styled.div``;
+const PedidosList = styled.div`
+  display: grid;
+  gap: 0.3rem;
+`;
 
 const RemoveFilterButton = styled.button`
   background: none;
@@ -598,7 +543,8 @@ const GuardarButton = styled.button`
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   cursor: pointer;
   transition: background-color 0.3s ease;
 
@@ -610,7 +556,8 @@ const GuardarButton = styled.button`
 const EditButton = styled.button`
   background: none;
   border: none;
-  font-size: 1.7rem;
+  font-size: ${({ theme }) => theme.fontSizes.title * 1.2}px;
+  color: ${({ theme }) => theme.colors.title};
   cursor: pointer;
   margin-left: 1rem;
 `;
@@ -625,7 +572,8 @@ const EditActions = styled.div`
 const IconButton = styled.button`
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   cursor: pointer;
   transition: transform 0.2s ease;
 `;
@@ -642,7 +590,8 @@ const ColumnHeaderWrapper = styled.div`
 const FilterButton = styled.button`
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   cursor: pointer;
   padding: 0;
   transition: transform 0.2s ease;
@@ -714,13 +663,15 @@ const BoardWrapper = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  font-size: 2rem;
-  color: #161616;
+  color: ${({ theme }) => theme.colors.title};
+  font-size: ${({ theme }) => theme.fontSizes.title * 0.8}px;
+  margin: 0 0 1rem 0;
+  margin-top: 1rem;
 `;
 
 const Divider = styled.hr`
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #cccccc16;
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
   width: 100%;
@@ -740,36 +691,26 @@ const WrapperInfo_Time = styled.div`
 `;
 
 const TimeLabel = styled.span`
-  font-size: 1rem;
-  color: #555;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
   font-weight: 600;
 `;
 
 const TimeText = styled.span`
-  font-size: 0.9rem;
-  color: #333;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const TimeSeparator = styled.span`
   margin: 0 0.25rem;
-  color: #999;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
-const ModalBackdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
+
 
 const RepartidorLink = styled.span`
-  color: black;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -785,21 +726,15 @@ const RepartidorLink = styled.span`
 
 const MapLink = styled.a`
   margin-left: 8px;
-  color: #1a73e8;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
   text-decoration: none;
-  font-size: 0.9em;
   cursor: pointer;
   &:hover {
     text-decoration: underline;
   }
 `;
 
-const Finalizar_Wrapper = styled.div`
-  display: flex;
-  margin-top: 4rem;
-  align-content: center;
-  justify-content: center;
-`;
 
 const Wrapper_Icon = styled.div`
   display: flex;
@@ -816,13 +751,17 @@ const Wrapper_Time2 = styled.div`
 `;
 
 const FinalizarButton = styled.button`
+
+  background-color: ${({ disabled, theme }) =>
+    disabled ? "#f9f9f99" : theme.colors.button};
+  color: ${({ disabled}) =>
+    disabled ? "#a0a0a0": "white"};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+
   padding: 0.5rem 1rem;
   border: 1px solid ${({ disabled }) => (disabled ? "#ddd" : "#333")};
   border-radius: 8px;
-  font-size: 15px;
   font-weight: 400;
-  background-color: ${({ disabled }) => (disabled ? "#f9f9f9" : "transparent")};
-  color: ${({ disabled }) => (disabled ? "#a0a0a0" : "#333")};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease,
     border 0.2s ease;
@@ -845,19 +784,23 @@ const Header_Detail_Wrapper = styled.div`
 `;
 
 const AddButton = styled.button`
-  background: #222222eb;
-  color: #fff;
+  background-color: ${({ disabled, theme }) =>
+    disabled ? "#f9f9f99" : theme.colors.button};
+  color: ${({ disabled}) =>
+    disabled ? "#a0a0a0": "white"};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+
   padding: 0.5rem;
   border: none;
   border-radius: 8px;
-  font-size: 15px;
+  color: ${({ theme }) => theme.colors.title};
   font-weight: 400;
   cursor: pointer;
   width: 7%;
   transition: background 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    background: #1f1f1f;
+    background-color: ${({ theme }) => theme.colors.background};
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
@@ -908,7 +851,7 @@ const ColumnsWrapper = styled.div`
 const Column = styled.div`
   flex: 1;
   min-width: 250px;
-  background: #f9f9f9;
+  background: ${({ theme }) => theme.colors.contenedores};
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -916,37 +859,29 @@ const Column = styled.div`
 `;
 
 const ColumnHeader = styled.h2`
-  font-size: 1.2rem;
   font-weight: bold;
-  background: #333;
-  color: white;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle * 1.2}px;
+  color: ${({ theme }) => theme.colors.title};
+  background-color: ${({ theme }) => theme.colors.contenedores};
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
 `;
 
-// const Pedidos t = styled.div`
-//   flex: 1;
-//   padding: 0.5rem;
-//   display: flex;
-//   flex-direction: column;
-//   gap: 0.5rem;
-//   overflow-y: auto;
-// `;
-
 const DetailContent = styled.div`
   position: relative;
   flex: 1;
-  background: white;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 10rem;
 `;
 
 const StatsColumn = styled.div`
   flex: 1;
   max-width: 300px;
-  background: #f9f9f9;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -957,7 +892,7 @@ const StatsContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: white;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   border-radius: 8px;
   margin: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -967,10 +902,11 @@ const StatsRow = styled.div<{ $highlight?: boolean }>`
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
+  color: ${({ theme }) => theme.colors.subtitle};
   border-bottom: 1px solid #eee;
   font-weight: ${({ $highlight }) => ($highlight ? "bold" : "normal")};
-  background: ${({ $highlight }) => ($highlight ? "#f8f9fa" : "transparent")};
-
+  /* background: ${({ $highlight }) =>
+    $highlight ? "#f8f9fa" : "transparent"}; */
   &:last-child {
     border-bottom: none;
   }
@@ -978,13 +914,11 @@ const StatsRow = styled.div<{ $highlight?: boolean }>`
 
 const PedidoDetails = styled.div`
   padding: 1rem;
-  background-color: #f8f9fa;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   border-radius: 8px;
   width: 90%;
   height: 36rem;
-
   animation: fadeSlideIn 0.4s ease forwards;
-
   @keyframes fadeSlideIn {
     from {
       opacity: 0;
@@ -1006,26 +940,25 @@ const DetailHeader = styled.div`
 
 const LeftWrapper = styled.div`
   display: flex;
-  /* flex-direction: column; */
   gap: 1rem;
 `;
 
 const OrderId = styled.h3`
-  font-size: 1.5rem;
-  color: #343a40;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   margin: 0;
 `;
 
 const Status = styled.span<{
-  $status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+  $status: "pendiente" | "en_camino" | "entregando" | "cancelado";
+  $isSelected?: boolean;
 }>`
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  /* font-weight: bold; */
   text-transform: uppercase;
   font-size: 0.8rem;
   color: #000;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.09);
   border: 1.5px solid
     ${({ $status }) => {
       switch ($status) {
@@ -1033,7 +966,7 @@ const Status = styled.span<{
           return "#ffc107";
         case "en_camino":
           return "#007bff";
-        case "entregado":
+        case "entregando":
           return "#28a745";
         case "cancelado":
           return "#dc3545";
@@ -1041,6 +974,8 @@ const Status = styled.span<{
           return "#000000";
       }
     }};
+  color: ${({ $isSelected, theme }) =>
+    $isSelected ? "#000000" : theme.colors.text};
 `;
 
 const DetailInfo = styled.div`
@@ -1064,21 +999,22 @@ const InfoItem = styled.div`
 
 const InfoLabel = styled.strong`
   width: 90px;
-  color: #495057;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
   margin-right: 0.5rem;
   align-content: center;
 `;
 
 const InfoValue = styled.span`
   display: flex;
-  color: #212529;
+  color: ${({ theme }) => theme.colors.title};
   align-items: center;
   gap: 0.5rem;
 `;
 
 const SectionTitle = styled.h4`
-  font-size: 1.2rem;
-  color: #343a40;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   margin-top: 1.5rem;
   margin-bottom: 1rem;
   border-bottom: 2px solid #dee2e6;
@@ -1103,8 +1039,8 @@ const ProductItem = styled.li`
 `;
 
 const ProductName = styled.span`
-  font-weight: 500;
-  color: #212529;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const Wrapper_Time = styled.span`
@@ -1128,14 +1064,14 @@ const TotalInfo = styled.div`
 `;
 
 const TotalLabel = styled.strong`
-  font-size: 1.1rem;
-  color: #343a40;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   margin-right: 1rem;
 `;
 
 const TotalValue = styled.span`
-  font-size: 1.1rem;
-  color: #198754;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   font-weight: bold;
 `;
 

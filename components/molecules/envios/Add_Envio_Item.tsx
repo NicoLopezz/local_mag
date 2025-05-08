@@ -10,7 +10,7 @@ interface AddEnvioItemProps {
   onSubmit: (envio: {
     clienteName: string;
     direccion: string;
-    status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+    status: "pendiente" | "en_camino" | "entregando" | "cancelado";
     time?: string;
   }) => void;
 }
@@ -22,7 +22,7 @@ export const Add_Envio_Item: FC<AddEnvioItemProps> = ({ onClose, onSubmit }) => 
   const handleSubmit = (envioData: {
     clienteName: string;
     direccion: string;
-    status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+    status: "pendiente" | "en_camino" | "entregando" | "cancelado";
     time?: string;
   }) => {
     if (!envioData.clienteName.trim() || !envioData.direccion.trim()) {

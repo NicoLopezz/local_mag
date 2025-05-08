@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { Item } from "../../molecules/sidebar/Sidebar_Item";
+import { useLang } from "@/context/Language_Context";
 import { Company_Logo } from "../../molecules/sidebar/Sidebar_Item_Logo";
 import {
   Productos_Icon,
@@ -18,7 +19,23 @@ import {
 } from "@/components/atoms/icons/sidebar_icons";
 
 export const Sidebar: FC = () => {
+  const { t } = useLang();
   const empresa = "Distribuidora Sur S.A.";
+
+  const sidebar_items = [
+    { icon: <Productos_Icon />, text: t.sidebar.productos, href: "/products" },
+    { icon: <Servicios_Icon />, text: t.sidebar.servicios, href: "/services" },
+    { icon: <Finanzas_Icon />, text: t.sidebar.finanzas, href: "/finances" },
+    { icon: <Clientes_Icon />, text: t.sidebar.clientes, href: "/customers" },
+    { icon: <Procesos_Icon />, text: t.sidebar.procesos, href: "/processes" },
+    { icon: <Empleados_Icon />, text: t.sidebar.empleados, href: "/employees" },
+    { icon: <Informes_Icon />, text: t.sidebar.pedidos, href: "/orders" },
+    { icon: <Tareas_Icon />, text: t.sidebar.tareas, href: "/tasks" },
+    { icon: <Legales_Icon />, text: t.sidebar.legales, href: "/legal" },
+    { icon: <Stock_Icon />, text: t.sidebar.stock, href: "/stock" },
+    { icon: <Envios_Icon />, text: t.sidebar.envios, href: "/shipments" },
+    { icon: <Setings_Icon />, text: t.sidebar.settings, href: "/settings" },
+  ];
 
   return (
     <Sidebar_Container>
@@ -37,8 +54,8 @@ export const Sidebar: FC = () => {
 };
 
 const Sidebar_Container = styled.aside`
-  width: 6rem;
-  height: 90vh;
+  width: 7rem;
+  height: calc(100vh - 4rem);
   position: fixed;
   top: 4rem;
   left: 0;
@@ -47,8 +64,14 @@ const Sidebar_Container = styled.aside`
   align-items: center;
   overflow-y: auto;
   z-index: 999;
+  background-color: ${({ theme }) => theme.colors.background};
+
   &::-webkit-scrollbar {
-    width: 0;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
   }
 `;
 
@@ -59,21 +82,7 @@ const List = styled.div`
   flex-grow: 1;
   align-items: center;
   font-size: 1.2rem;
+  color: ${({ theme }) => theme.colors.text};
+  gap: 0.5rem;
+  padding-bottom: 2rem;
 `;
-
-const sidebar_items = [
-  { icon: <Productos_Icon />, text: "Productos", href: "/productos" },
-  { icon: <Servicios_Icon />, text: "Servicios", href: "/servicios" },
-  { icon: <Finanzas_Icon />, text: "Finanzas", href: "/finanzas" },
-  { icon: <Clientes_Icon />, text: "Clientes", href: "/clientes" },
-  { icon: <Procesos_Icon />, text: "Procesos", href: "/procesos" },
-  { icon: <Empleados_Icon />, text: "Empleados", href: "/empleados" },
-  { icon: <Informes_Icon />, text: "Pedidos", href: "/pedidos" },
-  { icon: <Tareas_Icon />, text: "Tareas", href: "/tareas" },
-  { icon: <Legales_Icon />, text: "Legales", href: "/legales" },
-  { icon: <Stock_Icon />, text: "Stock", href: "/stock" },
-  { icon: <Envios_Icon />, text: "Envios", href: "/envios" },
-  { icon: <Setings_Icon />, text: "Settings", href: "/settings" },
-];
-
-

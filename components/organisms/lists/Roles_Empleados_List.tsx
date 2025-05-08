@@ -2,6 +2,8 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Role_Card } from "../../molecules/cards/Role_Card";
 import { Add_Role_Card } from "../../molecules/cards/Add_Role_Card";
+import { useLang } from "@/context/Language_Context";
+import { Divider} from "@/components/atoms/Divider";
 
 interface Role {
   title: string;
@@ -24,9 +26,12 @@ export const Roles_Empleados_List: FC<Props> = ({
   onAddCategory,
   selectedCategory,
 }) => {
+
+  const { t } = useLang();
+
   return (
     <Container>
-      <Title>Roles</Title>
+      <Title>{t.roles.title}</Title>
       <Divider />
       <Roles_Container>
         <Role_Wrapper>
@@ -55,16 +60,12 @@ const Container = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+font-weight: bold;
+margin-bottom: 10px;
+color: ${({ theme }) => theme.colors.title};
+font-size: ${({ theme }) => theme.fontSizes.title * 0.8}px;
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #ccc;
-  margin-bottom: 15px;
-`;
 
 const Roles_Container = styled.div`
   display: flex;

@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   step: number;
@@ -7,6 +8,7 @@ interface Props {
 
 export const Task_Stepper_EditDetail: FC<Props> = ({ step }) => {
   const fillPercent = step > 1 ? ((step - 1) / 3) * 100 : 0;
+  const { t } = useLang();
 
   return (
     <StepperContainer>
@@ -25,7 +27,7 @@ export const Task_Stepper_EditDetail: FC<Props> = ({ step }) => {
               $active={isActive}
             />
             <StepLabel $completed={isCompleted} $selected={isSelected}>
-              {`Paso ${s}`}
+            {t.tasks.modals.taskDescription.stepLabel.replace("{{count}}", String(s))}
             </StepLabel>
           </StepCircleWrapper>
         );

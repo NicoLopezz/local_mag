@@ -1,10 +1,11 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface EnvioItemProps {
   id: string;
   time: string;
-  status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+  status: "pendiente" | "en_camino" | "entregando" | "cancelado";
   clienteName: string;
   direccion: string;
   progress: "25" | "50" | "75" | "100";
@@ -28,6 +29,7 @@ export const Add_Envio_Form: FC<EnvioFormProps> = ({ onSubmit }) => {
     status: "pendiente" as const,
   });
 
+  const { t } = useLang();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -63,48 +65,48 @@ export const Add_Envio_Form: FC<EnvioFormProps> = ({ onSubmit }) => {
 
   return (
     <Form_Container onSubmit={handleSubmit}>
-      <Form_Title>Crear Nuevo Envío</Form_Title>
-
+      <Form_Title>{t.orders.createTitle}</Form_Title>
+  
       <Styled_Input
         name="clienteName"
-        placeholder="Nombre del cliente"
+        placeholder={t.orders.placeholders.cliente}
         value={form.clienteName}
         onChange={handleChange}
         required
       />
-
+  
       <Styled_Input
         name="provincia"
-        placeholder="Provincia"
+        placeholder={t.orders.placeholders.provincia}
         value={form.provincia}
         onChange={handleChange}
         required
       />
-
+  
       <Styled_Input
         name="calle"
-        placeholder="Calle"
+        placeholder={t.orders.placeholders.calle}
         value={form.calle}
         onChange={handleChange}
         required
       />
-
+  
       <Styled_Input
         name="altura"
-        placeholder="Altura"
+        placeholder={t.orders.placeholders.altura}
         value={form.altura}
         onChange={handleChange}
         required
       />
-
+  
       <Styled_Input
         name="codigoPostal"
-        placeholder="Código Postal"
+        placeholder={t.orders.placeholders.codigoPostal}
         value={form.codigoPostal}
         onChange={handleChange}
         required
       />
-
+  
       <Content_Wrapper>
         <Styled_Select
           name="status"
@@ -112,16 +114,18 @@ export const Add_Envio_Form: FC<EnvioFormProps> = ({ onSubmit }) => {
           onChange={handleChange}
           required
         >
-          <option value="pendiente">Pendiente</option>
-          <option value="en_camino">En camino</option>
-          <option value="entregado">Entregado</option>
-          <option value="cancelado">Cancelado</option>
+          <option value="pendiente">{t.orders.statusLabels.pendiente}</option>
+          <option value="en_camino">{t.orders.statusLabels.en_camino}</option>
+          <option value="entregando">{t.orders.statusLabels.entregando}</option>
+          <option value="cancelado">{t.orders.statusLabels.cancelado}</option>
         </Styled_Select>
-
-        <Styled_Button type="submit">Crear Envío</Styled_Button>
+  
+        <Styled_Button type="submit">{t.orders.createButton}</Styled_Button>
       </Content_Wrapper>
     </Form_Container>
   );
+  
+
 };
 
 const Form_Container = styled.form`

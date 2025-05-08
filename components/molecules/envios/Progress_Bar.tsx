@@ -7,14 +7,25 @@ import { Cancelado_Icon } from "@/components/atoms/icons/envios_icons/Cancelado_
 
 interface ProgressBarProps {
   progress: "25" | "50" | "75" | "100";
-  status: "pendiente" | "en_camino" | "entregado" | "cancelado";
+  status: "pendiente" | "en_camino" | "entregando" | "cancelado";
+  $isSelected?: boolean;
 }
 
-export const Progress_Bar: FC<ProgressBarProps> = ({ progress, status }) => {
+export const Progress_Bar: FC<ProgressBarProps> = ({ progress, status, $isSelected }) => {
+  const getColor = () => {
+    if (!$isSelected) return "#aaa";
+    if (status === "pendiente") return "#aaa";
+    if (status === "en_camino") return "#aaa";
+    if (status === "entregando") return "#aaa";
+    if (status === "cancelado") return "#aaa";
+    return "#000000";
+  };
+
   const getIcon = () => {
-    if (status === "pendiente") return <Pendiente_Icon />;
-    if (status === "en_camino") return <EnvioLista_Icon />;
-    if (status === "entregado") return <Entregado_Icon />;
+    const color = getColor();
+    if (status === "pendiente") return <Pendiente_Icon color={color} />;
+    if (status === "en_camino") return <EnvioLista_Icon color={color} />;
+    if (status === "entregando") return <Entregado_Icon color={color} />;
     if (status === "cancelado") return <Cancelado_Icon />;
     return null;
   };
@@ -76,18 +87,17 @@ const Circle = styled.div<{ active: boolean }>`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: ${({ active }) => (active ? "#000000" : "#fff")};
-  border: 2px solid #aaa;
+  background-color: ${({ active, theme }) => (active ? "#000000" : theme.colors.contenedores)};
+  border: 1px solid #aaa;
 `;
 
 const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;  
+  font-size: 20px;
   position: absolute;
-  top: -2px;
-  /* bottom: px; */
+  top: -3px;
 `;
 
 const Label = styled.span`

@@ -2,6 +2,8 @@ import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 import { Category_Card } from "../../molecules/cards/Category_Card";
 import { Add_Category_Card } from "../../molecules/cards/Add_Category_Card";
+import { useLang } from "@/context/Language_Context";
+import { Divider } from "@/components/atoms/Divider";
 
 interface Category {
   title: string;
@@ -24,9 +26,11 @@ export const Category_List: FC<Props> = ({
   onAddCategory,
   selectedCategory,
 }) => {
+  const { t } = useLang();
+
   return (
     <Container>
-      <Title>Categorías</Title>
+      <Title>{t.productos.pageTitle}</Title>
       <Divider />
       <Categories_Container>
         <Category_Wrapper>
@@ -54,34 +58,40 @@ const Container = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
+  font-size: ${({ theme }) => theme.fontSizes.title * 0.8}px;
+  color: ${({ theme }) => theme.colors.title};
   font-weight: bold;
   margin-bottom: 10px;
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #ccc;
-  margin-bottom: 15px;
-`;
-
 const Categories_Container = styled.div`
-
   display: flex;
   overflow-x: auto;
-  padding: 10px 0;
+  padding-block: 0.75rem;
+  gap: 1.25rem;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
-  gap: 20px;
-  
-
-  &::-webkit-scrollbar {
-    height: 6px;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+  &:hover {
+    scrollbar-color: hsl(0 0% 80% / 0.2) transparent;
   }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #aaa;
-    border-radius: 4px;
+  @media (hover: hover) {
+    &::-webkit-scrollbar {
+      height: 0.25rem;
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: hsl(0 0% 70% / 0);
+      border-radius: 1rem;
+      transition: background 0.3s ease;
+    }
+    
+    &:hover::-webkit-scrollbar-thumb {
+      background: hsl(0 0% 70% / 0.5);
+    }
   }
 `;
 
@@ -100,4 +110,3 @@ const Category_Wrapper = styled.div`
   display: flex;
   animation: ${fadeIn} 0.5s ease;
 `;
-

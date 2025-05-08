@@ -9,6 +9,7 @@ import { Task_Detail_Modal } from "@/components/molecules/modal_details/Task_Det
 import { Task_Details } from "@/components/organisms/modals_details/tasks/Task_Detail";
 import { Dynamic_User_Filter } from "@/components/molecules/tasks/search_user/Dynamic_User_Filter";
 import { Filter_Container } from "@/components/molecules/tasks/tab_section/Filter_Container";
+import { useLang } from "@/context/Language_Context";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
@@ -77,7 +78,6 @@ const Tasks: NextPage = () => {
   const getFilteredColumns = () => {
     let filtered = [...columns];
 
-    // Filter by users first
     if (selectedUsers.length > 0) {
       filtered = filtered.map((column) => ({
         ...column,
@@ -102,6 +102,8 @@ const Tasks: NextPage = () => {
   };
 
   const filteredColumns = getFilteredColumns();
+  const { t } = useLang();
+
 
   return (
     <Page_Container>
@@ -129,14 +131,14 @@ const Tasks: NextPage = () => {
                   isActive={activeTab === "all"}
                   onClick={() => setActiveTab("all")}
                 >
-                  All Tasks
+                  {t.tasks.allTasks}
                   {activeTab === "all" && <Underline />}
                 </Tab_Button>
                 <Tab_Button
                   isActive={activeTab === "prioridades"}
                   onClick={() => setActiveTab("prioridades")}
                 >
-                  Prioridades
+                  {t.tasks.priorities}
                   {activeTab === "prioridades" && <Underline />}
                 </Tab_Button>
               </Tab_Wrapper>
@@ -199,6 +201,7 @@ const Tasks: NextPage = () => {
       )}
     </Page_Container>
   );
+
 };
 
 const Filter_Content = styled.div`
@@ -221,13 +224,15 @@ const Priority_Pill = styled.div`
   background-color: #e7e7e7;
   padding: 0.25rem 0.5rem;
   border-radius: 16px;
-  font-size: 0.875rem;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   gap: 0.25rem;
 `;
 
 const Remove_Priority = styled.span`
   cursor: pointer;
-  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   line-height: 1;
   margin-left: 0.25rem;
 
@@ -238,7 +243,8 @@ const Remove_Priority = styled.span`
 
 const Clear_All = styled.span`
   cursor: pointer;
-  font-size: 0.875rem;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: #6c6c6c;
   text-decoration: underline;
 
@@ -287,8 +293,8 @@ const Checkbox = styled.div<{ checked: boolean }>`
   &::after {
     content: "✓";
     display: ${({ checked }) => (checked ? "block" : "none")};
-    color: white;
-    font-size: 12px;
+    color: ${({ theme }) => theme.colors.icon};
+    font-size: ${({ theme }) => theme.fontSizes.text}px;
   }
 `;
 
@@ -333,11 +339,13 @@ const Title_Wrapper = styled.div`
   align-items: flex-end;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
 `;
 
 const Tabs_Container = styled.div`
   display: flex;
-  background-color: #e7e7e74e;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
@@ -354,19 +362,22 @@ const Center_Wrapper = styled.div`
 
 const Filter_Button = styled.button<{ isActive: boolean }>`
   background-color: ${({ isActive }) => (isActive ? "#6c6c6c" : "#b7b7b738")};
-  color: ${({ isActive }) => (isActive ? "white" : "inherit")};
+  color: ${({ isActive, theme }) =>
+  isActive ? theme.colors.title : "white"};
+
   border-radius: 5px;
   padding: 0.5rem 1rem;
   border: none;
   text-align: center;
   cursor: pointer;
-  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   transition: all 0.2s ease;
   white-space: nowrap;
 
   &:hover {
     background-color: #6c6c6c;
-    color: white;
+    color: red;
   }
 `;
 
@@ -381,15 +392,15 @@ const Tab_Button = styled.button<{ isActive: boolean }>`
   padding: 0.5rem 1rem;
   background: transparent;
   border: none;
-  color: #000000;
   font-weight: 600;
-  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   cursor: pointer;
   transition: transform 0.2s ease, text-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-4px);
-    text-shadow: 0px 2px 6px rgb(235, 235, 235);
+    /* text-shadow: 0px 2px 6px rgb(235, 235, 235); */
   }
 `;
 

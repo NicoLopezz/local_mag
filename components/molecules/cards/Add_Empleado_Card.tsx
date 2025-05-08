@@ -1,15 +1,17 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onAddRole: () => void;
 }
 
 export const Add_Empleado_Card: FC<Props> = ({ onAddRole }) => {
+  const { t } = useLang();
   return (
     <Card_Container onClick={onAddRole}>
       <Add_Icon>+</Add_Icon>
-      <Add_Text>Agregar Empleado</Add_Text>
+      <Add_Text>{t.empleados.addEmployee}</Add_Text>
     </Card_Container>
   );
 };

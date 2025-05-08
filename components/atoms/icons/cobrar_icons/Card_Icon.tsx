@@ -1,11 +1,9 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-interface Props {
-  onClick: () => void;
-}
 
-export const Card_Icon: FC<Props> = ({ onClick }) => {
+
+export const Card_Icon: FC = () => {
   return (
     <Svg
       stroke="currentColor"

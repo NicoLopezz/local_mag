@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Search_Icon } from "@/components/atoms/icons/Search_Icon";
 import { Close_Icon } from "@/components/atoms/icons/Close_Icon";
 import { initialTasks } from "@/mock_data/tasks";
+import { useLang } from "@/context/Language_Context";
+
 
 export interface User {
   id: number;
@@ -20,28 +22,29 @@ const slideDown = keyframes`
   to { opacity: 1; max-height: 300px }
 `;
 
-export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({ 
-  onUsersSelected
+export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
+  onUsersSelected,
 }) => {
   const getUniqueAssignedUsers = useMemo(() => {
     const assignedNames = initialTasks
-      .flatMap(column => column.tasks)
-      .map(task => task.assigned)
+      .flatMap((column) => column.tasks)
+      .map((task) => task.assigned)
       .filter((name): name is string => !!name);
 
     return [...new Set(assignedNames)].map((name, index) => ({
       id: index + 1,
       name,
-      image: "/images/empleados/persona.png"
+      image: "/images/empleados/persona.png",
     }));
   }, []);
+  const { t } = useLang();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  
+
   const MAX_DISPLAY = 3;
   const defaultAvatars = getUniqueAssignedUsers.slice(0, MAX_DISPLAY);
   const hasMoreUsers = getUniqueAssignedUsers.length > MAX_DISPLAY;
@@ -52,7 +55,10 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
         if (isSearching) {
           setSearchTerm("");
           setIsSearching(false);
@@ -75,21 +81,22 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
 
     setIsSearching(true);
     setFilteredUsers(
-    getUniqueAssignedUsers.filter(user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ));
+      getUniqueAssignedUsers.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
   }, [searchTerm, getUniqueAssignedUsers]);
 
   const toggleUser = (user: User) => {
-    const newSelectedUsers = selectedUsers.some(u => u.id === user.id)
-      ? selectedUsers.filter(u => u.id !== user.id)
+    const newSelectedUsers = selectedUsers.some((u) => u.id === user.id)
+      ? selectedUsers.filter((u) => u.id !== user.id)
       : [...selectedUsers, user].slice(0, MAX_DISPLAY);
-    
+
     setSelectedUsers(newSelectedUsers);
   };
 
   const removeUser = (userId: number) => {
-    const newSelectedUsers = selectedUsers.filter(u => u.id !== userId);
+    const newSelectedUsers = selectedUsers.filter((u) => u.id !== userId);
     setSelectedUsers(newSelectedUsers);
   };
 
@@ -101,12 +108,17 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
 
   return (
     <FixedWidthContainer ref={wrapperRef}>
-      <Title>Tasks</Title>
-      
+      <Title>{t.tasks.title}</Title>
+
       <FilterStatus>
         {selectedUsers.length ? (
           <>
-            <StatusText>off {selectedUsers.length}</StatusText>
+            <StatusText>
+              {t.tasks.selected.replace(
+                "{{count}}",
+                String(selectedUsers.length)
+              )}
+            </StatusText>
             <AvatarStack>
               {selectedUsers.map((user, i) => (
                 <Avatar
@@ -121,19 +133,22 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
                     height={30}
                     alt={user.name}
                   />
-                  {selectedUsers.length > MAX_DISPLAY && i === MAX_DISPLAY - 1 && (
-                    <ExtraCount>+{selectedUsers.length - MAX_DISPLAY}</ExtraCount>
-                  )}
+                  {selectedUsers.length > MAX_DISPLAY &&
+                    i === MAX_DISPLAY - 1 && (
+                      <ExtraCount>
+                        +{selectedUsers.length - MAX_DISPLAY}
+                      </ExtraCount>
+                    )}
                 </Avatar>
               ))}
             </AvatarStack>
             <ClearButton onClick={clearSelection}>
-              <Close_Icon/>
+              <Close_Icon />
             </ClearButton>
           </>
         ) : (
           <>
-            <StatusText>off all</StatusText>
+            <StatusText>{t.tasks.allUsers}</StatusText>
             <AvatarStack>
               {defaultAvatars.map((user, i) => (
                 <Avatar key={user.id} $stacked $offset={i * 15}>
@@ -145,9 +160,7 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
                   />
                 </Avatar>
               ))}
-              {hasMoreUsers && (
-                <MoreIndicator>...</MoreIndicator>
-              )}
+              {hasMoreUsers && <MoreIndicator>...</MoreIndicator>}
             </AvatarStack>
           </>
         )}
@@ -156,11 +169,11 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
       <SearchWrapper>
         <SearchBox $expanded={isSearching && filteredUsers.length > 0}>
           <SearchIcon>
-            <Search_Icon/>
+            <Search_Icon />
           </SearchIcon>
           <SearchInput
             type="text"
-            placeholder="Filter users..."
+            placeholder={t.tasks.searchPlaceholder}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onFocus={() => searchTerm && setIsSearching(true)}
@@ -169,11 +182,11 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
 
         {isSearching && (
           <Dropdown>
-            {filteredUsers.map(user => (
+            {filteredUsers.map((user) => (
               <UserOption
                 key={user.id}
                 onClick={() => toggleUser(user)}
-                $selected={selectedUsers.some(u => u.id === user.id)}
+                $selected={selectedUsers.some((u) => u.id === user.id)}
               >
                 <UserImage
                   src={user.image}
@@ -182,14 +195,14 @@ export const Dynamic_User_Filter: FC<DynamicUserFilterProps> = ({
                   alt={user.name}
                 />
                 <UserName>{user.name}</UserName>
-                {selectedUsers.some(u => u.id === user.id) && (
+                {selectedUsers.some((u) => u.id === user.id) && (
                   <SelectedMark>✓</SelectedMark>
                 )}
               </UserOption>
             ))}
-            
+
             {filteredUsers.length === 0 && (
-              <EmptyMessage>No matching users</EmptyMessage>
+              <EmptyMessage>{t.tasks.noMatchingUsers}</EmptyMessage>
             )}
           </Dropdown>
         )}
@@ -218,7 +231,7 @@ const FilterStatus = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #f5f5f5;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   border-radius: 20px;
   padding: 6px 12px;
   height: 40px;
@@ -226,8 +239,8 @@ const FilterStatus = styled.div`
 
 const StatusText = styled.span`
   font-size: 0.9rem;
-  color: #555;
-  margin-right: 6px;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const AvatarStack = styled.div`
@@ -237,7 +250,7 @@ const AvatarStack = styled.div`
 `;
 
 const Avatar = styled.div<{ $stacked?: boolean; $offset?: number }>`
-  position: ${({ $stacked }) => $stacked ? 'absolute' : 'relative'};
+  position: ${({ $stacked }) => ($stacked ? "absolute" : "relative")};
   left: ${({ $offset }) => `${$offset}px`};
   width: 30px;
   height: 30px;
@@ -250,7 +263,7 @@ const Avatar = styled.div<{ $stacked?: boolean; $offset?: number }>`
   justify-content: center;
   cursor: pointer;
   transition: transform 0.2s ease;
-  z-index: ${({ $offset }) => 3 - ($offset || 0)/15};
+  z-index: ${({ $offset }) => 3 - ($offset || 0) / 15};
 
   &:hover {
     transform: translateY(-2px);
@@ -260,7 +273,7 @@ const Avatar = styled.div<{ $stacked?: boolean; $offset?: number }>`
 
 const ExtraCount = styled.span`
   position: absolute;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   font-size: 0.7rem;
   width: 100%;
@@ -286,14 +299,15 @@ const SearchWrapper = styled.div`
 
 const SearchBox = styled.div<{ $expanded: boolean }>`
   position: relative;
-  border: 1px solid #ddd;
-  border-radius: ${({ $expanded }) => $expanded ? '10px 10px 5px 5px' : '10px 10px 0px 0px '};
-  background: white;
+  border: 1px solid ${({ theme }) => theme.colors.contenedores};
+  border-radius: ${({ $expanded }) =>
+    $expanded ? "10px 10px 5px 5px" : "10px 10px 0px 0px "};
+  background-color: ${({ theme }) => theme.colors.contenedores};
   transition: all 0.3s ease;
 `;
 
 const SearchInput = styled.input`
-border: 1px solid #ddd;
+  border: 1px solid ${({ theme }) => theme.colors.contenedores};
   width: 100%;
   padding: 8px 16px 8px 36px;
   border: none;
@@ -301,6 +315,7 @@ border: 1px solid #ddd;
   font-size: 0.9rem;
   background: transparent;
   border-radius: 10px 10px 0px 0px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const SearchIcon = styled.div`
@@ -314,13 +329,13 @@ const SearchIcon = styled.div`
 const Dropdown = styled.div`
   position: absolute;
   width: 198px;
-  background: white;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   border: 1px solid #ddd;
   border-top: none;
   border-radius: 0 0 10px 10px;
   animation: ${slideDown} 0.3s ease-out;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   z-index: 10;
 `;
 
@@ -329,11 +344,10 @@ const UserOption = styled.div<{ $selected: boolean }>`
   align-items: center;
   padding: 10px 16px;
   cursor: pointer;
-  background: ${({ $selected }) => $selected ? '#f0f8ff' : 'white'};
+  background-color: ${({ theme }) => theme.colors.contenedores};
   transition: background 0.2s ease;
-
   &:hover {
-    background: #f8f9fa;
+    background-color: ${({ theme }) => theme.colors.contenedores};
   }
 `;
 
@@ -344,7 +358,7 @@ const UserImage = styled(Image)`
 const UserName = styled.span`
   margin-left: 10px;
   font-size: 0.9rem;
-  color: #495057;
+  color: ${({ theme }) => theme.colors.title};
   flex-grow: 1;
 `;
 
@@ -356,7 +370,7 @@ const SelectedMark = styled.span`
 const EmptyMessage = styled.div`
   padding: 12px;
   font-size: 0.85rem;
-  color: #6c757d;
+  color: ${({ theme }) => theme.colors.title};
   text-align: center;
 `;
 
@@ -364,7 +378,7 @@ const ClearButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: #adb5bd;
+  color: ${({ theme }) => theme.colors.title};
   display: flex;
   align-items: center;
   transition: color 0.2s ease;
@@ -372,6 +386,6 @@ const ClearButton = styled.button`
   padding: 4px;
 
   &:hover {
-    color: #495057;
+    color: ${({ theme }) => theme.colors.title};
   }
 `;

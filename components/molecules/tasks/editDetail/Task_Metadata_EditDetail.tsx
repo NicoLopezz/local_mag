@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   isEditing: boolean;
@@ -25,30 +26,31 @@ export const Task_Metadata_EditDetail: FC<Props> = ({
   const today = new Date();
   const timeDiff = endDate.getTime() - today.getTime();
   const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const { t } = useLang();
 
   return (
     <Row>
       <Section>
-        <Label>Prioridad</Label>
+        <Label>{t.tasks.modals.taskDescription.priority}</Label>
         <Select
           value={priority}
           onChange={(e) => onPriorityChange(e.target.value)}
           disabled={!isEditing}
         >
-          <option value="Alta">Alta</option>
-          <option value="Media">Media</option>
-          <option value="Baja">Baja</option>
+          <option value="Alta">{t.tasks.priorityLabels.Alta}</option>
+          <option value="Media">{t.tasks.priorityLabels.Media}</option>
+          <option value="Baja">{t.tasks.priorityLabels.Baja}</option>
         </Select>
       </Section>
 
       <Section>
-        <Label>Estado</Label>
+        <Label>{t.tasks.modals.taskDescription.status}</Label>
         <Select
           value={status}
           onChange={(e) => onStatusChange(e.target.value)}
           disabled={!isEditing}
         >
-          <option value="">Seleccionar</option>
+          <option value="">{t.tasks.modals.taskDescription.select}</option>
           {Object.keys(statusSteps).map((step) => (
             <option key={step} value={step}>
               {step}
@@ -60,7 +62,7 @@ export const Task_Metadata_EditDetail: FC<Props> = ({
       <Section>
         {isEditing ? (
           <>
-            <Label>Nuevo fin</Label>
+            <Label>{t.tasks.modals.taskDescription.newEnd}</Label>
             <DateInput
               type="date"
               value={endDate.toISOString().split("T")[0]}
@@ -69,9 +71,14 @@ export const Task_Metadata_EditDetail: FC<Props> = ({
           </>
         ) : (
           <Countdown>
-            <Label>Fin de tarea</Label>
+            <Label>{t.tasks.modals.taskDescription.taskEnd}</Label>
             <span>{endDate.toLocaleDateString()}</span>
-            <Restan>Restan {daysRemaining} días</Restan>
+            <Restan>
+              {t.tasks.modals.taskDescription.remaining.replace(
+                "{{count}}",
+                String(daysRemaining)
+              )}
+            </Restan>
           </Countdown>
         )}
       </Section>

@@ -29,6 +29,7 @@ const Stock_Container = styled.div`
   width: 70%;
   padding: 5px;
   border-top: 1px solid #ddd;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Stock_Button = styled.button`
@@ -43,6 +44,8 @@ const Stock_Button = styled.button`
   align-items: center;
   justify-content: center;
   transition: 0.2s;
+  color: ${({ theme }) => theme.colors.text};
+
 
   &:hover {
     background-color: #ddd;

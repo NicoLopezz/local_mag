@@ -6,12 +6,9 @@ import { Sidebar } from "../organisms/sidebar/Sidebar";
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
-
 interface Props {
   children: ReactNode;
 }
-
-
 
 export const Main_Layout: FC<Props> = ({ children }) => {
   return (
@@ -29,8 +26,9 @@ export const Main_Layout: FC<Props> = ({ children }) => {
 const Layout_Container = styled.div`
   display: flex;
   width: 100%;
-  height: calc(100vh - ${Navbar_Height});
+  height: calc(100vh);
   overflow-y: hidden;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const Content = styled.div`

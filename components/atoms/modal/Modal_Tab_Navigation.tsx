@@ -15,7 +15,6 @@ export const Modal_Tab_Navigation: FC<Props> = ({ tabs, activeTab, onTabChange }
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
     const activeIndex = tabs.indexOf(activeTab);
     const tabElements = container.querySelectorAll<HTMLButtonElement>("button");
 

@@ -1,15 +1,19 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onAddProceso: () => void;
 }
 
 export const Add_Proceso_Card: FC<Props> = ({ onAddProceso }) => {
+
+  const {t} = useLang();
+
   return (
     <Card_Container onClick={onAddProceso}>
       <Add_Icon>+</Add_Icon>
-      <Add_Text>Agregar Proceso</Add_Text>
+      <Add_Text>{t.processes.addProcesses}</Add_Text>
     </Card_Container>
   );
 };

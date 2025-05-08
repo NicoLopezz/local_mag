@@ -7,12 +7,13 @@ import { Drag_Indicator } from "@/components/atoms/card_tasks/Drag_Indicator";
 import { Task_Priority_Tag } from "@/components/atoms/card_tasks/Task_Priority_Tag";
 import { Task_Progress_Mini } from "@/components/atoms/card_tasks/Task_Progress_Mini";
 import Image from "next/image";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   id: string;
   title: string;
   tag?: string;
-  priority?: string;
+  priority?: "Baja" | "Media" | "Alta" | "Sin prioridad";
   assigned?: string;
   assignedImage?: string;
   status?: string;
@@ -58,13 +59,18 @@ export const Task_Card: FC<Props> = ({
     onMoveTask?.(id, "last");
   };
 
+  const { t } = useLang();
+
+
   const getDaysLeft = (dueDate?: string) => {
     if (!dueDate) return null;
     const today = new Date();
     const end = new Date(dueDate);
     const diffTime = end.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays >= 0 ? `${diffDays} days left` : "Vencida";
+    return diffDays >= 0
+    ? t.tasks.daysLeft.replace("{{count}}", String(diffDays))
+    : t.tasks.overdue;
   };
 
   const daysLeftText = getDaysLeft(dueDate);

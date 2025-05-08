@@ -1,7 +1,8 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Delete_Icon} from "@/components/atoms/icons/Delete_Icon";
+import { Delete_Icon } from "@/components/atoms/icons/Delete_Icon";
 import { Save_Icon } from "@/components/atoms/icons/Save_Icon";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   showSave: boolean;
@@ -10,21 +11,24 @@ interface Props {
 }
 
 export const Task_Actions_EditDetail: FC<Props> = ({ showSave, onSave, onDelete }) => {
+  const { t } = useLang();
+
   return (
     <Actions>
       {showSave && (
         <Button onClick={onSave}>
-          <Save_Icon/>
-          Guardar
+          <Save_Icon />
+          {t.tasks.modals.taskDescription.save}
         </Button>
       )}
       <DeleteButton onClick={onDelete}>
-        <Delete_Icon/>
-        Eliminar
+        <Delete_Icon />
+        {t.tasks.modals.taskDescription.delete}
       </DeleteButton>
     </Actions>
   );
 };
+
 
 const Actions = styled.div`
   display: flex;
@@ -34,15 +38,17 @@ const Actions = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #000000;
+  background-color: ${({ disabled, theme }) =>
+    disabled ? "#f9f9f99" : theme.colors.button};
+  
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+
   gap: 5px;
-  color: white;
   font-weight: 400;
   padding: 12px 16px;
   border: none;
   border-radius: 8px;
   font-family: inherit;
-  font-size: 13px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -54,14 +60,16 @@ const Button = styled.button`
 `;
 
 const DeleteButton = styled.button`
-  background-color: #000000;
+  background-color: ${({ disabled, theme }) =>
+    disabled ? "#f9f9f99" : theme.colors.button};
+  color: ${({ disabled}) =>
+    disabled ? "#a0a0a0": "white"};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   gap: 5px;
-  color: white;
   padding: 12px 16px;
   border: none;
   border-radius: 8px;
   font-family: inherit;
-  font-size: 13px;
   cursor: pointer;
   display: flex;
   align-items: center;

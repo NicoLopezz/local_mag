@@ -231,13 +231,7 @@ export const Tasks_Board: FC<Props> = ({
   };
 
   return (
-    // <DndContext
-    //   sensors={sensors}
-    //   collisionDetection={rectIntersection}
-    //   onDragStart={handleDragStart}
-    //   onDragOver={handleDragOver}
-    //   onDragEnd={handleDragEnd}
-    // >
+ 
     <>
     
       <Wrapper>
@@ -268,7 +262,14 @@ export const Tasks_Board: FC<Props> = ({
             id={activeTask.id}
             title={activeTask.title}
             tag={activeTask.tag}
-            priority={activeTask.priority}
+            priority={
+              activeTask.priority === "Baja" ||
+              activeTask.priority === "Media" ||
+              activeTask.priority === "Alta" ||
+              activeTask.priority === "Sin prioridad"
+                ? activeTask.priority
+                : undefined
+            }
             assigned={activeTask.assigned}
             status={activeTask.status}
             
@@ -277,13 +278,10 @@ export const Tasks_Board: FC<Props> = ({
         )}
       </DragOverlay>
       </>
-    // </DndContext>
   );
 };
 
 const Wrapper = styled.div`
-  /* max-width: 1500px; */
-  /* background-color: red; */
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;

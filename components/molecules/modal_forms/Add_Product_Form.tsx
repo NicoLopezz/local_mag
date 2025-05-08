@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onSubmit: (product: ProductInput) => void;
@@ -24,6 +25,7 @@ export const Add_Product_Form: FC<Props> = ({ onSubmit }) => {
     stock: ""
   });
 
+  const { t } = useLang();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -46,43 +48,47 @@ export const Add_Product_Form: FC<Props> = ({ onSubmit }) => {
 
   return (
     <Form_Container onSubmit={handleSubmit}>
-      <Form_Title>Agregar Producto</Form_Title>
-
+      <Form_Title>{t.modals.productos.productForm.title}</Form_Title>
+  
       <Styled_Input
         name="title"
-        placeholder="Nombre del producto"
+        placeholder={t.modals.productos.productForm.nombre}
         value={form.title}
         onChange={handleChange}
         required
       />
       <Styled_Textarea
         name="description"
-        placeholder="Descripción"
+        placeholder={t.modals.productos.productForm.descripcion}
         value={form.description}
         onChange={handleChange}
         required
       />
       <Styled_Input
         name="productCode"
-        placeholder="Código del producto"
+        placeholder={t.modals.productos.productForm.codigo}
         value={form.productCode}
         onChange={handleChange}
         required
       />
-
+  
       <Form_Row>
         <Styled_Input_Stock
           name="stock"
           type="number"
-          placeholder="Stock"
+          placeholder={t.modals.productos.productForm.stock}
           value={form.stock}
           onChange={handleChange}
           required
         />
-        <Styled_Button type="submit">Guardar</Styled_Button>
+        <Styled_Button type="submit">
+          {t.modals.productos.productForm.guardar}
+        </Styled_Button>
       </Form_Row>
     </Form_Container>
   );
+  
+
 };
 
 const Form_Container = styled.form`

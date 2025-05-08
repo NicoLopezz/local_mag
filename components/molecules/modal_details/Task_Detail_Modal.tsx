@@ -1,5 +1,4 @@
 import { FC, ReactNode } from "react";
-import styled from "styled-components";
 import { Modal_Overlay } from "../../atoms/modal/Modal_Overlay";
 import { Modal_Content } from "../../atoms/modal/Modal_Content";
 

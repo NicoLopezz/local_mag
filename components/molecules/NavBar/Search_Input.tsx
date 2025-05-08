@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { Close_Icon } from "@/components/atoms/icons/Close_Icon";
 import { Search_Icon } from "@/components/atoms/icons/Search_Icon";
+import { useLang } from "@/context/Language_Context";
 
 export const SearchInput: FC = () => {
   const router = useRouter();
@@ -14,7 +15,6 @@ export const SearchInput: FC = () => {
   const [focused, setFocused] = useState(false);
 
   const handleFocus = () => setFocused(true);
-
   const handleBlur = () => {
     if (inputValue.trim() === "") {
       setFocused(false);
@@ -56,6 +56,8 @@ export const SearchInput: FC = () => {
     router.replace(currentPath);
   };
 
+  const {t} = useLang();
+
   const showClear = inputValue.trim() !== "";
 
   return (
@@ -63,7 +65,7 @@ export const SearchInput: FC = () => {
       <Input
         ref={inputRef}
         type="text"
-        placeholder="Buscar..."
+        placeholder= {t.searchbar.placeholder}
         value={inputValue}
         onChange={handleChange}
         // onFocus={handleFocus}
@@ -83,19 +85,19 @@ export const SearchInput: FC = () => {
 };
 
 const getFilterKey = (path: string): string => {
-  if (path.includes("/productos")) return "category";
-  if (path.includes("/empleados")) return "roles";
-  if (path.includes("/servicios")) return "tipo";
+  if (path.includes("/products")) return "category";
+  if (path.includes("/employees")) return "roles";
+  if (path.includes("/services")) return "tipo";
   return "";
 };
 
 const Search_Wrapper = styled.div<{ focused: boolean }>`
   display: flex;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colors.title};;
   border-radius: 20px;
   padding: 5px 20px;
-  background-color: #f9f9f9;
+  background-color: ${({ theme }) => theme.colors.neutral.light};
   width: 350px;
   transition: width 0.3s ease;
 `;

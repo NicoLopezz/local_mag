@@ -10,13 +10,14 @@ import { QRCodeCanvas } from "qrcode.react";
 import { Money_Icon } from "@/components/atoms/icons/cobrar_icons/Money_Icon";
 import { Card_Icon } from "@/components/atoms/icons/cobrar_icons/Card_Icon";
 import { Qr_Icon } from "@/components/atoms/icons/cobrar_icons/Qr_Icon";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onClose: () => void;
 }
 
 export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState("Cobrar");
+  const { t } = useLang();
   const [activePaymentTab, setActivePaymentTab] = useState("Efectivo");
   const { query } = useRouter();
   const productCode =
@@ -129,6 +130,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
   };
 
   const tipoTarjeta = getTipoTarjeta(numeroTarjeta);
+  
 
   function handleFinalizarPago(
     event: React.MouseEvent<HTMLButtonElement>
@@ -136,11 +138,21 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
     throw new Error("Function not implemented.");
   }
 
+  const TABS = [
+    { id: "cobrar", label: t.modals.productos.cobrar.tabs.cobrar },
+    { id: "stock", label: t.modals.productos.cobrar.tabs.stock }
+  ];
+  
+  const [activeTab, setActiveTab] = useState("cobrar");
+  
   return (
     <Cobrar_Base_Detail_Modal
-      tabs={["Cobrar", "Stock"]}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
+      tabs={TABS.map(tab => tab.label)}
+      activeTab={TABS.find(tab => tab.id === activeTab)?.label || ""}
+      onTabChange={(label) => {
+        const selected = TABS.find(tab => tab.label === label);
+        if (selected) setActiveTab(selected.id);
+      }}
       onClose={onClose}
       imageSlot={
         producto && (
@@ -154,17 +166,17 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
         )
       }
     >
-      <TabContentContainer active={activeTab === "Cobrar"}>
-        {activeTab === "Cobrar" && (
+      <TabContentContainer active={activeTab === "cobrar"}>
+        {activeTab === "cobrar" && (
           <CobrarSection>
             {producto && (
               <>
                 <ProductInfo>
                   <span>{producto.title}</span>
-                  <span>Precio: ${producto.stock}</span>
+                  <span>{t.modals.productos.cobrar.precio}: ${producto.stock}</span>
                 </ProductInfo>
                 <InputGroup>
-                  <label htmlFor="cantidad">Cantidad:</label>
+                  <label htmlFor="cantidad">{t.modals.productos.cobrar.cantidad}:</label>
                   <input
                     type="number"
                     id="cantidad"
@@ -174,63 +186,46 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                   />
                 </InputGroup>
                 <TotalPagar>
-                  <span>Total a cobrar:</span>
+                  <span>{t.modals.productos.cobrar.totalCobrar}:</span>
                   <span>${totalAPagar.toFixed(2)}</span>
                 </TotalPagar>
-
+  
                 <PaymentMethodTabs>
                   <PaymentTab
-                    className={
-                      activePaymentTab === "Efectivo" ? "is-active" : ""
-                    }
+                    className={activePaymentTab === "Efectivo" ? "is-active" : ""}
                     onClick={() => setActivePaymentTab("Efectivo")}
                   >
                     <PaymentTabContent>
-                      <Money_Icon
-                        onClick={function (): void {
-                          throw new Error("Function not implemented.");
-                        }}
-                      />
-                      <span>Efectivo</span>
+                      <Money_Icon />
+                      <span>{t.modals.productos.cobrar.metodos.efectivo}</span>
                     </PaymentTabContent>
                   </PaymentTab>
-
+  
                   <PaymentTab
-                    className={
-                      activePaymentTab === "Tarjeta" ? "is-active" : ""
-                    }
+                    className={activePaymentTab === "Tarjeta" ? "is-active" : ""}
                     onClick={() => setActivePaymentTab("Tarjeta")}
                   >
                     <PaymentTabContent>
-                      <Card_Icon
-                        onClick={function (): void {
-                          throw new Error("Function not implemented.");
-                        }}
-                      />
-                      <span>Tarjeta</span>
+                      <Card_Icon />
+                      <span>{t.modals.productos.cobrar.metodos.tarjeta}</span>
                     </PaymentTabContent>
                   </PaymentTab>
-
+  
                   <PaymentTab
                     className={activePaymentTab === "QR" ? "is-active" : ""}
                     onClick={() => setActivePaymentTab("QR")}
                   >
                     <PaymentTabContent>
-                      <Qr_Icon
-                        onClick={function (): void {
-                          throw new Error("Function not implemented.");
-                        }}
-                      />
-                      <span>Qr</span>
+                      <Qr_Icon />
+                      <span>{t.modals.productos.cobrar.metodos.qr}</span>
                     </PaymentTabContent>
                   </PaymentTab>
                 </PaymentMethodTabs>
-                <PaymentContentContainer
-                  isActive={activePaymentTab === "Efectivo"}
-                >
+  
+                <PaymentContentContainer isActive={activePaymentTab === "Efectivo"}>
                   <PaymentDetails>
                     <PaymentOptions>
-                      <PaymentLabel>Paga con:</PaymentLabel>
+                      <PaymentLabel>{t.modals.productos.cobrar.pagaCon}</PaymentLabel>
                       <PaymentInput
                         type="number"
                         value={pagoEfectivo ?? ""}
@@ -239,60 +234,51 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                         min="0"
                         step="0.01"
                       />
-
+  
                       <QuickPaymentButtons>
-                        {[totalAPagar, totalAPagar * 1.5, totalAPagar * 2].map(
-                          (amount) => (
-                            <QuickButton
-                              key={amount}
-                              onClick={() => setPagoEfectivo(amount)}
-                            >
-                              ${amount.toFixed(2)}
-                            </QuickButton>
-                          )
-                        )}
+                        {[totalAPagar, totalAPagar * 1.5, totalAPagar * 2].map((amount) => (
+                          <QuickButton key={amount} onClick={() => setPagoEfectivo(amount)}>
+                            ${amount.toFixed(2)}
+                          </QuickButton>
+                        ))}
                         <PaymentActions>
                           <ActionButton
                             onClick={() => setPagoEfectivo(undefined)}
                             disabled={pagoEfectivo === null}
                           >
-                            Limpiar
+                            {t.modals.productos.cobrar.limpiar}
                           </ActionButton>
                         </PaymentActions>
                       </QuickPaymentButtons>
                     </PaymentOptions>
-
+  
                     <PaymentResultContainer>
                       <PaymentSummary>
                         <SummaryRow>
-                          <span>Recibido:</span>
+                          <span>{t.modals.productos.cobrar.recibido}:</span>
                           <ReceivedAmount $hasValue={pagoEfectivo !== null}>
                             {pagoEfectivo !== null
                               ? `$${(pagoEfectivo ?? 0).toFixed(2)}`
                               : "-"}
                           </ReceivedAmount>
                         </SummaryRow>
-
+  
                         <SummaryRow>
-                          <span>Total:</span>
+                          <span>{t.modals.productos.cobrar.total}:</span>
                           <span>${totalAPagar.toFixed(2)}</span>
                         </SummaryRow>
-
+  
                         <Divider />
-
+  
                         <SummaryRow>
-                          <span>Vuelto:</span>
-                          <ChangeAmount
-                            $status={getChangeStatus(vueltoEfectivo)}
-                          >
+                          <span>{t.modals.productos.cobrar.vuelto}:</span>
+                          <ChangeAmount $status={getChangeStatus(vueltoEfectivo)}>
                             {pagoEfectivo !== null
                               ? (vueltoEfectivo ?? 0) > 0
                                 ? `$${(vueltoEfectivo ?? 0).toFixed(2)}`
                                 : (vueltoEfectivo ?? 0) < 0
-                                ? `-$${Math.abs(vueltoEfectivo ?? 0).toFixed(
-                                    2
-                                  )}`
-                                : "Pago exacto"
+                                ? `-$${Math.abs(vueltoEfectivo ?? 0).toFixed(2)}`
+                                : t.modals.productos.cobrar.exacto
                               : "-"}
                           </ChangeAmount>
                         </SummaryRow>
@@ -300,9 +286,8 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                     </PaymentResultContainer>
                   </PaymentDetails>
                 </PaymentContentContainer>
-                <PaymentContentContainer
-                  isActive={activePaymentTab === "Tarjeta"}
-                >
+  
+                <PaymentContentContainer isActive={activePaymentTab === "Tarjeta"}>
                   <TarjetaSection>
                     <TarjetaFormulario
                       onNumeroTarjetaChange={handleNumeroTarjetaChange}
@@ -322,31 +307,36 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                     />
                   </TarjetaSection>
                 </PaymentContentContainer>
+  
                 <PaymentContentContainer isActive={activePaymentTab === "QR"}>
                   <PaymentDetails>
                     <QRCodeContainer>
                       <QRCodeCanvas
-                        value={`https://tusitio.com/productos/`}
+                        value={`https://tusitio.com/products/`}
                         size={200}
                         bgColor="#ffffff"
                         fgColor="#000000"
                         level="H"
                         includeMargin={true}
                       />
-                      <Title>Por favor scanee el QR</Title>
+                      <Title>{t.modals.productos.cobrar.escaneaQr}</Title>
                     </QRCodeContainer>
                   </PaymentDetails>
                 </PaymentContentContainer>
+  
                 <Finalizar_Wrapper>
                   <FinalizarButton disabled={contadorActivo !== true}>
-                    Finalizar
+                    {t.modals.productos.cobrar.finalizar}
                     {contadorActivo !== true && (
-                      <Tooltip>Complete los campos</Tooltip>
+                      <Tooltip>{t.modals.productos.cobrar.tooltip}</Tooltip>
                     )}
-                  </FinalizarButton>{" "}
+                  </FinalizarButton>
                   {contadorActivo && contador !== null && (
                     <ContadorCancelacion activo={contador <= 5}>
-                      Cancelación automática en {contador} seg
+                      {t.modals.productos.cobrar.cancelacionAuto.replace(
+                        "{seg}",
+                        String(contador)
+                      )}
                     </ContadorCancelacion>
                   )}
                 </Finalizar_Wrapper>
@@ -357,6 +347,9 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
       </TabContentContainer>
     </Cobrar_Base_Detail_Modal>
   );
+  
+
+
 };
 
 const TarjetaSection = styled.div`

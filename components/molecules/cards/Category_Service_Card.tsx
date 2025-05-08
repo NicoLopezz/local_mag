@@ -11,6 +11,7 @@ interface Props {
   onSelect: () => void;
 }
 
+
 export const Category_Service_Card: FC<Props> = ({
   title,
   description,
@@ -30,6 +31,7 @@ export const Category_Service_Card: FC<Props> = ({
     </Card_Container>
   );
 };
+
 
 const Card_Container = styled.div<{ isSelected: boolean }>`
   display: flex;
@@ -60,7 +62,7 @@ const Card_Image = styled.div`
   position: relative;
   width: 100%;
   height: 80px;
-  background-color: #f0f0f0;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const Card_Content = styled.div`
@@ -71,7 +73,7 @@ const Card_Content = styled.div`
 `;
 
 const Card_Title = styled.h3`
-  font-size: ${({ theme }) => theme.fontSizes.title}px;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   font-weight: bold;
   color: #333;
 `;

@@ -89,7 +89,8 @@ const PedidoItemContainer = styled.div<PedidoItemContainerProps>`
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  background: ${({ $isSelected }) => ($isSelected ? '#dbdbdb' : 'white')};
+  background-color: ${({ $isSelected, theme }) =>
+  $isSelected ? theme.colors.icon : theme.colors.contenedores};
   border-radius: 8px;
   box-shadow: ${({ $isSelected }) => 
     $isSelected ? '0 4px 12px rgba(0, 0, 0, 0.15)' : '0 2px 6px rgba(0, 0, 0, 0.1)'};
@@ -103,7 +104,6 @@ const PedidoItemContainer = styled.div<PedidoItemContainerProps>`
   gap: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: ${({ $isSelected }) => $isSelected ? '1px solid #3498db' : '1px solid #eee'};
   transform: ${({ $isSelected }) => $isSelected ? 'translateY(-2px)' : 'none'};
 
   &:hover {

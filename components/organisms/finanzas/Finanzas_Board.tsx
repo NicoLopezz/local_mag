@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useTransactions } from "@/context/Transacciones_Context";
 import React, { useState } from "react";
 import { Check_Icon } from "@/components/atoms/icons/finanzas_icons/Check_Icon";
+import { useLang } from "@/context/Language_Context";
 
 interface Transaction {
   time: string;
@@ -62,25 +63,26 @@ export const Finanzas_Board = ({
     return totalIngresosSeleccionados - totalEgresosSeleccionados;
   };
 
+  const { t } = useLang();
   const dynamicBalance = calculateDynamicBalance();
 
   return (
     <BoardWrapper>
-      <PageTitle>Finanzas</PageTitle>
-      <Divider/>
+      <PageTitle>{t.finanzas.title}</PageTitle>
+      <Divider />
       <TabContainer>
-        <TabItem $active={activeTab === "day"}>Día</TabItem>
-        <TabItem $active={activeTab === "week"}>Semana</TabItem>
-        <TabItem $active={activeTab === "month"}>Mes</TabItem>
-        <TabItem $active={activeTab === "year"}>Año</TabItem>
+        <TabItem $active={activeTab === "day"}>{t.finanzas.tabs.day}</TabItem>
+        <TabItem $active={activeTab === "week"}>{t.finanzas.tabs.week}</TabItem>
+        <TabItem $active={activeTab === "month"}>{t.finanzas.tabs.month}</TabItem>
+        <TabItem $active={activeTab === "year"}>{t.finanzas.tabs.year}</TabItem>
       </TabContainer>
-
+  
       <CurrentDate>{formatDate(date)}</CurrentDate>
-
+  
       <ContentContainer>
         <ColumnsWrapper>
           <Column>
-            <ColumnHeader>INGRESOS</ColumnHeader>
+            <ColumnHeader>{t.finanzas.ingresos}</ColumnHeader>
             <TransactionsList>
               {transactions
                 .filter((t) => t.type === "ingreso")
@@ -93,17 +95,15 @@ export const Finanzas_Board = ({
                   >
                     <TransactionTime>{t.time}</TransactionTime>
                     <TransactionDesc>{t.description}</TransactionDesc>
-                    <TransactionAmount $type="ingreso">
-                      {t.stock}
-                    </TransactionAmount>
+                    <TransactionAmount $type="ingreso">{t.stock}</TransactionAmount>
                     {selectedTransactionIds.has(t.id) && <CheckIcon />}
                   </TransactionItem>
                 ))}
             </TransactionsList>
           </Column>
-
+  
           <Column>
-            <ColumnHeader>EGRESOS</ColumnHeader>
+            <ColumnHeader>{t.finanzas.egresos}</ColumnHeader>
             <TransactionsList>
               {transactions
                 .filter((t) => t.type === "egreso")
@@ -116,21 +116,19 @@ export const Finanzas_Board = ({
                   >
                     <TransactionTime>{t.time}</TransactionTime>
                     <TransactionDesc>{t.description}</TransactionDesc>
-                    <TransactionAmount $type="egreso">
-                      {t.stock}
-                    </TransactionAmount>
+                    <TransactionAmount $type="egreso">{t.stock}</TransactionAmount>
                     {selectedTransactionIds.has(t.id) && <CheckIcon />}
                   </TransactionItem>
                 ))}
             </TransactionsList>
           </Column>
         </ColumnsWrapper>
-
+  
         <BalanceColumn>
-          <ColumnHeader>BALANCE</ColumnHeader>
+          <ColumnHeader>{t.finanzas.balance.title}</ColumnHeader>
           <BalanceContent>
             <BalanceRow>
-              <span>Total Ingresos:</span>
+              <span>{t.finanzas.balance.totalIngresos}:</span>
               <span>
                 ${transactions
                   .filter((t) => t.type === "ingreso")
@@ -139,7 +137,7 @@ export const Finanzas_Board = ({
               </span>
             </BalanceRow>
             <BalanceRow>
-              <span>Total Egresos:</span>
+              <span>{t.finanzas.balance.totalEgresos}:</span>
               <span>
                 -${Math.abs(
                   transactions
@@ -149,16 +147,18 @@ export const Finanzas_Board = ({
               </span>
             </BalanceRow>
             <BalanceRow $highlight>
-              <span>Balance Neto:</span>
-              <span>${dynamicBalance.toFixed(2)} (Seleccionado)</span>
+              <span>{t.finanzas.balance.neto}:</span>
+              <span>
+                ${dynamicBalance.toFixed(2)} ({t.finanzas.balance.seleccionado})
+              </span>
             </BalanceRow>
-              <AddButton onClick={handleAddPedido}>Añadir Pedido</AddButton>
-            
+            <AddButton onClick={handleAddPedido}>{t.finanzas.addPedido}</AddButton>
           </BalanceContent>
         </BalanceColumn>
       </ContentContainer>
     </BoardWrapper>
   );
+  
 };
 
 const BoardWrapper = styled.div`
@@ -169,15 +169,15 @@ const BoardWrapper = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  font-size: 2rem;
   margin: 0 0 1rem 0;
-  color: #2c3e50;
   margin-top: 1rem;
+  color: ${({ theme }) => theme.colors.title};
+  font-size: ${({ theme }) => theme.fontSizes.title}px;
 `;
 
 const Divider = styled.hr`
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #cccccc16;
   margin-top: 0.5rem; 
   margin-bottom: 1.5rem;
   width: 100%; 

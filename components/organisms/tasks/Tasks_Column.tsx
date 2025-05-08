@@ -80,7 +80,14 @@ export const Tasks_Column: FC<Props> = ({
                 id={task.id}
                 title={task.title}
                 tag={task.tag}
-                priority={task.priority}
+                priority={
+                  task.priority === "Baja" ||
+                  task.priority === "Media" ||
+                  task.priority === "Alta" ||
+                  task.priority === "Sin prioridad"
+                    ? task.priority
+                    : undefined
+                }
                 assigned={task.assigned}
                 assignedImage="/images/empleados/persona.png"
                 status={task.status} 
@@ -104,7 +111,7 @@ export const Tasks_Column: FC<Props> = ({
 
 const Column = styled.div`
   flex-shrink: 0;
-  background-color: #e7e7e74e;
+  background-color: ${({ theme }) => theme.colors.contenedores};
   border-radius: 12px;
   padding: 10px;
   width: 45%;
@@ -114,9 +121,9 @@ const Column = styled.div`
 `;
 
 const Column_Header = styled.h3`
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
   font-weight: 700;
-  color: var(--dark-blue);
   margin: 0 0 12px 0;
 `;
 
@@ -126,7 +133,29 @@ const Scrollable = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.background};
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.icon};
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: ${({ theme }) => theme.colors.button};
+  }
 `;
+
 
 const Cards_Container = styled.div`
   display: flex;

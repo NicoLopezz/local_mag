@@ -201,14 +201,17 @@ const Checkbox = styled.div<{ checked: boolean }>`
 `;
 
 const Filter_Button = styled.button<{ isActive: boolean }>`
-  background-color: ${({ isActive }) => (isActive ? "#6c6c6c9a" : "#b7b7b721")};
-  color: ${({ isActive }) => (isActive ? "white" : "inherit")};
+  background-color: ${({ disabled, theme }) =>
+    disabled ? "#f9f9f99" : theme.colors.button};
+  color: ${({ disabled}) =>
+    disabled ? "#a0a0a0": "white"};
+  font-size: ${({ theme }) => theme.fontSizes.text * 0.8}px;
+
   border-radius: 5px;
   padding: 0.5rem 1rem;
   border: none;
   text-align: center;
   cursor: pointer;
-  font-size: 12px;
   transition: all 0.2s ease;
   white-space: nowrap;
   font-weight:  600;

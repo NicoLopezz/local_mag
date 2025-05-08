@@ -23,12 +23,12 @@ const Page_Container = styled.div`
   display: flex;
   width: 100%;
   height: calc(100vh - ${Navbar_Height});
-  overflow: hidden;
+  overflow-y: hidden;
 `;
 
 const Main_Content = styled.div`
   display: flex;
-  overflow: hidden;
+  overflow-y: hidden;
   padding: 0px;
   flex-grow: 1;
 
@@ -42,7 +42,7 @@ const Content_Area = styled.div`
   max-width: calc(100vw - ${Sidebar_Width});
   margin-left: 6rem;
   margin-top: 1rem;
-  overflow: hidden;
+  overflow-y: hidden;
   height: calc(95vh);
 `;
 

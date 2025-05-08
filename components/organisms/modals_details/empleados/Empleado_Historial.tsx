@@ -1,7 +1,14 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { LineChart, BarChart, PieChart } from "@/components/molecules/empleados/Charts"; // Asume que tienes estos componentes
-import { ProgressCard, MetricCard } from "@/components/molecules/empleados/Cards"; // Asume que tienes estos componentes
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+} from "@/components/molecules/empleados/Charts";
+import {
+  ProgressCard,
+  MetricCard,
+} from "@/components/molecules/empleados/Cards";
 
 interface HistorialEmpleado {
   id: string;
@@ -45,49 +52,74 @@ interface Props {
 }
 
 export const Empleado_Historial: FC<Props> = ({ empleado }) => {
-  // Preparar datos para gráficos
-  const salarioData = empleado.historialSalarial.map(item => ({
-    fecha: new Date(item.fecha).toLocaleDateString('es-AR', { month: 'short', year: 'numeric' }),
-    salario: item.salario
+  const salarioData = empleado.historialSalarial.map((item) => ({
+    fecha: new Date(item.fecha).toLocaleDateString("es-AR", {
+      month: "short",
+      year: "numeric",
+    }),
+    salario: item.salario,
   }));
 
-  const presentismoData = empleado.presentismo.map(item => ({
+  const presentismoData = empleado.presentismo.map((item) => ({
     mes: item.mes,
-    presentismo: item.porcentaje
+    presentismo: item.porcentaje,
   }));
 
-  const ultimoMes = empleado.metricasLaborales[empleado.metricasLaborales.length - 1];
-  const meses = empleado.metricasLaborales.map(item => item.mes);
+  const ultimoMes =
+    empleado.metricasLaborales[empleado.metricasLaborales.length - 1];
+  const meses = empleado.metricasLaborales.map((item) => item.mes);
 
   return (
     <HistorialContainer>
-      <Header>
+      {/* <Header>
         <Title>Historial de {empleado.nombre}</Title>
-        <Subtitle>Legajo: {empleado.id} | Ingreso: {new Date(empleado.fechaIngreso).toLocaleDateString()}</Subtitle>
+        <Subtitle>
+          Legajo: {empleado.id} | Ingreso:{" "}
+          {new Date(empleado.fechaIngreso).toLocaleDateString()}
+        </Subtitle>
       </Header>
 
       <MetricsGrid>
-        <MetricCard 
-          title="Antigüedad" 
-          value={`${Math.floor((Date.now() - new Date(empleado.fechaIngreso).getTime() / (1000 * 60 * 60 * 24 * 365))} años`} 
+        <MetricCard
+          title="Antigüedad"
+          value={`${Math.floor(
+            (Date.now() - new Date(empleado.fechaIngreso).getTime()) /
+              (1000 * 60 * 60 * 24 * 365)
+          )} años`}
           icon="calendar"
         />
-        <MetricCard 
-          title="Último salario" 
-          value={`$${empleado.historialSalarial[empleado.historialSalarial.length - 1].salario.toLocaleString()}`} 
+
+        <MetricCard
+          title="Último salario"
+          value={`$${empleado.historialSalarial[
+            empleado.historialSalarial.length - 1
+          ].salario.toLocaleString()}`}
           icon="dollar"
           trend="up"
-          change={`${((empleado.historialSalarial[empleado.historialSalarial.length - 1].salario - empleado.historialSalarial[0].salario) / empleado.historialSalarial[0].salario * 100).toFixed(1)}% desde ingreso`}
+          change={`${(
+            ((empleado.historialSalarial[empleado.historialSalarial.length - 1]
+              .salario -
+              empleado.historialSalarial[0].salario) /
+              empleado.historialSalarial[0].salario) *
+            100
+          ).toFixed(1)}% desde ingreso`}
         />
-        <MetricCard 
-          title="Presentismo último mes" 
-          value={`${empleado.presentismo[empleado.presentismo.length - 1].porcentaje}%`} 
+        <MetricCard
+          title="Presentismo último mes"
+          value={`${
+            empleado.presentismo[empleado.presentismo.length - 1].porcentaje
+          }%`}
           icon="check-circle"
-          trend={empleado.presentismo[empleado.presentismo.length - 1].porcentaje > 95 ? "up" : "down"}
+          trend={
+            empleado.presentismo[empleado.presentismo.length - 1].porcentaje >
+            95
+              ? "up"
+              : "down"
+          }
         />
-        <MetricCard 
-          title="Envios último mes" 
-          value={ultimoMes.enviosRealizados?.toString() || "N/A"} 
+        <MetricCard
+          title="Envios último mes"
+          value={ultimoMes.enviosRealizados?.toString() || "N/A"}
           icon="package"
         />
       </MetricsGrid>
@@ -124,9 +156,9 @@ export const Empleado_Historial: FC<Props> = ({ empleado }) => {
           <ChartContainer>
             <ChartTitle>Productividad (tareas completadas)</ChartTitle>
             <LineChart
-              data={empleado.metricasLaborales.map(item => ({
-                mes: item.mes,
-                tareas: item.tareasCompletadas
+              data={empleado.metricasLaborales.map((item) => ({
+                label: item.mes,
+                value: item.tareasCompletadas ?? 0,
               }))}
               xField="mes"
               yField="tareas"
@@ -140,9 +172,9 @@ export const Empleado_Historial: FC<Props> = ({ empleado }) => {
           <ChartContainer>
             <ChartTitle>Atención a clientes</ChartTitle>
             <BarChart
-              data={empleado.metricasLaborales.map(item => ({
+              data={empleado.metricasLaborales.map((item) => ({
                 mes: item.mes,
-                clientes: item.clientesAtendidos
+                clientes: item.clientesAtendidos,
               }))}
               xField="mes"
               yField="clientes"
@@ -161,13 +193,21 @@ export const Empleado_Historial: FC<Props> = ({ empleado }) => {
               <EvaluacionItem key={index}>
                 <EvalHeader>
                   <EvalTipo>{eval.tipo}</EvalTipo>
-                  <EvalFecha>{new Date(eval.fecha).toLocaleDateString()}</EvalFecha>
+                  <EvalFecha>
+                    {new Date(eval.fecha).toLocaleDateString()}
+                  </EvalFecha>
                 </EvalHeader>
-                <ProgressCard 
-                  value={eval.puntaje} 
-                  max={10} 
+                <ProgressCard
+                  value={eval.puntaje}
+                  max={10}
                   label={`Puntaje: ${eval.puntaje}/10`}
-                  color={eval.puntaje >= 8 ? "#10b981" : eval.puntaje >= 6 ? "#f59e0b" : "#ef4444"}
+                  color={
+                    eval.puntaje >= 8
+                      ? "#10b981"
+                      : eval.puntaje >= 6
+                      ? "#f59e0b"
+                      : "#ef4444"
+                  }
                 />
                 <EvalComentario>{eval.comentarios}</EvalComentario>
               </EvaluacionItem>
@@ -184,18 +224,18 @@ export const Empleado_Historial: FC<Props> = ({ empleado }) => {
                 <CapDetalle>
                   <span>{new Date(cap.fecha).toLocaleDateString()}</span>
                   <span>{cap.duracion} horas</span>
-                  <CapEstado>{cap.completada ? '✅ Completada' : '⏳ En curso'}</CapEstado>
+                  <CapEstado>
+                    {cap.completada ? "✅ Completada" : "⏳ En curso"}
+                  </CapEstado>
                 </CapDetalle>
               </CapacitacionItem>
             ))}
           </CapacitacionesList>
         </Section>
-      </HalfSection>
+      </HalfSection> */}
     </HistorialContainer>
   );
 };
-
-
 
 const HistorialContainer = styled.div`
   display: flex;
@@ -324,7 +364,7 @@ const CapacitacionItem = styled.div<{ completed: boolean }>`
   border-radius: 8px;
   padding: 12px 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border-left: 4px solid ${props => props.completed ? '#10b981' : '#f59e0b'};
+  border-left: 4px solid ${(props) => (props.completed ? "#10b981" : "#f59e0b")};
 `;
 
 const CapNombre = styled.div`
@@ -340,7 +380,7 @@ const CapDetalle = styled.div`
   color: #666;
 `;
 
-const CapEstado = styled.span`
-  color: ${props => props.theme === 'completed' ? '#10b981' : '#f59e0b'};
-  font-weight: 500;
-`;
+// const CapEstado = styled.span`
+//   color: ${(props) => (props.theme === "completed" ? "#10b981" : "#f59e0b")};
+//   font-weight: 500;
+// `;

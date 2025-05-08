@@ -6,7 +6,6 @@ import { useTransactions } from "@/context/Transacciones_Context";
 interface Props {
   title: string;
   description: string;
-
   href: string;
   imageUrl: string;
   productCode: string;
@@ -15,7 +14,6 @@ interface Props {
   onSelect: (productCode: string) => void;
   category: string;
   onTransactionCommit: (decrease: number, title: string) => void;
-
 }
 
 export const Product_Card: FC<Props> = ({
@@ -30,7 +28,10 @@ export const Product_Card: FC<Props> = ({
   onTransactionCommit,
 }) => {
   const [currentStock, setCurrentStock] = useState(stock);
-  const pendingActions = useRef<{increase: number; decrease: number}>({ increase: 0, decrease: 0 });
+  const pendingActions = useRef<{ increase: number; decrease: number }>({
+    increase: 0,
+    decrease: 0,
+  });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const stockRef = useRef(currentStock);
   const { addTransaction } = useTransactions();
@@ -57,18 +58,17 @@ export const Product_Card: FC<Props> = ({
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
-  
+
     timerRef.current = setTimeout(() => {
       if (pendingActions.current.decrease > 0) {
         addTransaction("ingreso", {
           title,
           productCode,
           category,
-          units: pendingActions.current.decrease
+          units: pendingActions.current.decrease,
         });
         onTransactionCommit(pendingActions.current.decrease, title);
         pendingActions.current.decrease = 0;
-
       }
     }, 600);
   }, [title, productCode, category, addTransaction, onTransactionCommit]);
@@ -94,15 +94,14 @@ export const Product_Card: FC<Props> = ({
       <Card_Content onClick={handleClick}>
         <Card_Title>{title}</Card_Title>
       </Card_Content>
-      <Stock_Control 
-        stock={currentStock} 
-        onIncrease={handleIncrease} 
-        onDecrease={handleDecrease} 
+      <Stock_Control
+        stock={currentStock}
+        onIncrease={handleIncrease}
+        onDecrease={handleDecrease}
       />
     </Card_Container>
   );
 };
-
 
 const Card_Container = styled.div<{ isSelected: boolean }>`
   display: flex;
@@ -111,10 +110,17 @@ const Card_Container = styled.div<{ isSelected: boolean }>`
   height: 150px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #fff;
-  border: ${({ isSelected }) => (isSelected ? "2px solid #02203f" : "1px solid #ddd")};
-  box-shadow: ${({ isSelected }) =>
-    isSelected ? "0 0 10px rgba(0, 123, 255, 0.3)" : "0px 4px 8px rgba(0, 0, 0, 0.05)"};
+
+  background-color: ${({ theme }) => theme.colors.contenedores};
+  border: ${({ isSelected, theme }) =>
+    isSelected
+      ? `2px solid ${theme.colors.contenedores}`
+      : `1px solid ${theme.colors.contenedores}`};
+  box-shadow: ${({ isSelected, theme }) =>
+    isSelected
+      ? `0 0 10px ${theme.colors.title}40`
+      : `0px 4px 8px ${theme.colors.title}10`};
+
   transition: all 0.1s ease-in-out;
   text-decoration: none;
   color: inherit;
@@ -133,7 +139,7 @@ const Card_Image = styled.div`
   position: relative;
   width: 100%;
   height: 80px;
-  background-color: #f0f0f0;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const Card_Content = styled.div`
@@ -146,7 +152,7 @@ const Card_Title = styled.h3`
   font-size: ${({ theme }) => theme.fontSizes.text}px;
   font-weight: bold;
   margin: 5px 0;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Card_Description = styled.p`

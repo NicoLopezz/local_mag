@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { Service_Card } from "../../molecules/cards/Service_Card";
 import { Add_Service_Card } from "../../molecules/cards/Add_Service_Card";
 import { Service_Detail } from "../../organisms/modals_details/servicios/Service_Detail";
+import { Divider} from "@/components/atoms/Divider";
+import { useLang } from "@/context/Language_Context";
 
 interface Service {
   title: string;
@@ -19,6 +21,7 @@ interface Props {
 
 export const Servicios_List: FC<Props> = ({ services, onAddServicio }) => {
   const router = useRouter();
+  const { t } = useLang();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalServiceTitle, setModalServiceTitle] = useState("");
 
@@ -48,7 +51,7 @@ export const Servicios_List: FC<Props> = ({ services, onAddServicio }) => {
   return (
     <>
       <Container>
-        <Title>Servicios</Title>
+        <Title>{t.services.title}</Title>
         <Divider />
         <Services_Container>
           <Service_Wrapper>
@@ -98,13 +101,10 @@ const Title = styled.h2`
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #ccc;
-  margin-bottom: 15px;
-`;
+
 
 const Services_Container = styled.div`
   display: flex;

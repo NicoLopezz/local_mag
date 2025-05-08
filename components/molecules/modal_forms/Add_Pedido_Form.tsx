@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface PedidoFormProps {
   onSubmit: (pedido: {
@@ -26,6 +27,7 @@ export const Add_Pedido_Form: FC<PedidoFormProps> = ({ onSubmit }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const { t } = useLang();
   const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
   const time = new Date().toLocaleTimeString("es-ES", {
@@ -42,16 +44,16 @@ export const Add_Pedido_Form: FC<PedidoFormProps> = ({ onSubmit }) => {
 
   return (
     <Form_Container onSubmit={handleSubmit}>
-      <Form_Title>Crear Nuevo Pedido</Form_Title>
-
+      <Form_Title>{t.orders.createPedidoTitle}</Form_Title>
+  
       <Styled_Input
         name="proveedorName"
-        placeholder="Nombre del proveedor"
+        placeholder={t.orders.placeholders.proveedor}
         value={form.proveedorName}
         onChange={handleChange}
         required
       />
-
+  
       <Content_Wraper>
         <Styled_Select
           name="status"
@@ -59,15 +61,17 @@ export const Add_Pedido_Form: FC<PedidoFormProps> = ({ onSubmit }) => {
           onChange={handleChange}
           required
         >
-          <option value="abierto">Abierto</option>
-          <option value="cerrado">Cerrado</option>
-          <option value="cancelado">Cancelado</option>
+          <option value="abierto">{t.orders.statusLabels.abierto}</option>
+          <option value="cerrado">{t.orders.statusLabels.cerrado}</option>
+          <option value="cancelado">{t.orders.statusLabels.cancelado}</option>
         </Styled_Select>
-
-        <Styled_Button type="submit">Crear Pedido</Styled_Button>
+  
+        <Styled_Button type="submit">{t.orders.createPedidoButton}</Styled_Button>
       </Content_Wraper>
     </Form_Container>
   );
+  
+
 };
 
 const Form_Container = styled.form`
@@ -145,14 +149,18 @@ const Styled_Textarea = styled.textarea`
 `;
 
 const Styled_Button = styled.button`
+
+  background-color: ${({ disabled, theme }) =>
+    disabled ? "#f9f9f99" : theme.colors.button};
+  color: ${({ disabled}) =>
+    disabled ? "#a0a0a0": "white"};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+
   flex: 1;
-  background: #111;
-  color: white;
   padding: 0.75rem;
   border: none;
   border-radius: 8px;
   font-weight: 200;
-  font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
   

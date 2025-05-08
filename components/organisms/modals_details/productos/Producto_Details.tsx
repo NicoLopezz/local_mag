@@ -8,26 +8,40 @@ import { Producto_Proveedores } from "./Producto_Proveedores";
 import { Producto_Metricas } from "./Producto_Metricas";
 import { Producto_Historial } from "./Producto_Historial";
 import { mockData } from "@/mock_data/products";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onClose: () => void;
 }
 
 export const Producto_Detail: FC<Props> = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState("Detalles");
   const { query } = useRouter();
   const productCode = typeof query.productCode === "string" ? query.productCode : "";
   const producto = mockData.products.find((p) => p.productCode === productCode);
+  const { t } = useLang();
+
+  const TABS = [
+    { id: "detalles", label: t.modals.productos.tabs.detalles },
+    { id: "stock", label: t.modals.productos.tabs.stock },
+    { id: "proveedores", label: t.modals.productos.tabs.proveedores },
+    { id: "metricas", label: t.modals.productos.tabs.metricas },
+    { id: "historial", label: t.modals.productos.tabs.historial }
+  ];
+
+  const [activeTab, setActiveTab] = useState("detalles");
 
   const handleOpenDetailsFromStock = () => {
-    setActiveTab("Detalles");
+    setActiveTab("detalles");
   };
 
   return (
     <Base_Details_Modal
-      tabs={["Detalles", "Stock", "Proveedores", "Métricas" , "Historial"]}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
+      tabs={TABS.map(tab => tab.label)}
+      activeTab={TABS.find(tab => tab.id === activeTab)?.label || ""}
+      onTabChange={(label) => {
+        const tab = TABS.find(tab => tab.label === label);
+        if (tab) setActiveTab(tab.id);
+      }}
       onClose={onClose}
       imageSlot={
         producto && (
@@ -41,16 +55,16 @@ export const Producto_Detail: FC<Props> = ({ onClose }) => {
         )
       }
     >
-      {activeTab === "Detalles" && <Producto_Detalles />}
-      {activeTab === "Stock" && (
-        <Producto_Stock 
-          onCloseModal={onClose} 
-          onOpenDetailsModal={handleOpenDetailsFromStock} 
+      {activeTab === "detalles" && <Producto_Detalles />}
+      {activeTab === "stock" && (
+        <Producto_Stock
+          onCloseModal={onClose}
+          onOpenDetailsModal={handleOpenDetailsFromStock}
         />
       )}
-      {activeTab === "Proveedores" && <Producto_Proveedores />}
-      {activeTab === "Métricas" && <Producto_Metricas/>}
-      {activeTab === "Historial" && <Producto_Historial/>}
+      {activeTab === "proveedores" && <Producto_Proveedores />}
+      {activeTab === "metricas" && <Producto_Metricas />}
+      {activeTab === "historial" && <Producto_Historial />}
     </Base_Details_Modal>
   );
 };

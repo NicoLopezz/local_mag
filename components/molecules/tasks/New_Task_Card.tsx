@@ -1,5 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
+
 
 interface Props {
   onAdd: (taskName: string, description?: string, code?: string) => void;
@@ -7,6 +9,8 @@ interface Props {
 }
 
 export const New_Task_Card: FC<Props> = ({ onAdd, onOpenModal }) => {
+  const { t } = useLang();
+
   const [input, setInput] = useState("");
 
   const handleAdd = () => {
@@ -30,7 +34,7 @@ export const New_Task_Card: FC<Props> = ({ onAdd, onOpenModal }) => {
       <Form>
         <InputContainer>
           <Input
-            placeholder="Escribe el título de la card"
+            placeholder={t.tasks.cardTitlePlaceholder}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -49,11 +53,12 @@ export const New_Task_Card: FC<Props> = ({ onAdd, onOpenModal }) => {
           </IconButton>
         </InputContainer>
         <Actions>
-          <AddButton onClick={onOpenModal}>Añadir card</AddButton>
+          <AddButton onClick={onOpenModal}>{t.tasks.addCard}</AddButton>
         </Actions>
       </Form>
     </Wrapper>
   );
+
 };
 
 const Wrapper = styled.div`
@@ -86,11 +91,11 @@ const Input = styled.input`
   flex: 1;
   border: none;
   padding: 0 0.75rem;
-  font-size: 12px;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
   height: 100%;
   outline: none;
-  background: #fff;
-
+  background-color: ${({ theme }) => theme.colors.background};
   &::placeholder {
     color: #9ca3af;
   }
@@ -100,17 +105,16 @@ const IconButton = styled.button`
   width: 25px;
   height: 100%;
   border: none;
-  background: white;
+  background-color: ${({ theme }) => theme.colors.background};
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   cursor: pointer;
-  color: #4b5563;
   transition: background 0.2s ease;
 
   &:hover {
-    background: #f3f4f6;
+    background: ${({ theme }) => theme.colors.contenedores};
     color: var(--dark-blue);
   }
 `;
@@ -120,11 +124,15 @@ const IconWrapper = styled.div<{ $visible: boolean }>`
   opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   transform: scale(${({ $visible }) => ($visible ? 1 : 0.3)});
   transition: opacity 0.2s ease, transform 0.2s ease;
+  background-color: ${({ $visible, theme }) =>
+  $visible ? theme.colors.background : "transparent"};
+
 `;
 
 const SvgIcon = styled.svg`
   width: 15px;
   height: 15px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const Actions = styled.div`

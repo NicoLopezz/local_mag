@@ -48,13 +48,7 @@ const ColorLabelText = styled.span`
   color: #2d3748;
 `;
 
-const ColorCode = styled.span`
-  font-size: ${({ theme }) => theme.fontSizes.text}-8px;
-  font-family: monospace;
-  color: #4a5568;
-`;
-
-const ColorPickerWrapper = styled.div<{ color: string }>`
+const ColorPickerWrapper = styled.label<{ color: string }>`
   width: 30px;
   height: 30px;
   border-radius: 6px;
@@ -72,4 +66,10 @@ const HiddenColorInput = styled.input`
   width: 100%;
   height: 100%;
   cursor: pointer;
+`;
+
+const ColorCode = styled.span`
+  font-size: ${({ theme }) => `${theme.fontSizes.text - 8}px`};
+  font-family: monospace;
+  color: #4a5568;
 `;

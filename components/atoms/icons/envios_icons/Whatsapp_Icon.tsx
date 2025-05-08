@@ -44,7 +44,7 @@ const IconWrapper = styled.div`
 `;
 
 const Svg = styled.svg`
-  color: black;
+  color: ${({ theme }) => theme.colors.title};
   transition: all 0.3s ease;
   width: 24px;
   height: 24px;

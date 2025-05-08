@@ -1,15 +1,18 @@
 import type { NextPage } from "next";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
-const Legales: NextPage = () => {
+const Clientes: NextPage = () => {
+  const {t} = useLang();
   return (
     <Page_Container>
       <Main_Content>
         <Content_Area>
-          <Page_Title>Legales</Page_Title>
+          <Page_Title>{t.customers.title}
+          </Page_Title>
         </Content_Area>
       </Main_Content>
     </Page_Container>
@@ -40,8 +43,9 @@ const Content_Area = styled.div`
 `;
 
 const Page_Title = styled.h1`
-  font-size: 2.5rem;
+  color: ${({ theme }) => theme.colors.title};
+  font-size: ${({ theme }) => theme.fontSizes.title}px;
   font-weight: 700;
 `;
 
-export default Legales;
+export default Clientes;

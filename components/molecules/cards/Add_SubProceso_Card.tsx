@@ -1,15 +1,17 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onAddSubProceso: () => void;
 }
 
 export const Add_SubProceso_Card: FC<Props> = ({ onAddSubProceso }) => {
+  const {t} = useLang();
   return (
     <Card_Container onClick={onAddSubProceso}>
       <Add_Icon>+</Add_Icon>
-      <Add_Text>Agregar Sub-Proceso</Add_Text>
+      <Add_Text>{t.subprocesses.addSubprocesses}</Add_Text>
     </Card_Container>
   );
 };
@@ -44,8 +46,9 @@ const Add_Icon = styled.div`
 
 const Add_Text = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  text-align: center;
   font-weight: bold;
   color: #333;
-  margin: 8px 0 0 0;
+  margin: 10px 0 0 0;
 `;
 

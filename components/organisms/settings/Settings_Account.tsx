@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { Password_Change } from "./Password_Change";
+import { useLang } from "@/context/Language_Context";
 
 
 
@@ -11,17 +12,16 @@ export const Settings_Account: FC = () => {
     const [userEmail, setUserEmail] = useState("");
     const [userAddress, setUserAddress] = useState("");
     const [userRole, setUserRole] = useState("user");
-    const [userPhone, setUserPhone] = useState("");
-    const [userLanguage, setUserLanguage] = useState("es");
-    
+    const [userPhone, setUserPhone] = useState("");    
+    const { t } = useLang();
 
   return (
     <AccountContainer>
       <SettingsSection>
-        <SectionTitle>Informacion de la cuenta</SectionTitle>
+        <SectionTitle>{t.settings.accountTab.infoAccount}</SectionTitle>
 
         <ItemGroup>
-          <Label>Name</Label>
+          <Label>{t.settings.accountTab.name}</Label>
           <EmailInput
             type="text"
             value={userName}
@@ -31,7 +31,7 @@ export const Settings_Account: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Email</Label>
+          <Label>{t.settings.accountTab.email}</Label>
           <EmailInput
             type="email"
             value={userEmail}
@@ -41,7 +41,7 @@ export const Settings_Account: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Address</Label>
+          <Label>{t.settings.accountTab.address}</Label>
           <EmailInput
             type="text"
             value={userAddress}
@@ -51,7 +51,7 @@ export const Settings_Account: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Role</Label>
+          <Label>{t.settings.accountTab.role}</Label>
           <SelectStyled
             value={userRole}
             onChange={(e) => setUserRole(e.target.value)}
@@ -63,7 +63,7 @@ export const Settings_Account: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Phone</Label>
+          <Label>{t.settings.accountTab.phone}</Label>
           <EmailInput
             type="tel"
             value={userPhone}
@@ -72,17 +72,9 @@ export const Settings_Account: FC = () => {
           />
         </ItemGroup>
 
-        <ItemGroup>
-          <Label>Language</Label>
-          <SelectStyled
-            value={userLanguage}
-            onChange={(e) => setUserLanguage(e.target.value)}
-          >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-          </SelectStyled>
-        </ItemGroup>
+        
+
+
       </SettingsSection>
       <Password_Change />
     </AccountContainer>
@@ -96,37 +88,42 @@ const AccountContainer = styled.div`
 `;
 
 const SettingsSection = styled.div`
-  background-color: white;
+  border: 1px solid ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.contenedores};
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #eee;
   width: 40%;
+  height: 400px;
 `;
 
 const SectionTitle = styled.h3`
   margin-bottom: 1rem;
   font-weight: 600;
+  color: ${({ theme }) => theme.colors.title};
   font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
 `;
 
 const Label = styled.label`
+  color: ${({ theme }) => theme.colors.subtitle};
   font-size: ${({ theme }) => theme.fontSizes.text}px;
-  color: #333;
 `;
 
 
 const EmailInput = styled.input`
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 0.875rem;
   width: 60%;
+  font-size: 0.875rem;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const SelectStyled = styled.select`
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.contenedores};
+  color: ${({ theme }) => theme.colors.subtitle};
   font-size: 0.875rem;
   width: 20%;
 `;

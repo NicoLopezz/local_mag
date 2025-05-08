@@ -1,15 +1,18 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onAddProduct: () => void;
 }
 
 export const Add_Service_Card: FC<Props> = ({ onAddProduct }) => {
+
+  const {t} = useLang();
   return (
     <Card_Container onClick={onAddProduct}>
       <Add_Icon>+</Add_Icon>
-      <Add_Text>Agregar Servicio</Add_Text>
+      <Add_Text>{t.services.addServicio}</Add_Text>
     </Card_Container>
   );
 };

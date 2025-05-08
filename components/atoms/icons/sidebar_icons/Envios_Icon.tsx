@@ -10,6 +10,6 @@ export const Envios_Icon: FC = () => {
 };
 
 const Svg = styled.svg`
-  color: #000000;
+  color: ${({ theme }) => theme.colors.icon};
 `;
 

@@ -29,9 +29,7 @@ const Svg = styled.svg`
 `;
 
 const IconWrapper = styled.div`
-  /* background-color: white; */
   border-radius: 50%;
-  /* padding: 8px; */
   display: flex;
   align-items: center;
   justify-content: center;

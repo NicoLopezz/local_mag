@@ -21,5 +21,6 @@ export const Close_Icon: FC = () => {
 };
 
 const Svg = styled.svg`
-  color: #000000;
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
 `;

@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onSubmit: (category: CategoryInput) => void;
@@ -32,6 +33,8 @@ export const Add_Category_Form: FC<Props> = ({ onSubmit }) => {
     }));
   };
 
+  const { t } = useLang();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
@@ -43,36 +46,40 @@ export const Add_Category_Form: FC<Props> = ({ onSubmit }) => {
 
   return (
     <Form_Container onSubmit={handleSubmit}>
-      <Form_Title>Agregar Categoria</Form_Title>
-
+      <Form_Title>{t.modals.productos.categoryForm.title}</Form_Title>
+  
       <Styled_Input
         name="title"
-        placeholder="Nombre de la categoria"
+        placeholder={t.modals.productos.categoryForm.placeholder}
         value={form.title}
         onChange={handleChange}
         required
       />
       <Styled_Textarea
         name="description"
-        placeholder="Descripción"
+        placeholder={t.modals.productos.categoryForm.descripcion}
         value={form.description}
         onChange={handleChange}
         required
       />
-
+  
       <Form_Row>
         <Styled_Input_Stock
           name="stock"
           type="number"
-          placeholder="Stock"
+          placeholder={t.modals.productos.categoryForm.stock}
           value={form.stock}
           onChange={handleChange}
           required
         />
-        <Styled_Button type="submit">Guardar</Styled_Button>
+        <Styled_Button type="submit">
+          {t.modals.productos.categoryForm.guardar}
+        </Styled_Button>
       </Form_Row>
     </Form_Container>
   );
+  
+
 };
 
 const Form_Container = styled.form`
@@ -93,11 +100,13 @@ const Form_Row = styled.div`
 const Styled_Input = styled.input`
   width: 90%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 0.5px solid ${({ theme }) => theme.colors.text};
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
   transition: border 0.2s;
+  background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 
   &::placeholder {
     font-family: 'YourFontFamily', sans-serif;
@@ -115,12 +124,13 @@ const Styled_Input_Stock = styled.input`
   width: 100px;
   min-width: 80px;
   max-width: 140px;
-  border: 1px solid #ddd;
+  border: 0.5px solid ${({ theme }) => theme.colors.text};
+  background-color: ${({ theme }) => theme.colors.background};
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
   transition: border 0.2s;
-
+  color: ${({ theme }) => theme.colors.text};
   &::placeholder {
     font-family: 'YourFontFamily', sans-serif;
     font-size: 1rem;
@@ -135,12 +145,14 @@ const Styled_Input_Stock = styled.input`
 const Styled_Textarea = styled.textarea`
   width: 90%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 0.5px solid ${({ theme }) => theme.colors.text};
   border-radius: 6px;
   font-size: 1rem;
   min-height: 80px;
   outline: none;
   transition: border 0.2s;
+  background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 
   &::placeholder {
     font-family: 'YourFontFamily', sans-serif;
@@ -154,30 +166,26 @@ const Styled_Textarea = styled.textarea`
 `;
 
 const Styled_Button = styled.button`
-  flex: 1;
-  background: #111;
+  background: ${({ theme }) => theme.colors.button};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: white;
+  flex: 1;
   padding: 0.75rem;
   border: none;
   border-radius: 8px;
   font-weight: 200;
-  font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
-
   &:hover {
-    background: #045689;
-  }
-
-  &:disabled {
-    background: #999;
-    cursor: not-allowed;
+    background: ${({ theme }) => theme.colors.icon};
+    color: white;
   }
 `;
 
 const Styled_Title = styled.h2`
   text-align: center;
-  font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  font-size:${({ theme }) => theme.fontSizes.subtitle};  
+  color: ${({ theme }) => theme.colors.text};
 `;

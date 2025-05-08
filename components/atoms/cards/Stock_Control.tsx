@@ -43,6 +43,7 @@ const Stock_Button = styled.button`
   align-items: center;
   justify-content: center;
   transition: 0.2s;
+  color: ${({ theme }) => theme.colors.text};
 
   &:hover {
     background-color: #ddd;
@@ -53,4 +54,5 @@ const Stock_Button = styled.button`
 const Stock_Value = styled.span`
   font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   font-weight: bold;
+  color: ${({ theme }) => theme.colors.text};
 `;

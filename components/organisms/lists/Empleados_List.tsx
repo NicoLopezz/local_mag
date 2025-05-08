@@ -4,6 +4,8 @@ import { Empleado_Card } from "../../molecules/cards/Empleado_Card";
 import { Add_Empleado_Card } from "../../molecules/cards/Add_Empleado_Card";
 import { Empleado_Detail } from "../../organisms/modals_details/empleados/Empleados_Detail";
 import { useRouter } from "next/router";
+import { useLang } from "@/context/Language_Context";
+import { Divider} from "@/components/atoms/Divider";
 
 interface Empleado {
   name: string;
@@ -40,7 +42,7 @@ export const Empleados_List: FC<Props> = ({ empleado, onAddEmpleado }) => {
     const currentEmail = router.query.email;
     const params = new URLSearchParams(router.query as Record<string, string>);
 
-    params.set("email", email); // <-- corregido: ahora sí actualiza la query
+    params.set("email", email); //
 
     const empleados = empleado.find((p) => p.email === email);
 
@@ -51,14 +53,16 @@ export const Empleados_List: FC<Props> = ({ empleado, onAddEmpleado }) => {
         setModalEmpleadoName(empleados.name);
       }
       setModalOpen(true);
-      window.scrollTo({ top: 0, behavior: "smooth" }); // <-- opcional: scroll arriba suave
+      window.scrollTo({ top: 0, behavior: "smooth" }); 
     }
   };
+
+  const { t } = useLang();
 
   return (
     <>
       <Container>
-        <Title>Empleados</Title>
+        <Title>{t.empleados.title}</Title>
         <Divider />
         <Empleados_Container>
           <Empleado_Wrapper>
@@ -103,14 +107,15 @@ const Container = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.title};
+  font-size: ${({ theme }) => theme.fontSizes.title * 0.8}px;
   font-weight: bold;
   margin-bottom: 10px;
 `;
 
 const Divider = styled.hr`
   border: none;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #cccccc16;
   margin-bottom: 15px;
 `;
 

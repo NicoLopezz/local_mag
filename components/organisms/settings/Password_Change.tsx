@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { EyeClose_Icon } from "../../atoms/icons/setting/EyeClose_Icon";
 import { EyeOpen_Icon } from "../../atoms/icons/setting/EyeOpen_Icon";
 import { useToast } from "@/context/Toast_Context";
+import { useLang } from "@/context/Language_Context";
 
 export const Password_Change: FC = () => {
   const [showFields, setShowFields] = useState(false);
@@ -14,6 +15,8 @@ export const Password_Change: FC = () => {
 
   const [animateOut, setAnimateOut] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+
+  const { t } = useLang();
 
   useEffect(() => {
     if (showFields) {
@@ -49,21 +52,21 @@ export const Password_Change: FC = () => {
   return (
     <PasswordSection>
       <PasswordHeader>
-        <SectionTitle>Contraseña</SectionTitle>
+        <SectionTitle>{t.settings.accountTab.password}</SectionTitle>
         <ToggleVisibility onClick={() => setShowPassword(!showPassword)}>
           {showPassword ? <EyeOpen_Icon /> : <EyeClose_Icon />}
         </ToggleVisibility>
       </PasswordHeader>
 
       <ItemGroup>
-        <Label>Contraseña actual</Label>
+        <Label>{t.settings.accountTab.currentPassword}</Label>
         <InputGroup>
           {showFields ? (
             <Input
               type={showPassword ? "text" : "password"}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter current password"
+              placeholder={t.settings.accountTab.currentPassword}
             />
           ) : (
             <MaskedPassword>••••••••</MaskedPassword>
@@ -72,7 +75,7 @@ export const Password_Change: FC = () => {
       </ItemGroup>
 
       {!showFields && (
-        <ChangeButton onClick={() => setShowFields(true)}>Cambiar</ChangeButton>
+        <ChangeButton onClick={() => setShowFields(true)}>{t.settings.accountTab.change}</ChangeButton>
       )}
 
       {shouldRender && (
@@ -84,7 +87,7 @@ export const Password_Change: FC = () => {
                 type={showPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password"
+                placeholder={t.settings.accountTab.enterNewPassword}
               />
             </InputGroup>
           </ItemGroup>
@@ -96,7 +99,7 @@ export const Password_Change: FC = () => {
                 type={showPassword ? "text" : "password"}
                 value={repeatPassword}
                 onChange={(e) => setRepeatPassword(e.target.value)}
-                placeholder="Repeat password"
+                placeholder={t.settings.accountTab.repeatNewPassword}
               />
               {!passwordsMatch && repeatPassword.length > 0 && (
                 <ErrorText>Passwords do not match</ErrorText>
@@ -105,10 +108,10 @@ export const Password_Change: FC = () => {
           </ItemGroup>
 
           <CheckList>
-            <CheckItem fulfilled={hasLength}>At least 8 characters</CheckItem>
-            <CheckItem fulfilled={hasUppercase}>One uppercase letter</CheckItem>
-            <CheckItem fulfilled={hasSpecialChar}>One special character</CheckItem>
-            <CheckItem fulfilled={hasNumber}>One number</CheckItem>
+            <CheckItem fulfilled={hasLength}>{t.settings.accountTab.minLength}</CheckItem>
+            <CheckItem fulfilled={hasUppercase}>{t.settings.accountTab.uppercase}</CheckItem>
+            <CheckItem fulfilled={hasSpecialChar}>{t.settings.accountTab.specialChar}</CheckItem>
+            <CheckItem fulfilled={hasNumber}>{t.settings.accountTab.number}</CheckItem>
           </CheckList>
 
           <ProgressBar>
@@ -116,12 +119,12 @@ export const Password_Change: FC = () => {
           </ProgressBar>
 
           <ButtonGroup>
-            <CancelButton onClick={() => setShowFields(false)}>Cancel</CancelButton>
+            <CancelButton onClick={() => setShowFields(false)}>{t.settings.accountTab.cancel}</CancelButton>
             <SaveButton
               disabled={!passwordsMatch || fulfilled < 4 || !currentPassword}
               onClick={handleSave}
             >
-              Save
+              {t.settings.accountTab.save}  
             </SaveButton>
           </ButtonGroup>
         </AnimatedContainer>
@@ -131,10 +134,10 @@ export const Password_Change: FC = () => {
 };
 
 const PasswordSection = styled.div`
-  background-color: white;
+  border: 1px solid ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.contenedores};
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #eee;
   width: 40%;
   display: flex;
   flex-direction: column;
@@ -145,12 +148,16 @@ const PasswordHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: ${({ theme }) => theme.colors.title};
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
 `;
 
 const SectionTitle = styled.h3`
   margin: 0;
   font-weight: 600;
   font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
+  
 `;
 
 const ToggleVisibility = styled.button`
@@ -158,6 +165,7 @@ const ToggleVisibility = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const ItemGroup = styled.div`
@@ -168,10 +176,10 @@ const ItemGroup = styled.div`
 `;
 
 const Label = styled.label`
-  color: #333;
   width: 30%;
   min-width: 120px;
   font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const InputGroup = styled.div`
@@ -184,14 +192,17 @@ const InputGroup = styled.div`
 const Input = styled.input`
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.background};
   font-size: 0.875rem;
   width: 80%;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const MaskedPassword = styled.span`
-  font-size: 0.875rem;
-  color: #666;
+  color: ${({ theme }) => theme.colors.title};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   letter-spacing: 0.2rem;
 `;
 
@@ -219,8 +230,8 @@ const CheckList = styled.ul`
 `;
 
 const CheckItem = styled.li<{ fulfilled: boolean }>`
-  font-size: 0.85rem;
-  color: ${({ fulfilled }) => (fulfilled ? "#000000" : "#a0aec0")};
+  font-size: ${({ theme }) => theme.fontSizes.text * 0.8}px;
+  color: ${({ theme }) => theme.colors.subtitle};
   text-decoration: ${({ fulfilled }) => (fulfilled ? "line-through" : "none")};
   margin-bottom: 4px;
 `;
@@ -249,16 +260,19 @@ const ButtonGroup = styled.div`
 
 const CancelButton = styled.button`
   padding: 0.6rem 1.25rem;
-  background-color: transparent;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 6px;
   font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
+  font-size: ${({ theme }) => theme.fontSizes.subtitle * 0.8}px;
+  background-color: ${(props) => (props.disabled ? "#f0f0f011" : "#000000")};
+  color: ${(props) => (props.disabled ? "#a0a0a0" : "white")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  transition: background 0.2s ease, box-shadow 0.2s ease;
   &:hover {
-    background-color: #f2f2f2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  &:active {
+    transform: scale(0.97);
   }
 `;
 
@@ -267,9 +281,17 @@ const SaveButton = styled.button<{ disabled?: boolean }>`
   border: none;
   border-radius: 6px;
   font-weight: 500;
-  background-color: ${({ disabled }) => (disabled ? "#ccc" : "#000")};
-  color: white;
-  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  font-size: ${({ theme }) => theme.fontSizes.subtitle * 0.8}px;
+  background-color: ${(props) => (props.disabled ? "#f0f0f011" : "#000000")};
+  color: ${(props) => (props.disabled ? "#a0a0a0" : "white")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
 `;
 
 const AnimatedContainer = styled.div<{ visible: boolean }>`

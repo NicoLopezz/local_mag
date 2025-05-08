@@ -1,19 +1,19 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
-    priority : string;
+  priority: "Baja" | "Media" | "Alta" | "Sin prioridad";
 }
 
 export const Task_Priority_Tag: FC<Props> = ({ priority }) => {
-    return (
-        <Title>
-            {priority}
-        </Title>
-    );  
-}
+  const { t } = useLang();
+  const translated = t.tasks.priorityLabels[priority] || priority;
 
-const Title= styled.h3`
+  return <Title>{translated}</Title>;
+};
+
+const Title = styled.h3`
   font-weight: 100;
   font-size: ${({ theme }) => theme.fontSizes.text}px;
   margin: 0;

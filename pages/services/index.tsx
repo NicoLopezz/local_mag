@@ -8,12 +8,14 @@ import { Add_Category_Modal } from "../../components/organisms/add_modals/Add_Ca
 import { mockData } from "../../mock_data/servicios";
 import { Toast } from "../../components/atoms/notification/Toast";
 import { useRouter } from "next/router";
+import { useLang } from "@/context/Language_Context";
 
 const Navbar_Height = "1rem";
 const Sidebar_Width = "1rem";
 
 const Servicios: NextPage = () => {
   const router = useRouter();
+  const { t } = useLang();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [servicioModalOpen, setServicioModalOpen] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);

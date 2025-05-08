@@ -4,8 +4,10 @@ import { Product_Card } from "../../molecules/cards/Product_Card";
 import { Add_Product_Card } from "../../molecules/cards/Add_Product_Card";
 import { Producto_Detail } from "../../organisms/modals_details/productos/Producto_Details";
 import { useRouter } from "next/router";
+import { useLang } from "@/context/Language_Context";
+import { Divider} from "@/components/atoms/Divider";
 
-interface Product {
+interface Product { 
   title: string;
   description: string;
   imageUrl: string;
@@ -24,7 +26,7 @@ export const Product_List: FC<Props> = ({ products, onAddProduct, onTransactionC
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalProductTitle, setModalProductTitle] = useState("");
-
+  const { t } = useLang();
   const selectedProductCode =
     typeof router.query.productCode === "string"
       ? router.query.productCode
@@ -42,7 +44,7 @@ export const Product_List: FC<Props> = ({ products, onAddProduct, onTransactionC
       params.set("productCode", productCode);
     }
 
-    router.replace(`/productos?${params.toString()}`);
+    router.replace(`/products?${params.toString()}`);
 
     if (product && currentCode !== productCode) {
       setModalProductTitle(product.title);
@@ -53,7 +55,7 @@ export const Product_List: FC<Props> = ({ products, onAddProduct, onTransactionC
   return (
     <>
       <Container>
-        <Title>Productos</Title>
+        <Title>{t.productos.subTitle}</Title>
         <Divider />
         <Products_Container>
           <Product_Wrapper>
@@ -101,15 +103,10 @@ const Container = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle};
   font-weight: bold;
   margin-bottom: 10px;
-`;
-
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #ccc;
-  margin-bottom: 15px;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Products_Container = styled.div`
@@ -120,17 +117,26 @@ const Products_Container = styled.div`
   max-height: 300px;
   padding: 10px 0;
   scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
-  justify-content: flex-start;
-  align-items: stretch;
-
-  &::-webkit-scrollbar {
-    width: 6px;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+  &:hover {
+    scrollbar-color: hsl(0 0% 80% / 0.2) transparent;
   }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #aaa;
-    border-radius: 4px;
+  @media (hover: hover) {
+    &::-webkit-scrollbar {
+      height: 0.25rem;
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: hsl(0 0% 70% / 0);
+      border-radius: 1rem;
+      transition: background 0.3s ease;
+    }
+    
+    &:hover::-webkit-scrollbar-thumb {
+      background: hsl(0 0% 70% / 0.5);
+    }
   }
 `;
 

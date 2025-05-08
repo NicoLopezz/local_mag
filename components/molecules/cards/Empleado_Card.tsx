@@ -74,7 +74,7 @@ const Card_Image = styled.div`
   position: relative;
   width: 100%;
   height: 80px;
-  background-color: #f0f0f0;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const Card_Content = styled.div`

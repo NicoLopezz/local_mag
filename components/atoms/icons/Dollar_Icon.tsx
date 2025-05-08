@@ -21,11 +21,11 @@ export const Dollar_Icon: FC<Props> = ({onClick}) => {
 };
 
 const Svg = styled.svg`
-  color: ${({ theme }) => theme.colors.button};
+  color: ${({ theme }) => theme.colors.icon};
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 10px;
-  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   font-weight: 400;
   cursor: pointer;
   width: 20%;

@@ -1,6 +1,10 @@
 import { FC } from "react";
 import styled, { keyframes } from "styled-components";
-import { useAddTaskForm, TaskInput } from "@/hooks/tasks_handlers/usedTasksForm";
+import {
+  useAddTaskForm,
+  TaskInput,
+} from "@/hooks/tasks_handlers/usedTasksForm";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onSubmit: (task: TaskInput) => void;
@@ -26,23 +30,31 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
     handleSubmit,
   } = useAddTaskForm(initialData, onSubmit);
 
+  const { t } = useLang();
+
   const priorityLevels = ["Baja", "Media", "Alta"];
-  const selectedIndex = form.priority ? priorityLevels.indexOf(form.priority) : -1;
+
+  const selectedIndex = form.priority
+    ? priorityLevels.indexOf(form.priority)
+    : -1;
+
+  const getPriorityLabel = (level: string) =>
+    t.tasks.priorityLabels[level as keyof typeof t.tasks.priorityLabels];
 
   return (
     <Form_Container onSubmit={handleSubmit}>
-      <Form_Title>Agregar Tarea</Form_Title>
+      <Form_Title>{t.tasks.modals.addTask}</Form_Title>
 
       <Styled_Input
         name="title"
-        placeholder="Título de la tarea"
+        placeholder={t.tasks.modals.titlePlaceholder}
         value={form.title}
         onChange={handleChange}
         required
       />
       <Styled_Textarea
         name="description"
-        placeholder="Descripción"
+        placeholder={t.tasks.modals.descriptionPlaceholder}
         value={form.description}
         onChange={handleChange}
         required
@@ -81,8 +93,13 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
       <Advanced_Container $visible={showAdvanced}>
         <Priority_Selector>
           {priorityLevels.map((level) => (
-            <Priority_Label key={level} onClick={() => handlePrioritySelect(level)}>
-              <Priority_Text selected={form.priority === level}>{level}</Priority_Text>
+            <Priority_Label
+              key={level}
+              onClick={() => handlePrioritySelect(level)}
+            >
+              <Priority_Text selected={form.priority === level}>
+                {getPriorityLabel(level)}
+              </Priority_Text>
             </Priority_Label>
           ))}
           {form.priority && <Animated_Underline index={selectedIndex} />}
@@ -97,7 +114,7 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
 
         <Styled_Input
           name="assignee"
-          placeholder="Asignado a"
+          placeholder={t.tasks.modals.assignedPlaceholder}
           value={form.assignee}
           onChange={handleChange}
         />
@@ -124,21 +141,17 @@ export const Add_Task_Form: FC<Props> = ({ onSubmit, initialData }) => {
 
         <Styled_Input
           name="tags"
-          placeholder="Presioná Enter para agregar etiquetas"
+          placeholder={t.tasks.modals.tagsPlaceholder}
           value={tagInput}
           onChange={(e) => setTagInput(e.target.value)}
           onKeyDown={handleTagKeyDown}
         />
       </Advanced_Container>
 
-      <Styled_Button type="submit">Guardar</Styled_Button>
+      <Styled_Button type="submit">{t.tasks.modals.save}</Styled_Button>
     </Form_Container>
   );
 };
-
-// Styled components idénticos al archivo anterior...
-// (no los repito para que no sea redundante, pero son exactamente los mismos)
-
 
 const Form_Container = styled.form`
   display: flex;

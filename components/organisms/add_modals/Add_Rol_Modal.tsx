@@ -3,6 +3,7 @@ import { Modal_Overlay } from "../../atoms/modal/Modal_Overlay";
 import { Modal_Content } from "../../atoms/modal/Modal_Content";
 import { Close_Button } from "../../atoms/modal/Close_Button";
 import { Add_Rol_Form } from "../../molecules/modal_forms/Add_Rol_Form";
+import { useLang } from "@/context/Language_Context";
 
 interface Props {
   onClose: () => void;
@@ -33,6 +34,8 @@ export const Add_Rol_Modal: FC<Props> = ({ onClose, onSubmit }) => {
     return () => document.removeEventListener("keydown", handleEsc);
   }, []);
 
+  const { t } = useLang();
+  
   return (
     <Modal_Overlay
       onClick={handleOverlayClick}

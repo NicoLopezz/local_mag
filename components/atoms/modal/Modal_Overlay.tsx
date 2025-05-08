@@ -1,22 +1,20 @@
 import styled from "styled-components";
 
 export const Modal_Overlay = styled.div`
-  
   position: fixed;
   top: 0;
   left: 0;
-  width: 99vw;
+  width: 100vw;
   height: 100vh;
-  /* background-color: red; */
+  z-index: 9999;
   backdrop-filter: blur(6px);
-  z-index: 99999999999;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.10s ease-out;
-  
+  animation: fadeIn 0.15s ease-out;
+
   &.closing {
-    animation: fadeOut 0.10s ease-in forwards;
+    animation: fadeOut 0.15s ease-in forwards;
   }
 
   @keyframes fadeIn {

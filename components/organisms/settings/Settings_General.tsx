@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { Theme_Toggle } from "@/components/molecules/setting/Theme_Toggle";
 import { useThemeContext } from "@/context/Theme_Context";
 import { Color_Circle_Picker } from "@/components/molecules/setting/Color_Circle_Picker";
+import { useLang } from "@/context/Language_Context";
 
 export const Settings_General: FC = () => {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
   const { fontSizes, setFontSize } = useThemeContext();
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [autoSync, setAutoSync] = useState(false);
@@ -20,23 +20,24 @@ export const Settings_General: FC = () => {
   const [backupEmail, setBackupEmail] = useState("");
   const [sessionTimeout, setSessionTimeout] = useState("30");
   const [accountLocked, setAccountLocked] = useState(false);
-  // const [primaryColor, setPrimaryColor] = useState("#0d6efd");
-  // const [secondaryColor, setSecondaryColor] = useState("#6c757d");
   const { colors, setColor } = useThemeContext();
+  const { themeMode, setThemeMode } = useThemeContext();
+  const { lang, setLang } = useLang();
+  const { t } = useLang();
 
   return (
     <Container>
       <SettingsSection>
-        <SectionTitle>Apariencia</SectionTitle>
+        <SectionTitle>{t.settings.appearance}</SectionTitle>
 
         <ItemGroup>
-          <Label>Theme</Label>
-          <Theme_Toggle theme={theme} setTheme={setTheme} />
+          <Label>{t.settings.theme}</Label>
+          <Theme_Toggle theme={themeMode} setTheme={setThemeMode} />
         </ItemGroup>
-        
-        <Subtitulo>Tamaño textos</Subtitulo>
+
+        <Subtitulo>{t.settings.fontSize.fontSize}</Subtitulo>
         <ItemGroup>
-          <Label>Título</Label>
+          <Label>{t.settings.fontSize.title}</Label>
           <FontSizeControl>
             <ControlButton
               onClick={() =>
@@ -57,7 +58,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Subtítulo</Label>
+          <Label>{t.settings.fontSize.subtitle}</Label>
           <FontSizeControl>
             <ControlButton
               onClick={() =>
@@ -78,7 +79,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Texto</Label>
+          <Label>{t.settings.fontSize.text}</Label>
           <FontSizeControl>
             <ControlButton
               onClick={() =>
@@ -101,37 +102,37 @@ export const Settings_General: FC = () => {
         <ItemGroup>
           <ColorGrid>
             <Color_Circle_Picker
-              label="Título"
+              label={t.settings.colors.title}
               value={colors.title}
               onChange={(color) => setColor("title", color)}
             />
 
             <Color_Circle_Picker
-              label="Subtítulo"
+              label={t.settings.colors.subtitle}
               value={colors.subtitle}
               onChange={(color) => setColor("subtitle", color)}
             />
 
             <Color_Circle_Picker
-              label="Boton"
+              label={t.settings.colors.button}
               value={colors.button}
               onChange={(color) => setColor("button", color)}
             />
 
             <Color_Circle_Picker
-              label="Icono"
+              label={t.settings.colors.icon}
               value={colors.icon}
               onChange={(color) => setColor("icon", color)}
             />
 
             <Color_Circle_Picker
-              label="Togle On"
+              label={t.settings.colors.toggleOff}
               value={colors.toggleOn}
               onChange={(color) => setColor("toggleOn", color)}
             />
 
             <Color_Circle_Picker
-              label="Togle Off"
+              label={t.settings.colors.toggleOn}
               value={colors.toggleOff}
               onChange={(color) => setColor("toggleOff", color)}
             />
@@ -140,10 +141,10 @@ export const Settings_General: FC = () => {
       </SettingsSection>
 
       <SettingsSection>
-        <SectionTitle>Seguridad</SectionTitle>
+        <SectionTitle>{t.settings.security}</SectionTitle>
 
         <ItemGroup>
-          <Label>Two-Factor Authentication</Label>
+          <Label>{t.settings.twoFactor}</Label>
           <ToggleWrapper>
             <ToggleInput
               type="checkbox"
@@ -155,7 +156,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Backup Email</Label>
+          <Label>{t.settings.backupEmail}</Label>
           <EmailInput
             type="email"
             value={backupEmail}
@@ -165,7 +166,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Session Timeout (min)</Label>
+          <Label>{t.settings.sessionTimeout}(min)</Label>
           <SelectStyled
             value={sessionTimeout}
             onChange={(e) => setSessionTimeout(e.target.value)}
@@ -177,7 +178,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Lock Account</Label>
+          <Label>{t.settings.lockAccount}</Label>
           <ToggleWrapper>
             <ToggleInput
               type="checkbox"
@@ -190,10 +191,21 @@ export const Settings_General: FC = () => {
       </SettingsSection>
 
       <SettingsSection>
-        <SectionTitle>Preferencias</SectionTitle>
+        <SectionTitle>{t.settings.preferences}</SectionTitle>
 
         <ItemGroup>
-          <Label>Auto Sync</Label>
+          <Label>{t.settings.language}</Label>
+          <SelectStyled
+            value={lang}
+            onChange={(e) => setLang(e.target.value as "en" | "es")}
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </SelectStyled>
+        </ItemGroup>
+
+        <ItemGroup>
+          <Label>{t.settings.autoSync}</Label>
           <ToggleWrapper>
             <ToggleInput
               type="checkbox"
@@ -205,7 +217,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Sound Feedback</Label>
+          <Label>{t.settings.soundFeedback}</Label>
           <ToggleWrapper>
             <ToggleInput
               type="checkbox"
@@ -217,7 +229,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Touch Vibration</Label>
+          <Label>{t.settings.touchVibration}</Label>
           <ToggleWrapper>
             <ToggleInput
               type="checkbox"
@@ -229,7 +241,7 @@ export const Settings_General: FC = () => {
         </ItemGroup>
 
         <ItemGroup>
-          <Label>Offline Mode</Label>
+          <Label>{t.settings.offlineMode}</Label>
           <ToggleWrapper>
             <ToggleInput
               type="checkbox"
@@ -242,10 +254,10 @@ export const Settings_General: FC = () => {
       </SettingsSection>
 
       <SettingsSection>
-        <SectionTitle>Notificaciones</SectionTitle>
+        <SectionTitle>{t.settings.notifications}</SectionTitle>
         <NotificaionesGrid>
           <ItemGroup>
-            <Label>Envios</Label>
+            <Label>{t.settings.sections.envios}</Label>
             <ToggleWrapper>
               <ToggleInput
                 type="checkbox"
@@ -257,7 +269,7 @@ export const Settings_General: FC = () => {
           </ItemGroup>
 
           <ItemGroup>
-            <Label>Cambios</Label>
+            <Label>{t.settings.sections.cambios}</Label>
             <ToggleWrapper>
               <ToggleInput
                 type="checkbox"
@@ -269,7 +281,7 @@ export const Settings_General: FC = () => {
           </ItemGroup>
 
           <ItemGroup>
-            <Label>Ventas</Label>
+            <Label>{t.settings.sections.ventas}</Label>
             <ToggleWrapper>
               <ToggleInput
                 type="checkbox"
@@ -281,7 +293,7 @@ export const Settings_General: FC = () => {
           </ItemGroup>
 
           <ItemGroup>
-            <Label>Tareas</Label>
+            <Label>{t.settings.sections.tareas}</Label>
             <ToggleWrapper>
               <ToggleInput
                 type="checkbox"
@@ -293,7 +305,7 @@ export const Settings_General: FC = () => {
           </ItemGroup>
 
           <ItemGroup>
-            <Label>Stock</Label>
+            <Label>{t.settings.sections.stock}</Label>
             <ToggleWrapper>
               <ToggleInput
                 type="checkbox"
@@ -305,7 +317,7 @@ export const Settings_General: FC = () => {
           </ItemGroup>
 
           <ItemGroup>
-            <Label>Pedidos</Label>
+            <Label>{t.settings.sections.pedidos}</Label>
             <ToggleWrapper>
               <ToggleInput
                 type="checkbox"
@@ -346,13 +358,11 @@ const ColorPickerWrapper = styled.label<{ color: string }>`
   display: inline-block;
 `;
 
-
-const Subtitulo = styled.h1` 
+const Subtitulo = styled.h1`
   margin: 0;
   color: ${({ theme }) => theme.colors.title};
   font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   margin-bottom: 10px;
-
 `;
 
 const HiddenColorInput = styled.input`
@@ -413,17 +423,19 @@ const ColorPicker = styled.input`
 const EmailInput = styled.input`
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 0.875rem;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.background};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   width: 60%;
 `;
 
 const SelectStyled = styled.select`
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 0.875rem;
-  width: 20%;
+  background-color: ${({ theme }) => theme.colors.contenedores};
+  color: ${({ theme }) => theme.colors.subtitle};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  width: auto;
 `;
 
 const Container = styled.div`
@@ -433,10 +445,10 @@ const Container = styled.div`
 `;
 
 const SettingsSection = styled.div`
-  background-color: white;
   padding: 1rem;
   border-radius: 12px;
-  border: 1px solid #eee;
+  border: 1px solid ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.contenedores};
   width: 80%;
   height: 90%;
 `;
@@ -445,6 +457,7 @@ const SectionTitle = styled.h3`
   margin-bottom: 1.5rem;
   font-weight: 700;
   font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const ItemGroup = styled.div`
@@ -457,7 +470,7 @@ const ItemGroup = styled.div`
 
 const Label = styled.label`
   font-weight: 500;
-  color: #333;
+  color: ${({ theme }) => theme.colors.subtitle};
   font-size: ${({ theme }) => theme.fontSizes.text}px;
 `;
 
@@ -465,6 +478,7 @@ const FontSizeControl = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: ${({ theme }) => theme.colors.title};
 `;
 
 const ControlButton = styled.button`
@@ -476,13 +490,14 @@ const ControlButton = styled.button`
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
-  color: #fff;
+  color: white;
 `;
 
 const SizeValue = styled.span`
   font-size: 0.9rem;
   min-width: 60px;
   text-align: center;
+  color: ${({ theme }) => theme.colors.subtitle};
 `;
 
 const ThemeGroup = styled.div`
@@ -511,7 +526,6 @@ const ToggleInput = styled.input`
   opacity: 0;
   width: 0;
   height: 0;
-
   &:checked + span {
     background-color: ${({ theme }) => theme.colors.toggleOff};
   }
