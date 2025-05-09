@@ -11,6 +11,7 @@ import { Money_Icon } from "@/components/atoms/icons/cobrar_icons/Money_Icon";
 import { Card_Icon } from "@/components/atoms/icons/cobrar_icons/Card_Icon";
 import { Qr_Icon } from "@/components/atoms/icons/cobrar_icons/Qr_Icon";
 import { useLang } from "@/context/Language_Context";
+import { Divider } from "@/components/atoms/Divider";
 
 interface Props {
   onClose: () => void;
@@ -25,12 +26,9 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
   const producto = mockData.products.find((p) => p.productCode === productCode);
   const [cantidad, setCantidad] = useState(1);
 
-
-
   //FALTA EL PRECIO UNITARIO POR PRODUCTO.
   const totalAPagar = cantidad * (producto?.stock ?? 0);
   // const precioUnitario = 100;
-
 
   //
 
@@ -130,7 +128,6 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
   };
 
   const tipoTarjeta = getTipoTarjeta(numeroTarjeta);
-  
 
   function handleFinalizarPago(
     event: React.MouseEvent<HTMLButtonElement>
@@ -140,17 +137,17 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
 
   const TABS = [
     { id: "cobrar", label: t.modals.productos.cobrar.tabs.cobrar },
-    { id: "stock", label: t.modals.productos.cobrar.tabs.stock }
+    { id: "stock", label: t.modals.productos.cobrar.tabs.stock },
   ];
-  
+
   const [activeTab, setActiveTab] = useState("cobrar");
-  
+
   return (
     <Cobrar_Base_Detail_Modal
-      tabs={TABS.map(tab => tab.label)}
-      activeTab={TABS.find(tab => tab.id === activeTab)?.label || ""}
+      tabs={TABS.map((tab) => tab.label)}
+      activeTab={TABS.find((tab) => tab.id === activeTab)?.label || ""}
       onTabChange={(label) => {
-        const selected = TABS.find(tab => tab.label === label);
+        const selected = TABS.find((tab) => tab.label === label);
         if (selected) setActiveTab(selected.id);
       }}
       onClose={onClose}
@@ -173,10 +170,14 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
               <>
                 <ProductInfo>
                   <span>{producto.title}</span>
-                  <span>{t.modals.productos.cobrar.precio}: ${producto.stock}</span>
+                  <span>
+                    {t.modals.productos.cobrar.precio}: ${producto.stock}
+                  </span>
                 </ProductInfo>
                 <InputGroup>
-                  <label htmlFor="cantidad">{t.modals.productos.cobrar.cantidad}:</label>
+                  <label htmlFor="cantidad">
+                    {t.modals.productos.cobrar.cantidad}:
+                  </label>
                   <input
                     type="number"
                     id="cantidad"
@@ -189,10 +190,12 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                   <span>{t.modals.productos.cobrar.totalCobrar}:</span>
                   <span>${totalAPagar.toFixed(2)}</span>
                 </TotalPagar>
-  
+
                 <PaymentMethodTabs>
                   <PaymentTab
-                    className={activePaymentTab === "Efectivo" ? "is-active" : ""}
+                    className={
+                      activePaymentTab === "Efectivo" ? "is-active" : ""
+                    }
                     onClick={() => setActivePaymentTab("Efectivo")}
                   >
                     <PaymentTabContent>
@@ -200,9 +203,11 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                       <span>{t.modals.productos.cobrar.metodos.efectivo}</span>
                     </PaymentTabContent>
                   </PaymentTab>
-  
+
                   <PaymentTab
-                    className={activePaymentTab === "Tarjeta" ? "is-active" : ""}
+                    className={
+                      activePaymentTab === "Tarjeta" ? "is-active" : ""
+                    }
                     onClick={() => setActivePaymentTab("Tarjeta")}
                   >
                     <PaymentTabContent>
@@ -210,7 +215,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                       <span>{t.modals.productos.cobrar.metodos.tarjeta}</span>
                     </PaymentTabContent>
                   </PaymentTab>
-  
+
                   <PaymentTab
                     className={activePaymentTab === "QR" ? "is-active" : ""}
                     onClick={() => setActivePaymentTab("QR")}
@@ -221,11 +226,15 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                     </PaymentTabContent>
                   </PaymentTab>
                 </PaymentMethodTabs>
-  
-                <PaymentContentContainer isActive={activePaymentTab === "Efectivo"}>
+
+                <PaymentContentContainer
+                  isActive={activePaymentTab === "Efectivo"}
+                >
                   <PaymentDetails>
                     <PaymentOptions>
-                      <PaymentLabel>{t.modals.productos.cobrar.pagaCon}</PaymentLabel>
+                      <PaymentLabel>
+                        {t.modals.productos.cobrar.pagaCon}
+                      </PaymentLabel>
                       <PaymentInput
                         type="number"
                         value={pagoEfectivo ?? ""}
@@ -234,13 +243,18 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                         min="0"
                         step="0.01"
                       />
-  
+
                       <QuickPaymentButtons>
-                        {[totalAPagar, totalAPagar * 1.5, totalAPagar * 2].map((amount) => (
-                          <QuickButton key={amount} onClick={() => setPagoEfectivo(amount)}>
-                            ${amount.toFixed(2)}
-                          </QuickButton>
-                        ))}
+                        {[totalAPagar, totalAPagar * 1.5, totalAPagar * 2].map(
+                          (amount) => (
+                            <QuickButton
+                              key={amount}
+                              onClick={() => setPagoEfectivo(amount)}
+                            >
+                              ${amount.toFixed(2)}
+                            </QuickButton>
+                          )
+                        )}
                         <PaymentActions>
                           <ActionButton
                             onClick={() => setPagoEfectivo(undefined)}
@@ -251,7 +265,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                         </PaymentActions>
                       </QuickPaymentButtons>
                     </PaymentOptions>
-  
+
                     <PaymentResultContainer>
                       <PaymentSummary>
                         <SummaryRow>
@@ -262,22 +276,26 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                               : "-"}
                           </ReceivedAmount>
                         </SummaryRow>
-  
+
                         <SummaryRow>
                           <span>{t.modals.productos.cobrar.total}:</span>
                           <span>${totalAPagar.toFixed(2)}</span>
                         </SummaryRow>
-  
+
                         <Divider />
-  
+
                         <SummaryRow>
                           <span>{t.modals.productos.cobrar.vuelto}:</span>
-                          <ChangeAmount $status={getChangeStatus(vueltoEfectivo)}>
+                          <ChangeAmount
+                            $status={getChangeStatus(vueltoEfectivo)}
+                          >
                             {pagoEfectivo !== null
                               ? (vueltoEfectivo ?? 0) > 0
                                 ? `$${(vueltoEfectivo ?? 0).toFixed(2)}`
                                 : (vueltoEfectivo ?? 0) < 0
-                                ? `-$${Math.abs(vueltoEfectivo ?? 0).toFixed(2)}`
+                                ? `-$${Math.abs(vueltoEfectivo ?? 0).toFixed(
+                                    2
+                                  )}`
                                 : t.modals.productos.cobrar.exacto
                               : "-"}
                           </ChangeAmount>
@@ -286,8 +304,10 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                     </PaymentResultContainer>
                   </PaymentDetails>
                 </PaymentContentContainer>
-  
-                <PaymentContentContainer isActive={activePaymentTab === "Tarjeta"}>
+
+                <PaymentContentContainer
+                  isActive={activePaymentTab === "Tarjeta"}
+                >
                   <TarjetaSection>
                     <TarjetaFormulario
                       onNumeroTarjetaChange={handleNumeroTarjetaChange}
@@ -307,7 +327,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                     />
                   </TarjetaSection>
                 </PaymentContentContainer>
-  
+
                 <PaymentContentContainer isActive={activePaymentTab === "QR"}>
                   <PaymentDetails>
                     <QRCodeContainer>
@@ -323,7 +343,7 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
                     </QRCodeContainer>
                   </PaymentDetails>
                 </PaymentContentContainer>
-  
+
                 <Finalizar_Wrapper>
                   <FinalizarButton disabled={contadorActivo !== true}>
                     {t.modals.productos.cobrar.finalizar}
@@ -347,9 +367,6 @@ export const Cobrar_Detail: FC<Props> = ({ onClose }) => {
       </TabContentContainer>
     </Cobrar_Base_Detail_Modal>
   );
-  
-
-
 };
 
 const TarjetaSection = styled.div`
@@ -407,6 +424,7 @@ const TabContentContainer = styled.div<{ active: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const ReceivedAmount = styled.span<{ $hasValue: boolean }>`
@@ -435,16 +453,10 @@ const CobrarSection = styled.div`
   gap: 1rem;
   padding: 2rem;
   width: 90%;
-  background: #f9f9f9;
+  background-color: ${({ theme }) => theme.colors.modal};
   border-radius: 16px;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd5f;
   height: 650px;
-`;
-
-const TotalDisplay = styled.div`
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #000;
 `;
 
 const QuickPaymentButtons = styled.div`
@@ -485,12 +497,6 @@ const SummaryRow = styled.div`
   justify-content: space-between;
 `;
 
-const Divider = styled.div`
-  height: 1px;
-  background: #eee;
-  margin: 0.5rem 0;
-`;
-
 const PagoExacto = styled.div`
   display: flex;
   justify-content: space-between;
@@ -504,7 +510,7 @@ const CheckIcon = styled.span`
   width: 20px;
   height: 20px;
   background-color: #28a745;
-  color: white;
+  color: ${({ theme }) => theme.colors.text};
   border-radius: 50%;
   text-align: center;
   line-height: 20px;
@@ -567,9 +573,12 @@ const InputGroup = styled.div`
   input {
     width: 50px;
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: none;
+    background-color: ${({ theme }) => theme.colors.background};
+    font-size: ${({ theme }) => theme.fontSizes.text}px;
     border-radius: 4px;
     text-align: center;
+    color: ${({ theme }) => theme.colors.text};
   }
 `;
 
@@ -595,7 +604,7 @@ const PaymentTab = styled.button`
   background: none;
   cursor: pointer;
   font-weight: bold;
-  color: #555;
+  color: ${({ theme }) => theme.colors.text};
   position: relative;
   transition: all 0.2s ease-in-out;
   gap: 10px;
@@ -614,7 +623,7 @@ const PaymentTab = styled.button`
   }
 
   &.is-active {
-    color: #000;
+    color: ${({ theme }) => theme.colors.text};
     gap: 10px;
 
     &::after {
@@ -656,7 +665,9 @@ const PaymentLabel = styled.label`
 
 const PaymentInput = styled.input`
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.background};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   border-radius: 4px;
   width: 150px;
 `;
@@ -672,7 +683,7 @@ const Tooltip = styled.span`
   visibility: hidden;
   width: 120px;
   background-color: #0000006c;
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
   text-align: center;
   border-radius: 6px;
   padding: 5px;
@@ -698,7 +709,7 @@ const Tooltip = styled.span`
 `;
 
 const FinalizarButton = styled.button`
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
@@ -730,6 +741,6 @@ const QRCodeContainer = styled.div`
   border: 1px dashed #ccc;
   border-radius: 4px;
   font-size: 0.9rem;
-  color: #777;
+  color: ${({ theme }) => theme.colors.text};
   gap: 15px;
 `;

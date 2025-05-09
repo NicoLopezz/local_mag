@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { mockData } from "@/mock_data/products";
 import { QRCodeCanvas } from "qrcode.react";
 import { useLang } from "@/context/Language_Context";
+import { Divider } from "@/components/atoms/Divider";
 
 
 export const Producto_Detalles: FC = () => {
@@ -52,7 +53,7 @@ const Info_Container = styled.div`
   padding: 2rem;
   border-radius: 16px;
   height: 80%;
-  background: rgba(255, 255, 255, 0.12);
+  background-color: ${({ theme }) => theme.colors.background};
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -69,28 +70,22 @@ const Info_Content = styled.div`
 const Title = styled.h3`
   font-size: 2.2rem;
   font-weight: 700;
-  color: #2e2e2e;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const SubTitle = styled.h4`
   font-size: 1.3rem;
   font-weight: 500;
-  color: #555;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
-const Divider = styled.hr`
-  border: none;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin: 0.25rem 0 0.5rem;
-`;
 
 const Details_List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
   font-size: 1rem;
-  color: #444;
+  color: ${({ theme }) => theme.colors.text};
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -104,11 +99,12 @@ const Item = styled.li`
 
 const Label = styled.span`
   font-weight: 600;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const QR_Container = styled.div`
   align-self: flex-end;
+
 `;
 
 const Mensaje = styled.div`

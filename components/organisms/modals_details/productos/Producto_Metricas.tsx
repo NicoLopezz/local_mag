@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { Divider } from "@/components/atoms/Divider";
 
 export const Producto_Metricas: FC = () => {
   const ventasPorSemana = [
@@ -92,14 +93,10 @@ const Title = styled.h3`
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #e0e0e0;
-  margin: 1.5rem 0;
-`;
+
 
 const ChartWrapper = styled.div`
   display: flex;
@@ -131,7 +128,7 @@ const Bar = styled.div<{ $height: number; $color?: string }>`
 const Label = styled.div`
   margin-top: 0.5rem;
   font-size: 0.8rem;
-  color: #555;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const KPIBox = styled.div`
@@ -145,7 +142,7 @@ const KPIBox = styled.div`
 const KPI_Title = styled.h4`
   font-size: 1.2rem;
   font-weight: 600;
-  color: #555;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const KPI_Value = styled.div`
@@ -157,6 +154,6 @@ const KPI_Value = styled.div`
 
 const KPI_Description = styled.p`
   font-size: 1rem;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text};
   margin: 0;
 `;

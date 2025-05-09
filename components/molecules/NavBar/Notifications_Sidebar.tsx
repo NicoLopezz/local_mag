@@ -1,5 +1,6 @@
 import { FC, useState ,useEffect } from "react";
 import styled from "styled-components";
+import { useLang } from "@/context/Language_Context";
 
 interface NotificationItem {
   id: number;
@@ -61,6 +62,9 @@ export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose , onUnreadCou
     }
   ]);
 
+  const { t } = useLang();
+
+
   const unreadCount = notifications.filter(n => !n.isRead).length;
   useEffect(() => {
     if (onUnreadCountChange) {
@@ -86,24 +90,24 @@ export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose , onUnreadCou
       
       <SidebarContainer $isOpen={isOpen}>
         <Header>
-          <Title>Notificaciones</Title>
-          <CloseButton onClick={onClose} aria-label="Cerrar notificaciones">
+          <Title>{t.notification.title}</Title>
+          <CloseButton onClick={onClose} aria-label={t.notification.close}>
             ✕
           </CloseButton>
         </Header>
         
         <TabsContainer>
           <Tab $active>
-            No leídas <UnreadBadge>{unreadCount}</UnreadBadge>
+            {t.notification.unreadTab} <UnreadBadge>{unreadCount}</UnreadBadge>
           </Tab>
           <Tab onClick={markAllAsRead}>
-            Marcar como leídas
+            {t.notification.markAllAsRead}
           </Tab>
         </TabsContainer>
-
+  
         {unreadCount > 0 && (
           <>
-            <SectionHeader>No leídas</SectionHeader>
+            <SectionHeader>{t.notification.unreadSection}</SectionHeader>
             {notifications.filter(n => !n.isRead).map(notification => (
               <NotificationCard 
                 key={notification.id} 
@@ -121,15 +125,15 @@ export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose , onUnreadCou
                     {notification.date} · {notification.time}
                   </NotificationTime>
                   <ViewDetails>
-                    Ver detalle &gt;
+                    {t.notification.viewDetails} &gt;
                   </ViewDetails>
                 </NotificationFooter>
               </NotificationCard>
             ))}
           </>
         )}
-
-        <SectionHeader>Leídas</SectionHeader>
+  
+        <SectionHeader>{t.notification.readSection}</SectionHeader>
         {notifications.filter(n => n.isRead).map(notification => (
           <NotificationCard 
             key={notification.id} 
@@ -147,7 +151,7 @@ export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose , onUnreadCou
                 {notification.date} · {notification.time}
               </NotificationTime>
               <ViewDetails>
-                Ver detalle &gt;
+                {t.notification.viewDetails} &gt;
               </ViewDetails>
             </NotificationFooter>
           </NotificationCard>
@@ -155,6 +159,8 @@ export const Notifications_Sidebar: FC<Props> = ({ isOpen, onClose , onUnreadCou
       </SidebarContainer>
     </>
   );
+
+
 };
 
 
@@ -164,7 +170,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.302);
   z-index: 99;
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
@@ -178,7 +184,7 @@ const SidebarContainer = styled.div<{ $isOpen: boolean }>`
   height: 100vh;
   width: 380px;
   max-width: 90vw;
-  background-color: #f8f9fa;
+  background-color: ${({ theme }) => theme.colors.modal};
   box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
   transform: ${({ $isOpen }) => ($isOpen ? 'translateX(0)' : 'translateX(100%)')};
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -194,8 +200,8 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: ${({ theme }) => theme.colors.modal};
+  border-bottom: 1px solid #e0e0e06f;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -205,7 +211,7 @@ const Title = styled.h3`
   margin: 0;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const CloseButton = styled.button`
@@ -213,7 +219,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  color: #666;
+  color: ${({ theme }) => theme.colors.text};
   padding: 5px;
   border-radius: 50%;
   width: 30px;
@@ -230,8 +236,8 @@ const CloseButton = styled.button`
 const TabsContainer = styled.div`
   display: flex;
   padding: 15px 20px;
-  background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: ${({ theme }) => theme.colors.modal};
+  border-bottom: 1px solid #e0e0e07e;
   gap: 15px;
 `;
 
@@ -240,12 +246,12 @@ const Tab = styled.div<{ $active?: boolean }>`
   cursor: pointer;
   font-weight: ${({ $active }) => ($active ? 600 : 500)};
   font-size: 0.9rem;
-  color: ${({ $active }) => ($active ? '#0a3662' : '#555')};
+  color: ${({ $active }) => ($active ? '#f8f8f8' : '#555')};
   border-radius: 4px;
   display: flex;
   align-items: center;
   gap: 5px;
-  background-color: ${({ $active }) => ($active ? '#f0f7ff' : 'transparent')};
+  background-color: ${({ $active, theme }) => ($active ? theme.colors.modal : 'transparent')};
 
   &:hover {
     background-color: #f5f5f5;
@@ -263,8 +269,8 @@ const UnreadBadge = styled.span`
 
 const SectionHeader = styled.div`
   padding: 10px 20px;
-  background-color: #f0f0f0;
-  color: #555;
+  background-color: ${({ theme }) => theme.colors.modal};
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 600;
   font-size: 0.85rem;
   text-transform: uppercase;

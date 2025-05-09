@@ -1,6 +1,5 @@
 import { FC } from "react";
-import styled from "styled-components";
-import Image from "next/image";
+import { Card_Base } from "@/components/atoms/cards/Card_Base";
 
 interface Props {
   title: string;
@@ -8,7 +7,7 @@ interface Props {
   imageUrl: string;
   href: string;
   isSelected: boolean;
-  onSelect: () => void;
+  onSelect: (title: string) => void;
 }
 
 
@@ -20,65 +19,11 @@ export const Category_Service_Card: FC<Props> = ({
   onSelect,
 }) => {
   return (
-    <Card_Container isSelected={isSelected} onClick={onSelect}>
-      <Card_Image>
-        <Image src={imageUrl} alt={title} fill style={{ objectFit: "cover" }} />
-      </Card_Image>
-      <Card_Content>
-        <Card_Title>{title}</Card_Title>
-        <Card_Description>{description}</Card_Description>
-      </Card_Content>
-    </Card_Container>
+    <Card_Base
+      title={title}
+      description={description}
+      imageUrl={imageUrl}
+      isSelected={isSelected}
+      onClick={() => onSelect(title)} stock={0}  />
   );
 };
-
-
-const Card_Container = styled.div<{ isSelected: boolean }>`
-  display: flex;
-  flex-direction: column;
-  width: 150px;
-  height: 150px;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #fff;
-  border: ${({ isSelected }) => (isSelected ? "2px solid #02203f" : "1px solid #ddd")};
-  box-shadow: ${({ isSelected }) =>
-    isSelected ? "0 0 10px rgba(0, 123, 255, 0.3)" : "0px 4px 8px rgba(0, 0, 0, 0.05)"};
-  transition: all 0.1s ease-in-out;
-  text-decoration: none;
-  color: inherit;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const Card_Image = styled.div`
-  position: relative;
-  width: 100%;
-  height: 80px;
-  background-color: ${({ theme }) => theme.colors.background};
-`;
-
-const Card_Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  padding-top: 6px;
-`;
-
-const Card_Title = styled.h3`
-  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
-  font-weight: bold;
-  color: #333;
-`;
-
-const Card_Description = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.text}px;
-  color: #666;
-`;

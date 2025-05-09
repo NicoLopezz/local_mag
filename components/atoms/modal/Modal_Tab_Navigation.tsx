@@ -48,14 +48,14 @@ const Tabs_Container = styled.div`
   flex-wrap: wrap;
   margin-bottom: 2rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #eeeeee2d;
 `;
 
 const Active_Indicator = styled.div`
   position: absolute;
   bottom: -1px;
   height: 3px;
-  background-color: #222;
+  background-color:${({ theme }) => theme.colors.text};
   border-radius: 4px;
   transition: left 0.3s ease, width 0.3s ease;
 `;

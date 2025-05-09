@@ -21,6 +21,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     setRouteKey(router.route);
   }, [router.route]);
 
+  const getLayout = (Component as any).getLayout || ((page: React.ReactNode) => (
+    <Main_Layout>
+      <FadeWrapper key={routeKey}>{page}</FadeWrapper>
+    </Main_Layout>
+  ));
+
   return (
     <LanguageProvider>
       <SearchProvider>
@@ -29,11 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <EnviosProvider>
               <PedidosProvider>
                 <ToastProvider>
-                  <Main_Layout>
-                    <FadeWrapper key={routeKey}>
-                      <Component {...pageProps} />
-                    </FadeWrapper>
-                  </Main_Layout>
+                  {getLayout(<Component {...pageProps} />)}
                 </ToastProvider>
               </PedidosProvider>
             </EnviosProvider>
@@ -43,6 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     </LanguageProvider>
   );
 }
+
 
 export default MyApp;
 

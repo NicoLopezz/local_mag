@@ -126,7 +126,7 @@ export const Producto_Historial: FC = () => {
 
 const Container = styled.div`
   flex: 2;
-  background: #f9f9f9;
+  background-color: ${({ theme }) => theme.colors.background};
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
   padding: 2rem;
@@ -162,20 +162,20 @@ const Title = styled.h3`
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
-  color: #000000;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const TotalVentas = styled.div`
   font-size: 1rem;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.8);
+  color: ${({ theme }) => theme.colors.text};
   padding: 0.5rem 1rem;
   border-radius: 20px;
 `;
 
 const Mensaje = styled.div`
   font-size: 1rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: ${({ theme }) => theme.colors.text};
   padding: 2rem;
   text-align: center;
 `;
@@ -227,7 +227,7 @@ const TableHeader = styled.th<{ align?: string }>`
   padding: 1rem;
   text-align: ${({ align }) => align || 'left'};
   font-weight: 600;
-  color: #000000;
+  color: ${({ theme }) => theme.colors.text};
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -236,7 +236,7 @@ const TableHeader = styled.th<{ align?: string }>`
 const TableCell = styled.td<{ align?: string }>`
   padding: 1rem;
   text-align: ${({ align }) => align || 'left'};
-  color: rgba(0, 0, 0, 0.8);
+  color: ${({ theme }) => theme.colors.text};
   font-size: 0.95rem;
   border: none;
   border-bottom: 1px solid #e0e0e0;
@@ -256,7 +256,7 @@ const QuantityBadge = styled.span`
 const SellerBadge = styled.span`
   display: inline-block;
   padding: 0.35rem 0.8rem;
-  color: #000000;
+  color: ${({ theme }) => theme.colors.text};
   border-radius: 16px;
   font-weight: 500;
 `;
@@ -271,7 +271,7 @@ const FilterContainer = styled.div`
 const FilterLabel = styled.label`
   font-size: 0.9rem;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.7);
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const FilterInput = styled.input`

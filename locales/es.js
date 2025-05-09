@@ -86,7 +86,6 @@ const es = {
     title: "Clientes",
   },
 
-
   //MODALS
   modals: {
     productos: {
@@ -95,14 +94,14 @@ const es = {
         stock: "Stock",
         proveedores: "Proveedores",
         metricas: "Métricas",
-        historial: "Historial"
+        historial: "Historial",
       },
       detalles: {
         title: "Detalles del producto",
         descripcion: "Descripción",
         categoria: "Categoría",
         stockDisponible: "Stock disponible",
-        codigo: "Código"
+        codigo: "Código",
       },
       categoryForm: {
         title: "Agregar Categoría",
@@ -111,7 +110,7 @@ const es = {
         stock: "Stock",
         guardar: "Guardar",
         confirm: "Añadir categoría",
-        cancel: "Cancelar"
+        cancel: "Cancelar",
       },
       productForm: {
         title: "Agregar Producto",
@@ -121,7 +120,7 @@ const es = {
         stock: "Stock",
         guardar: "Guardar",
         confirm: "Añadir producto",
-        cancel: "Cancelar"
+        cancel: "Cancelar",
       },
       cobrarCard: {
         numeroTarjeta: "Nº de tarjeta *",
@@ -134,12 +133,12 @@ const es = {
         placeholderNombre: "Como aparece en la tarjeta",
         pagoConTarjeta: "Pago con tarjeta *",
         selectOption: "Seleccione un elemento",
-        recordar: "Recordar tarjeta"
-      },      
+        recordar: "Recordar tarjeta",
+      },
       cobrar: {
         tabs: {
           cobrar: "Cobrar",
-          stock: "Stock"
+          stock: "Stock",
         },
         precio: "Precio",
         cantidad: "Cantidad",
@@ -147,7 +146,7 @@ const es = {
         metodos: {
           efectivo: "Efectivo",
           tarjeta: "Tarjeta",
-          qr: "QR"
+          qr: "QR",
         },
         pagaCon: "Paga con",
         limpiar: "Limpiar",
@@ -158,11 +157,10 @@ const es = {
         escaneaQr: "Por favor scanee el QR",
         finalizar: "Finalizar",
         tooltip: "Complete los campos",
-        cancelacionAuto: "Cancelación automática en {seg} seg"
-      }
-    }
+        cancelacionAuto: "Cancelación automática en {seg} seg",
+      },
+    },
   },
-  
 
   //FINANZAS
   finanzas: {
@@ -209,7 +207,7 @@ const es = {
   productos: {
     pageTitle: "Categoras",
     subTitle: "Productos",
-    addProduct:"Agregar producto"
+    addProduct: "Agregar producto",
   },
 
   //ROLES
@@ -267,6 +265,38 @@ const es = {
       open: "Abiertos",
       closed: "Cerrados",
     },
+  },
+
+  //LOGIN
+  login: {
+    titleLogin: "Bienvenido de nuevo",
+    titleRegister: "Crea una cuenta",
+    goToRegister: "Registrarse",
+    goToLogin: "Iniciar sesión",
+    name: "Nombre completo",
+    email: "Correo electrónico",
+    password: "Contraseña",
+    enter: "Continuar",
+    register: "Registrarse",
+    errorEmailRequired: "Se requiere un correo electrónico.",
+    errorPasswordRequired: "Se requiere una contraseña.",
+    terms: "Términos de uso",
+    privacy: "Política de privacidad",
+    repeatEmail: "Repetir email",
+    repeatPassword: "Repetir contraseña",
+    errorEmail: "Los correos no coinciden",
+    errorPassword: "Las contraseñas no coinciden"
+  },
+
+  // NOTIFICATIONBAR
+  notification: {
+    title: "Notificaciones",
+    close: "Cerrar notificaciones",
+    unreadTab: "No leídas",
+    markAllAsRead: "Marcar como leídas",
+    unreadSection: "No leídas",
+    readSection: "Leídas",
+    viewDetails: "Ver detalle",
   },
 
   //LEGAL

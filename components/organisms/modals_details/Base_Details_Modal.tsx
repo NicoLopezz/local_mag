@@ -64,8 +64,8 @@ const Modal_Grid = styled.div`
 
 const Image_Box = styled.div`
   flex: 1;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
+  background-color: ${({ theme }) => theme.colors.modal};
+  border: 1px solid #dddddd53;
   border-radius: 16px;
   padding: 2rem;
   display: flex;

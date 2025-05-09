@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { Category_Card } from "../../molecules/cards/Category_Card";
 import { Add_Proceso_Card } from "../../molecules/cards/Add_Proceso_Card";
 import { useLang } from "@/context/Language_Context";
-import { Divider} from "@/components/atoms/Divider";
-
+import { Divider } from "@/components/atoms/Divider";
 
 interface Category {
   title: string;
@@ -27,13 +26,12 @@ export const Procesos_List: FC<Props> = ({
   onAddCategory,
   selectedCategory,
 }) => {
-
-  const {t} = useLang();
+  const { t } = useLang();
 
   return (
     <Container>
       <Title>{t.processes.title}</Title>
-      <Divider/>
+      <Divider />
       <Categories_Container>
         <Category_Wrapper>
           <Add_Proceso_Card onAddProceso={onAddCategory} />
@@ -84,20 +82,17 @@ const Categories_Container = styled.div`
       height: 0.25rem;
       background: transparent;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: hsl(0 0% 70% / 0);
       border-radius: 1rem;
       transition: background 0.3s ease;
     }
-    
+
     &:hover::-webkit-scrollbar-thumb {
       background: hsl(0 0% 70% / 0.5);
     }
   }
 `;
 
-const Category_Wrapper = styled.div`
-
-`;
-
+const Category_Wrapper = styled.div``;

@@ -2,16 +2,12 @@ import styled from "styled-components";
 
 export const Close_Button = styled.button`
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 5px;
+  right: 10px;
   background: transparent;
   border: none;
-  font-size: ${({ theme }) => theme.fontSizes.title}px;
-  color: #333;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.text};
   cursor: pointer;
   transition: color 0.2s;
-
-  &:hover {
-    color: #000;
-  }
 `;

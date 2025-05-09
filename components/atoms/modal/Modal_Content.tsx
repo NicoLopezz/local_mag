@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Modal_Content = styled.div`
+  position: relative;
   background-color: ${({ theme }) => theme.colors.modal};
   padding: 2rem;
   border-radius: 12px;

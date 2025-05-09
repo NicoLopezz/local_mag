@@ -113,12 +113,6 @@ const Title = styled.h2`
   margin-bottom: 10px;
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #cccccc16;
-  margin-bottom: 15px;
-`;
-
 const Empleados_Container = styled.div`
   display: flex;
   flex-wrap: wrap;

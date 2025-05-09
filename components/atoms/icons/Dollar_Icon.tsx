@@ -11,7 +11,7 @@ export const Dollar_Icon: FC<Props> = ({onClick}) => {
       stroke="currentColor"
       fill="currentColor"
       viewBox="0 0 448 512"
-      height="2em"
+      height="1.5em"
       width="10em"
       xmlns="http://www.w3.org/2000/svg"
     >

@@ -94,7 +94,7 @@ const getFilterKey = (path: string): string => {
 const Search_Wrapper = styled.div<{ focused: boolean }>`
   display: flex;
   align-items: center;
-  border: 1px solid ${({ theme }) => theme.colors.title};;
+  border: 0.1px solid ${({ theme }) => theme.colors.title};;
   border-radius: 20px;
   padding: 5px 20px;
   background-color: ${({ theme }) => theme.colors.neutral.light};

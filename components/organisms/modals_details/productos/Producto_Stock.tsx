@@ -5,6 +5,7 @@ import { mockData } from "@/mock_data/products";
 import { useTransactions } from "@/context/Transacciones_Context";
 import { useToast } from "@/context/Toast_Context";
 import { usePedidos } from "@/context/Pedidos_Context";
+import { Divider } from "@/components/atoms/Divider";
 
 interface ProductoPedido {
   id: string;
@@ -298,6 +299,7 @@ const PaymentOptions = styled.div`
 const PaymentLabel = styled.label`
   font-size: 15px;
   width:70%;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const PaymentSelect = styled.select`
@@ -493,31 +495,9 @@ const Section = styled.div`
 const Title = styled.h3`
   font-size: 1.8rem;
   font-weight: 700;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
-const SubTitle = styled.h4`
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 0.5rem;
-`;
-
-const List = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 1rem;
-  color: #444;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-`;
-
-const Mensaje = styled.div`
-  font-size: 1rem;
-  color: #999;
-  padding: 2rem;
-`;
 
 const Stock_Number = styled.div<{ low?: boolean }>`
   font-size: 1.8rem;
@@ -526,11 +506,6 @@ const Stock_Number = styled.div<{ low?: boolean }>`
   margin-bottom: 0;
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #e0e0e0;
-  margin: 1.5rem 0;
-`;
 
 const Badge = styled.span`
   display: inline-block;

@@ -1,5 +1,5 @@
-import React, { FC, useState, ChangeEvent } from 'react';
-import styled from 'styled-components';
+import React, { FC, useState, ChangeEvent } from "react";
+import styled from "styled-components";
 import { useLang } from "@/context/Language_Context";
 
 interface Props {
@@ -24,11 +24,13 @@ export const TarjetaFormulario: FC<Props> = ({
   nombreApellido,
 }) => {
   const { t } = useLang();
-  
+
   return (
     <FormularioTarjeta>
       <Campo>
-        <Label htmlFor="numeroTarjeta">{t.modals.productos.cobrarCard.numeroTarjeta}</Label>
+        <Label htmlFor="numeroTarjeta">
+          {t.modals.productos.cobrarCard.numeroTarjeta}
+        </Label>
         <Input
           type="text"
           id="numeroTarjeta"
@@ -40,7 +42,9 @@ export const TarjetaFormulario: FC<Props> = ({
       </Campo>
       <FilaDoble>
         <CampoCorto>
-          <Label htmlFor="vencimiento">{t.modals.productos.cobrarCard.vencimiento}</Label>
+          <Label htmlFor="vencimiento">
+            {t.modals.productos.cobrarCard.vencimiento}
+          </Label>
           <Input
             type="text"
             id="vencimiento"
@@ -51,7 +55,9 @@ export const TarjetaFormulario: FC<Props> = ({
           />
         </CampoCorto>
         <CampoCorto>
-          <Label htmlFor="codSeguridad">{t.modals.productos.cobrarCard.codSeguridad}</Label>
+          <Label htmlFor="codSeguridad">
+            {t.modals.productos.cobrarCard.codSeguridad}
+          </Label>
           <Input
             type="text"
             id="codSeguridad"
@@ -63,7 +69,9 @@ export const TarjetaFormulario: FC<Props> = ({
         </CampoCorto>
       </FilaDoble>
       <Campo>
-        <Label htmlFor="nombreApellido">{t.modals.productos.cobrarCard.nombreApellido}</Label>
+        <Label htmlFor="nombreApellido">
+          {t.modals.productos.cobrarCard.nombreApellido}
+        </Label>
         <Input
           type="text"
           id="nombreApellido"
@@ -73,7 +81,9 @@ export const TarjetaFormulario: FC<Props> = ({
         />
       </Campo>
       <Campo>
-        <Label htmlFor="pagoConTarjeta">{t.modals.productos.cobrarCard.pagoConTarjeta}</Label>
+        <Label htmlFor="pagoConTarjeta">
+          {t.modals.productos.cobrarCard.pagoConTarjeta}
+        </Label>
         <Select id="pagoConTarjeta">
           <option value="">{t.modals.productos.cobrarCard.selectOption}</option>
         </Select>
@@ -86,8 +96,6 @@ export const TarjetaFormulario: FC<Props> = ({
       </CampoCheckbox>
     </FormularioTarjeta>
   );
-  
-
 };
 
 const FormularioTarjeta = styled.div`
@@ -109,7 +117,9 @@ const Label = styled.label`
 
 const Input = styled.input`
   padding: 0.7rem;
-  border: 1px solid #ccc;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.background};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   border-radius: 4px;
   font-size: 1rem;
 `;
@@ -127,7 +137,10 @@ const CampoCorto = styled.div`
 
 const Select = styled.select`
   padding: 0.7rem;
-  border: 1px solid #ccc;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.background};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
+  color: ${({ theme }) => theme.colors.text};
   border-radius: 4px;
   font-size: 1rem;
 `;
@@ -139,7 +152,9 @@ const CampoCheckbox = styled.div`
 `;
 
 const Checkbox = styled.input`
-  /* Estilos para el checkbox */
+  border: none;
+  background-color: ${({ theme }) => theme.colors.background};
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
 `;
 
 const LabelCheckbox = styled.label`

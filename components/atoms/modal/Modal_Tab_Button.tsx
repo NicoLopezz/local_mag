@@ -8,14 +8,14 @@ export const Modal_Tab_Button = styled.button<Props>`
   padding: 0.5rem 1.25rem;
   border: none;
   border-radius: 8px;
-  background-color: ${({ active }) => (active ? "transparent" : "transparent")};
+  background-color: transparent;
   font-weight: ${({ active }) => (active ? "bold" : "normal")};
-  color: #222;
+  color: ${({ theme }) => theme.colors.text};
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease-in-out;
   font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
 
   &:hover {
-    background-color: #f5f5f5;
+    transform: scale(1.15);
   }
 `;

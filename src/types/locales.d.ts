@@ -81,6 +81,18 @@ declare module "@/locales/es" {
       settings: string;
     };
 
+    //NOTIFICATION
+    notification: {
+      title: string;
+      close: string;
+      unreadTab: string;
+      markAllAsRead: string;
+      unreadSection: string;
+      readSection: string;
+      viewDetails: string;
+    };
+
+
     //SHIPMENTS
     shipments: {
       pageTitle: string;
@@ -317,6 +329,27 @@ declare module "@/locales/es" {
         Alta: string;
         "Sin prioridad": string;
       };
+    };
+
+    //LOGIN
+    login: {
+      titleLogin: string,
+      titleRegister: string,
+      goToRegister: string;
+      goToLogin: string;
+      name: string;
+      email: string;
+      password: string;
+      repeatEmail: string;
+      repeatPassword: string;
+      enter: string;
+      register: string;
+      errorEmailRequired: string;
+      errorPasswordRequired: string;
+      terms: string;
+      privacy: string;
+      errorEmail: string;
+      errorPassword: string;
     };
 
     //ORDERS

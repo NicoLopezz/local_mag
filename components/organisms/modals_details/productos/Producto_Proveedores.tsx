@@ -92,7 +92,7 @@ const Title = styled.h3`
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 0.6rem;
-  color: #333;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const SubTitle = styled.h4`
@@ -100,7 +100,7 @@ const SubTitle = styled.h4`
   font-weight: 600;
   margin-top: 1rem;
   margin-bottom: 0.4rem;
-  color: #555;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const List = styled.ul`
@@ -108,7 +108,7 @@ const List = styled.ul`
   padding: 0;
   margin: 0;
   font-size: 1rem;
-  color: #444;
+  color: ${({ theme }) => theme.colors.text};
   display: flex;
   flex-direction: column;
   gap: 0.3rem;

@@ -170,7 +170,40 @@ const en = {
   productos: {
     pageTitle: "Categories",
     subTitle: "Products",
-    addProduct:"Add product"
+    addProduct: "Add product",
+  },
+
+  // NOTIFICATIONBAR
+  notification: {
+    title: "Notifications",
+    close: "Close notifications",
+    unreadTab: "Unread",
+    markAllAsRead: "Mark all as read",
+    unreadSection: "Unread",
+    readSection: "Read",
+    viewDetails: "View details",
+  },
+
+  //LOGIN
+  login: {
+    titleLogin: "Welcome back",
+    titleRegister: "Create an account",
+    goToRegister: "Register",
+    goToLogin: "Login",
+    name: "Full name",
+    email: "Email adress",
+    password: "Password",
+    repeatEmail: "Repeat email",
+    repeatPassword: "Repeat password",
+    enter: "Continue",
+    register: "Register",
+    errorEmailRequired: "Email is required.",
+    errorPasswordRequired: "Password is required.",
+    terms: "Terms of Use",
+    privacy: "Privacy Policy",
+    errorEmail: "The emails do not match",
+    errorPassword: "The emails do not match"
+    
   },
 
   //SEARCH BAR
@@ -235,14 +268,14 @@ const en = {
         stock: "Stock",
         proveedores: "Suppliers",
         metricas: "Metrics",
-        historial: "History"
+        historial: "History",
       },
       detalles: {
         title: "Product details",
         descripcion: "Description",
         categoria: "Category",
         stockDisponible: "Available stock",
-        codigo: "Code"
+        codigo: "Code",
       },
       categoryForm: {
         title: "Add Category",
@@ -251,7 +284,7 @@ const en = {
         stock: "Stock",
         guardar: "Save",
         confirm: "Add category",
-        cancel: "Cancel"
+        cancel: "Cancel",
       },
       productForm: {
         title: "Add Product",
@@ -261,7 +294,7 @@ const en = {
         stock: "Stock",
         guardar: "Save",
         confirm: "Add product",
-        cancel: "Cancel"
+        cancel: "Cancel",
       },
       cobrarCard: {
         numeroTarjeta: "Card number *",
@@ -274,12 +307,12 @@ const en = {
         placeholderNombre: "As appears on the card",
         pagoConTarjeta: "Pay with card *",
         selectOption: "Select an option",
-        recordar: "Remember card"
-      },      
+        recordar: "Remember card",
+      },
       cobrar: {
         tabs: {
           cobrar: "Charge",
-          stock: "Stock"
+          stock: "Stock",
         },
         precio: "Price",
         cantidad: "Quantity",
@@ -287,7 +320,7 @@ const en = {
         metodos: {
           efectivo: "Cash",
           tarjeta: "Card",
-          qr: "QR"
+          qr: "QR",
         },
         pagaCon: "Pay with",
         limpiar: "Clear",
@@ -298,14 +331,10 @@ const en = {
         escaneaQr: "Please scan the QR",
         finalizar: "Finish",
         tooltip: "Fill in all fields",
-        cancelacionAuto: "Auto cancel in {seg} sec"
-      }
-
-      
-    }
-  }
-  ,
-
+        cancelacionAuto: "Auto cancel in {seg} sec",
+      },
+    },
+  },
   //FINANZAS
   finanzas: {
     title: "Finances",

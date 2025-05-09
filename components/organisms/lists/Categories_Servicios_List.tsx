@@ -31,7 +31,7 @@ export const Categories_Servicios_List: FC<Props> = ({
   return (  
     <Container>
       <Title>{t.services.categories.title}</Title>
-      <Divider />
+      <StyledDivider />
       <Categories_Container>
         <Category_Wrapper>
           <Add_Category_Card onAddCategory={onAddCategory} />
@@ -64,7 +64,7 @@ const Title = styled.h2`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-const Divider = styled.hr`
+const StyledDivider = styled.hr`
   border: none;
   border-top: 1px solid #cccccc16;
   margin-bottom: 15px;

@@ -1,23 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-const Search_Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  border-radius: 20px;
-  padding: 5px 10px;
-  background-color: #f9f9f9;
-`;
-
-const Input = styled.input`
-  border: none;
-  outline: none;
-  background: transparent;
-  padding: 5px;
-  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
-  width: 150px;
-`;
-
 export const Search_Bar: FC = () => {
   return (
     <Search_Wrapper>
@@ -36,3 +19,21 @@ export const Search_Bar: FC = () => {
     </Search_Wrapper>
   );
 };
+
+
+const Search_Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  padding: 5px 10px;
+  background-color: #f9f9f9;
+`;
+
+const Input = styled.input`
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 5px;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  width: 150px;
+`;

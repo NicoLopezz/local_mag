@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Modal_Content_Base = styled.div`
   position: relative;
-  background: #fff;
+  background-color: ${({ theme }) => theme.colors.modal};
   border-radius: 12px;
   padding: 2rem;
   width: 85vw;
