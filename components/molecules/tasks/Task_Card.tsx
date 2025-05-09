@@ -61,7 +61,6 @@ export const Task_Card: FC<Props> = ({
 
   const { t } = useLang();
 
-
   const getDaysLeft = (dueDate?: string) => {
     if (!dueDate) return null;
     const today = new Date();
@@ -69,8 +68,8 @@ export const Task_Card: FC<Props> = ({
     const diffTime = end.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays >= 0
-    ? t.tasks.daysLeft.replace("{{count}}", String(diffDays))
-    : t.tasks.overdue;
+      ? t.tasks.daysLeft.replace("{{count}}", String(diffDays))
+      : t.tasks.overdue;
   };
 
   const daysLeftText = getDaysLeft(dueDate);
@@ -84,11 +83,11 @@ export const Task_Card: FC<Props> = ({
   return (
     <Card_Container
       ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       style={style}
       $isDragging={isDragging}
       $mounted={mounted}
-      {...attributes}
-      {...listeners}
       onClick={onOpenModal}
     >
       <Top_Row>
@@ -137,7 +136,6 @@ export const Task_Card: FC<Props> = ({
         <Progress_Mini_Wrapper>
           <Task_Progress_Mini status={status as any} />
         </Progress_Mini_Wrapper>
-
         <Right_Block>
           <Days_Left>{daysLeftText}</Days_Left>
           <AvatarWrapper>
@@ -153,6 +151,7 @@ export const Task_Card: FC<Props> = ({
     </Card_Container>
   );
 };
+
 
 const appear = keyframes`
   from {

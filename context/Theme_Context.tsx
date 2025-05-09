@@ -10,7 +10,7 @@ interface FontSizes {
 
 const defaultFontSizes: FontSizes = {
   title: 30,
-  subtitle: 22,
+  subtitle: 18,
   text: 13,
 };
 

@@ -231,9 +231,13 @@ export const Tasks_Board: FC<Props> = ({
   };
 
   return (
- 
-    <>
-    
+    <DndContext
+      sensors={sensors}
+      collisionDetection={rectIntersection}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
       <Wrapper>
         <Board>
           {columns.map((column) => (
@@ -250,12 +254,10 @@ export const Tasks_Board: FC<Props> = ({
               overTaskId={overTaskId}
               isOver={overColumnId === column.id}
             />
-            
           ))}
-          {/* <New_Column_Card onAdd={handleAddColumn} /> */}
         </Board>
       </Wrapper>
-
+  
       <DragOverlay>
         {activeTask && (
           <Task_Card
@@ -272,13 +274,12 @@ export const Tasks_Board: FC<Props> = ({
             }
             assigned={activeTask.assigned}
             status={activeTask.status}
-            
-            
           />
         )}
       </DragOverlay>
-      </>
+    </DndContext>
   );
+  
 };
 
 const Wrapper = styled.div`

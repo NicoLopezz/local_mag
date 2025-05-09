@@ -63,7 +63,7 @@ const Tabs = styled.div`
 
 const TabButton = styled.button<{ active: boolean }>`
   padding: 0.5rem 1.25rem;
-  font-size: ${({ theme }) => theme.fontSizes.subtitle - 2}px;
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
   font-weight: 600;
   border-radius: 6px;
   background-color: ${({ active, theme }) =>

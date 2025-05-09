@@ -9,8 +9,6 @@ import {
 import { useDroppable } from "@dnd-kit/core";
 import type { Task } from "@/mock_data/tasks";
 
-
-
 interface Props {
   id: string;
   title: string;
@@ -46,15 +44,14 @@ export const Tasks_Column: FC<Props> = ({
         ? items.findIndex((t) => t.id === overTaskId)
         : items.length;
 
-        items.splice(index, 0, {
-          id: "__placeholder__",
-          title: "",
-          tag: "",
-          priority: "",
-          assigned: "",
-          dueDate: new Date().toISOString()
-        });
-        
+      items.splice(index, 0, {
+        id: "__placeholder__",
+        title: "",
+        tag: "",
+        priority: "",
+        assigned: "",
+        dueDate: new Date().toISOString(),
+      });
     }
 
     return items;
@@ -67,7 +64,7 @@ export const Tasks_Column: FC<Props> = ({
       <Column_Header>{title}</Column_Header>
       <Scrollable>
         <SortableContext
-          items={[...tasks.map((t) => t.id), id]}
+          items={tasks.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
           <Cards_Container>
@@ -76,25 +73,24 @@ export const Tasks_Column: FC<Props> = ({
                 <Placeholder_Card key="placeholder" />
               ) : (
                 <Task_Card
-                key={task.id}
-                id={task.id}
-                title={task.title}
-                tag={task.tag}
-                priority={
-                  task.priority === "Baja" ||
-                  task.priority === "Media" ||
-                  task.priority === "Alta" ||
-                  task.priority === "Sin prioridad"
-                    ? task.priority
-                    : undefined
-                }
-                assigned={task.assigned}
-                assignedImage="/images/empleados/persona.png"
-                status={task.status} 
-                onOpenModal={() => onOpenTaskModal(task)}
-                onMoveTask={onMoveTask}
-                dueDate={task.dueDate}
-
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  tag={task.tag}
+                  priority={
+                    task.priority === "Baja" ||
+                    task.priority === "Media" ||
+                    task.priority === "Alta" ||
+                    task.priority === "Sin prioridad"
+                      ? task.priority
+                      : undefined
+                  }
+                  assigned={task.assigned}
+                  assignedImage="/images/empleados/persona.png"
+                  status={task.status}
+                  onOpenModal={() => onOpenTaskModal(task)}
+                  onMoveTask={onMoveTask}
+                  dueDate={task.dueDate}
                 />
               )
             )}
