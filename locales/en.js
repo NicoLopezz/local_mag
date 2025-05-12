@@ -1,6 +1,3 @@
-import { add } from "@dnd-kit/utilities";
-import { title } from "process";
-
 const en = {
   //SETINGS
   settings: {
@@ -203,7 +200,6 @@ const en = {
     privacy: "Privacy Policy",
     errorEmail: "The emails do not match",
     errorPassword: "The emails do not match"
-    
   },
 
   //SEARCH BAR

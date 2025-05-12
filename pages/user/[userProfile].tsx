@@ -15,7 +15,7 @@ export default function UserProfilePage() {
         <FadeSlideIn>
           <Image_Block>
             <Image
-              src="/images/user-profile.png"
+              src=""
               alt="User Profile"
               width={200}
               height={200}

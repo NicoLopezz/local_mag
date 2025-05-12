@@ -42,7 +42,7 @@ export const initialTasks: Column[] = [
         dueDate: "2025-06-25"
       },
       {
-        id: "2",
+        id: "3",
         title: "Crear vista de tareas",
         tag: "Frontend",
         priority: "Media",
@@ -52,7 +52,7 @@ export const initialTasks: Column[] = [
         dueDate: "2025-06-25"
       },
       {
-        id: "2",
+        id: "4",
         title: "Crear vista de tareas",
         tag: "Frontend",
         priority: "Media",
@@ -61,107 +61,6 @@ export const initialTasks: Column[] = [
         status: "Paso 2",
         dueDate: "2025-06-25"
       },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      },
-      {
-        id: "2",
-        title: "Crear vista de tareas",
-        tag: "Frontend",
-        priority: "Media",
-        assigned: "Camila",
-        description: "Diseñar y desarrollar UI de tareas con drag & drop",
-        status: "Paso 2",
-        dueDate: "2025-06-25"
-      }
-    
     ]
   },
   {
@@ -169,7 +68,7 @@ export const initialTasks: Column[] = [
     title: "In Progress",
     tasks: [
       {
-        id: "3",
+        id: "5",
         title: "Conectar login con backend",
         tag: "Auth",
         priority: "Alta",
@@ -185,7 +84,7 @@ export const initialTasks: Column[] = [
     title: "Done",
     tasks: [
       {
-        id: "4",
+        id: "6",
         title: "Crear vista de tareas",
         tag: "Frontend",
         priority: "Media",
@@ -195,7 +94,7 @@ export const initialTasks: Column[] = [
         dueDate: "2025-06-25"
       },
       {
-        id: "5",
+        id: "7",
         title: "Crear ",
         tag: "Frontend",
         priority: "Media",

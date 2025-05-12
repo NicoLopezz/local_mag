@@ -9,9 +9,26 @@ import { PedidosProvider } from "@/context/Pedidos_Context";
 import { ToastProvider } from "@/context/Toast_Context";
 import { ThemeContextProvider } from "@/context/Theme_Context";
 import { LanguageProvider } from "@/context/Language_Context";
+import { DragProvider } from "@/context/Drag_Context";
 import styled from "styled-components";
-
 import "../styles/globals.css";
+
+const FadeWrapper = styled.div`
+  animation: fadeIn 0.3s ease-in-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+
+
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -35,7 +52,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             <EnviosProvider>
               <PedidosProvider>
                 <ToastProvider>
-                  {getLayout(<Component {...pageProps} />)}
+                  <DragProvider> 
+                    {getLayout(<Component {...pageProps} />)}
+                  </DragProvider>
                 </ToastProvider>
               </PedidosProvider>
             </EnviosProvider>
@@ -46,18 +65,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-
 export default MyApp;
-
-const FadeWrapper = styled.div`
-  animation: fadeIn 0.3s ease-in-out forwards;
-  opacity: 0;
-  transform: translateY(10px);
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`;

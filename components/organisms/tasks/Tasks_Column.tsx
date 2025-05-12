@@ -1,12 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { Task_Card } from "@/components/molecules/tasks/Task_Card";
 import { New_Task_Card } from "@/components/molecules/tasks/New_Task_Card";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
+import { useDrag } from "@/context/Drag_Context";
 import type { Task } from "@/mock_data/tasks";
 
 interface Props {
@@ -14,12 +10,10 @@ interface Props {
   title: string;
   tasks: Task[];
   onAddTask: (taskName: string) => void;
-  activeTaskId?: string;
-  overTaskId?: string | null;
-  isOver?: boolean;
   onOpenModal: () => void;
   onOpenTaskModal: (task: Task) => void;
   onMoveTask?: (taskId: string, direction: "next" | "last") => void;
+  onDropTask: (task: Task, columnId: string, index: number) => void;
 }
 
 export const Tasks_Column: FC<Props> = ({
@@ -27,76 +21,101 @@ export const Tasks_Column: FC<Props> = ({
   title,
   tasks,
   onAddTask,
-  activeTaskId,
-  overTaskId,
-  isOver,
   onOpenModal,
   onOpenTaskModal,
   onMoveTask,
+  onDropTask,
 }) => {
-  const { setNodeRef } = useDroppable({ id });
+  const { draggedTask, setDraggedTask, setDragPosition, dragPosition } = useDrag();
+  const [isOver, setIsOver] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
-  const getCardsWithPlaceholder = () => {
-    const items = [...tasks];
-
-    if (isOver && activeTaskId) {
-      const index = overTaskId
-        ? items.findIndex((t) => t.id === overTaskId)
-        : items.length;
-
-      items.splice(index, 0, {
-        id: "__placeholder__",
-        title: "",
-        tag: "",
-        priority: "",
-        assigned: "",
-        dueDate: new Date().toISOString(),
-      });
+  useEffect(() => {
+    if (!isOver || !dragPosition || !containerRef.current) {
+      setHoverIndex(null);
+      return;
     }
 
-    return items;
+    const cards = Array.from(containerRef.current.children).filter(
+      (el) => el.getAttribute("data-type") === "task"
+    );
+
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i] as HTMLElement;
+      const rect = card.getBoundingClientRect();
+      const middleY = rect.top + rect.height / 2;
+      if (dragPosition.y < middleY) {
+        setHoverIndex(i);
+        return;
+      }
+    }
+
+    setHoverIndex(cards.length);
+  }, [dragPosition, isOver, tasks.length]);
+
+  useEffect(() => {
+    const handleMouseUp = () => {
+      console.log("🟢 Drop detected:", {
+        column: id,
+        task: draggedTask?.id,
+        dropIndex: hoverIndex ?? tasks.length,
+      });      
+      if (draggedTask && isOver) {
+        const dropIndex = hoverIndex ?? tasks.length;
+        onDropTask(draggedTask, id, dropIndex); 
+        setDraggedTask(null);
+        setDragPosition(null);
+      }
+    };
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => window.removeEventListener("mouseup", handleMouseUp);
+  }, [draggedTask, isOver, hoverIndex]);
+  
+
+  const renderTasks = () => {
+    const items = [...tasks];
+    if (draggedTask && isOver && hoverIndex !== null) {
+      items.splice(hoverIndex, 0, { id: "__placeholder__", title: "" } as Task);
+    }
+
+    return items.map((task, index) =>
+      task.id === "__placeholder__" ? (
+        <Placeholder_Card key="placeholder" />
+      ) : (
+        <Task_Card
+          key={task.id}
+          id={task.id}
+          title={task.title}
+          tag={task.tag}
+          priority={
+            task.priority === "Baja" ||
+            task.priority === "Media" ||
+            task.priority === "Alta" ||
+            task.priority === "Sin prioridad"
+              ? task.priority
+              : undefined
+          }
+          assigned={task.assigned}
+          assignedImage="/images/empleados/persona.png"
+          status={task.status}
+          onOpenModal={() => onOpenTaskModal(task)}
+          onMoveTask={onMoveTask}
+          dueDate={task.dueDate}
+          data-index={index}
+          data-type="task"
+        />
+      )
+    );
   };
 
-  const cardsToRender = getCardsWithPlaceholder();
-
   return (
-    <Column ref={setNodeRef}>
+    <Column
+      onMouseEnter={() => setIsOver(true)}
+      onMouseLeave={() => setIsOver(false)}
+    >
       <Column_Header>{title}</Column_Header>
-      <Scrollable>
-        <SortableContext
-          items={tasks.map((t) => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <Cards_Container>
-            {cardsToRender.map((task) =>
-              task.id === activeTaskId ? null : task.id === "__placeholder__" ? (
-                <Placeholder_Card key="placeholder" />
-              ) : (
-                <Task_Card
-                  key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  tag={task.tag}
-                  priority={
-                    task.priority === "Baja" ||
-                    task.priority === "Media" ||
-                    task.priority === "Alta" ||
-                    task.priority === "Sin prioridad"
-                      ? task.priority
-                      : undefined
-                  }
-                  assigned={task.assigned}
-                  assignedImage="/images/empleados/persona.png"
-                  status={task.status}
-                  onOpenModal={() => onOpenTaskModal(task)}
-                  onMoveTask={onMoveTask}
-                  dueDate={task.dueDate}
-                />
-              )
-            )}
-          </Cards_Container>
-        </SortableContext>
-      </Scrollable>
+      <Scrollable ref={containerRef}>{renderTasks()}</Scrollable>
       <New_Task_Card
         onAdd={(taskName) => onAddTask(taskName)}
         onOpenModal={onOpenModal}
@@ -105,12 +124,22 @@ export const Tasks_Column: FC<Props> = ({
   );
 };
 
+const Placeholder_Card = styled.div`
+  width: 100%;
+  height: 72px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 2px dashed #b0c4ff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+`;
+
 const Column = styled.div`
   flex-shrink: 0;
   background-color: ${({ theme }) => theme.colors.contenedores};
   border-radius: 12px;
   padding: 10px;
-  width: 45%;
+  width: 40%;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -160,12 +189,3 @@ const Cards_Container = styled.div`
   width: 80%;
 `;
 
-const Placeholder_Card = styled.div`
-  width: 100%;
-  height: 72px;
-  border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.05);
-  border: 2px dashed #b0c4ff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
-`;

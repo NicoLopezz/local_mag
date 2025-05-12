@@ -228,7 +228,7 @@ const Finalizar_Wrapper = styled.div`
   bottom: 30px;
   left: 50px;
   gap: 20px;
-`;
+`
 
 const FinalizarButton = styled.button`
   padding: 0.5rem 1rem;

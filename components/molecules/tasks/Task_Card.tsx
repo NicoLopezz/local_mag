@@ -1,13 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { Task_Title } from "@/components/atoms/card_tasks/Task_Title";
 import { Drag_Indicator } from "@/components/atoms/card_tasks/Drag_Indicator";
 import { Task_Priority_Tag } from "@/components/atoms/card_tasks/Task_Priority_Tag";
 import { Task_Progress_Mini } from "@/components/atoms/card_tasks/Task_Progress_Mini";
 import Image from "next/image";
 import { useLang } from "@/context/Language_Context";
+import { useDrag } from "@/context/Drag_Context";
 
 interface Props {
   id: string;
@@ -34,31 +33,7 @@ export const Task_Card: FC<Props> = ({
   onOpenModal,
   onMoveTask,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.4 : 1,
-  };
-
-  const handleMoveNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onMoveTask?.(id, "next");
-  };
-
-  const handleMoveLast = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onMoveTask?.(id, "last");
-  };
-
+  const { setDraggedTask, setDragPosition } = useDrag();
   const { t } = useLang();
 
   const getDaysLeft = (dueDate?: string) => {
@@ -74,6 +49,49 @@ export const Task_Card: FC<Props> = ({
 
   const daysLeftText = getDaysLeft(dueDate);
 
+  const handleMoveNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onMoveTask?.(id, "next");
+  };
+
+  const handleMoveLast = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onMoveTask?.(id, "last");
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  
+    const taskData = {
+      id,
+      title,
+      tag,
+      priority,
+      assigned,
+      assignedImage,
+      status,
+      dueDate,
+    };
+  
+    setDraggedTask(taskData);
+    setDragPosition({ x: e.clientX, y: e.clientY });
+  
+    const onMouseMove = (e: MouseEvent) => {
+      setDragPosition({ x: e.clientX, y: e.clientY });
+    };
+  
+    // ❌ NO LLAMES A setDraggedTask(null) ACÁ
+    const onMouseUp = () => {
+      setDragPosition(null); // dejá solo esto
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+  
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
+  
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 10);
@@ -82,37 +100,23 @@ export const Task_Card: FC<Props> = ({
 
   return (
     <Card_Container
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      style={style}
-      $isDragging={isDragging}
-      $mounted={mounted}
+      onMouseDown={handleMouseDown}
       onClick={onOpenModal}
+      data-type="task"
+      $mounted={mounted}
+      $isDragging={false} 
     >
       <Top_Row>
         <Task_Priority_Tag priority={priority} />
         <Icons_Wrapper>
           <Icon_Box onClick={handleMoveNext}>
             <SvgIcon viewBox="0 0 24 24">
-              <path
-                d="M10 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-              />
+              <path d="M10 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
             </SvgIcon>
           </Icon_Box>
           <Icon_Box onClick={handleMoveLast}>
             <SvgIcon viewBox="0 0 24 24">
-              <path
-                d="M6 6l6 6-6 6M13 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-              />
+              <path d="M6 6l6 6-6 6M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
             </SvgIcon>
           </Icon_Box>
         </Icons_Wrapper>
@@ -139,12 +143,7 @@ export const Task_Card: FC<Props> = ({
         <Right_Block>
           <Days_Left>{daysLeftText}</Days_Left>
           <AvatarWrapper>
-            <Profile_Image
-              src={assignedImage}
-              width={25}
-              height={25}
-              alt="profile"
-            />
+            <Profile_Image src={assignedImage} width={25} height={25} alt="profile" />
           </AvatarWrapper>
         </Right_Block>
       </Bottom_Row>
@@ -152,21 +151,20 @@ export const Task_Card: FC<Props> = ({
   );
 };
 
-
 const appear = keyframes`
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(10px);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: scale(1);
   }
 `;
 
 const Card_Container = styled.div<{ $isDragging: boolean; $mounted: boolean }>`
   position: relative;
-  width: 100%;
+  width: 80%;
   min-height: 110px;
   height: 7rem;
   background-color: #ffffff;
@@ -264,9 +262,8 @@ const Days_Left = styled.div`
   color: #333;
   font-style: italic;
   margin-bottom: 10px;
-  margin-right: 10px
+  margin-right: 10px;
 `;
-
 
 const AvatarWrapper = styled.div`
   width: 30px;
