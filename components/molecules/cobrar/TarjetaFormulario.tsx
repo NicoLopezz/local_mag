@@ -40,7 +40,7 @@ export const TarjetaFormulario: FC<Props> = ({
           maxLength={19}
         />
       </Campo>
-      <FilaDoble>
+      {/* <FilaDoble> */}
         <CampoCorto>
           <Label htmlFor="vencimiento">
             {t.modals.productos.cobrarCard.vencimiento}
@@ -67,7 +67,10 @@ export const TarjetaFormulario: FC<Props> = ({
             maxLength={4}
           />
         </CampoCorto>
-      </FilaDoble>
+      {/* </FilaDoble> */}
+
+      {/* <FilaDoble> */}
+      
       <Campo>
         <Label htmlFor="nombreApellido">
           {t.modals.productos.cobrarCard.nombreApellido}
@@ -88,6 +91,7 @@ export const TarjetaFormulario: FC<Props> = ({
           <option value="">{t.modals.productos.cobrarCard.selectOption}</option>
         </Select>
       </Campo>
+
       <CampoCheckbox>
         <Checkbox type="checkbox" id="recordarTarjeta" />
         <LabelCheckbox htmlFor="recordarTarjeta">
@@ -103,6 +107,9 @@ const FormularioTarjeta = styled.div`
   flex-direction: column;
   gap: 1rem;
   padding: 1rem 0;
+  @media (max-width: 1440px) {
+  width: 40%;
+}
 `;
 
 const Campo = styled.div`

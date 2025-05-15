@@ -3,6 +3,9 @@ import styled, { css } from "styled-components";
 import { useLang } from "@/context/Language_Context";
 import { Input_FloatLabel } from "@/components/molecules/login/Input_FloatLabel";
 import { Language_Switch } from "@/components/molecules/login/Language_Switch";
+import { EyeClose_Icon } from "../../atoms/icons/setting/EyeClose_Icon";
+import { EyeOpen_Icon } from "../../atoms/icons/setting/EyeOpen_Icon";
+import { Modal_Terms } from "@/components/molecules/login/Modal_Terms";
 
 interface Props {}
 
@@ -11,11 +14,13 @@ export const Login: FC<Props> = () => {
   const [activePanel, setActivePanel] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
   const [repeatEmail, setRepeatEmail] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   const LanguageSelector: FC = () => {
     const { lang, setLang } = useLang();
@@ -39,8 +44,8 @@ export const Login: FC<Props> = () => {
     } else {
       setPasswordError("");
     }
-
     if (!valid) return;
+    setShowTerms(true);
   };
 
   return (
@@ -53,8 +58,9 @@ export const Login: FC<Props> = () => {
               onClick={() => setActivePanel("register")}
               $position="right"
             >
-              {t.login.goToRegister}
+              {t.login.goToRegister} <span>→</span>
             </ToggleButton>
+
             <PanelContent>
               <Title>{t.login.titleLogin}</Title>
               <Form onSubmit={handleSubmit}>
@@ -66,16 +72,22 @@ export const Login: FC<Props> = () => {
                     onChange={setEmail}
                     error={emailError}
                   />
-                  <Input_FloatLabel
-                    label={t.login.password}
-                    type="password"
-                    value={password}
-                    onChange={setPassword}
-                    error={passwordError}
-                  />
+                  <InputWrapper>
+                    <Input_FloatLabel
+                      label={t.login.password}
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={setPassword}
+                      error={passwordError}
+                    />
+                    <IconToggle
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? <EyeOpen_Icon /> : <EyeClose_Icon />}
+                    </IconToggle>
+                  </InputWrapper>
                 </PassWord_Wrapper>
                 <SubmitButton type="submit">{t.login.enter}</SubmitButton>
-
                 <TermsWrapper>
                   <LinkText href="#">{t.login.terms}</LinkText>
                   <Separator>|</Separator>
@@ -90,8 +102,9 @@ export const Login: FC<Props> = () => {
               onClick={() => setActivePanel("login")}
               $position="left"
             >
-              {t.login.goToLogin}
+              <span>←</span> {t.login.goToLogin}
             </ToggleButton>
+
             <PanelContent>
               <Title>{t.login.titleRegister}</Title>
               <Form>
@@ -116,32 +129,53 @@ export const Login: FC<Props> = () => {
                 </PassWord_Wrapper>
 
                 <PassWord_Wrapper>
-                  <Input_FloatLabel
-                    label={t.login.password}
-                    type="password"
-                    value={password}
-                    onChange={setPassword}
-                    error={passwordError}
-                  />
-                  <Input_FloatLabel
-                    label={t.login.repeatPassword}
-                    type="password"
-                    value={repeatPassword}
-                    onChange={setRepeatPassword}
-                    validateMatch={{
-                      compareWith: password,
-                      errorMessage: t.login.errorPassword,
-                    }}
-                  />
+                  <InputWrapper>
+                    <Input_FloatLabel
+                      label={t.login.password}
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={setPassword}
+                      error={passwordError}
+                    />
+                    <IconToggle
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? <EyeOpen_Icon /> : <EyeClose_Icon />}
+                    </IconToggle>
+                  </InputWrapper>
+
+                  <InputWrapper>
+                    <Input_FloatLabel
+                      label={t.login.repeatPassword}
+                      type={showRepeatPassword ? "text" : "password"}
+                      value={repeatPassword}
+                      onChange={setRepeatPassword}
+                      validateMatch={{
+                        compareWith: password,
+                        errorMessage: t.login.errorPassword,
+                      }}
+                    />
+                    <IconToggle
+                      onClick={() => setShowRepeatPassword((prev) => !prev)}
+                    >
+                      {showRepeatPassword ? (
+                        <EyeOpen_Icon />
+                      ) : (
+                        <EyeClose_Icon />
+                      )}
+                    </IconToggle>
+                  </InputWrapper>
                 </PassWord_Wrapper>
 
                 <SubmitButton type="submit">{t.login.register}</SubmitButton>
               </Form>
             </PanelContent>
           </AuthPanel>
+
           <Slider $activePanel={activePanel} />
         </PanelContainer>
       </AuthContainer>
+      <Modal_Terms visible={showTerms} onAccept={() => setShowTerms(false)} />
     </Wrapper>
   );
 };
@@ -154,8 +188,15 @@ const PassWord_Wrapper = styled.div`
 const Wrapper = styled.div`
   display: grid;
   justify-content: center;
-  min-height: 100vh;
+  align-items: center;
+  min-height: 95dvh;
+  padding: 2rem;
+  @media (max-width: 1300px) {
+    padding: 0rem;
+    min-height: 100dvh;
+  }
 `;
+
 
 const TermsWrapper = styled.div`
   margin-top: 1.5rem;
@@ -182,21 +223,28 @@ const Separator = styled.span`
 `;
 
 const AuthContainer = styled.div`
-  width: 100rem;
+  width: 100%;
   max-width: 800px;
   position: relative;
 `;
 
+
 const PanelContainer = styled.div`
   position: relative;
-  height: 700px;
   display: flex;
+  flex-direction: row;
+  height: 700px;
   border-radius: 16px;
   background-color: #f6f6f670;
   border: 1px solid #ccc;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+
+  @media (max-width: 1300px) {
+    height: 85dvh;
+  }
 `;
+
 
 const AuthPanel = styled.div<{ $active: boolean }>`
   flex: 1;
@@ -229,6 +277,8 @@ const AuthPanel = styled.div<{ $active: boolean }>`
 const ToggleButton = styled.button<{ $position: "left" | "right" }>`
   position: absolute;
   top: 1.5rem;
+  display: flex;
+  gap: 10px;
   ${({ $position }) => $position}: 1.5rem;
   background: none;
   border: none;
@@ -238,6 +288,8 @@ const ToggleButton = styled.button<{ $position: "left" | "right" }>`
   padding: 0.5rem 1rem;
   border-radius: 6px;
   transition: all 0.2s ease;
+  align-items: center;
+  justify-items: center;
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -255,6 +307,11 @@ const Title = styled.h2`
   margin-bottom: 4rem;
   font-weight: 200;
   text-align: center;
+  @media (max-width: 1300px) {
+    font-size: 1.5rem;
+    margin-top: 0rem;
+    margin-bottom: 2rem;
+  }
 `;
 
 const Form = styled.form`
@@ -262,6 +319,25 @@ const Form = styled.form`
   flex-direction: column;
   gap: 3rem;
   width: 100%;
+  @media (max-width: 1300px) {
+    gap: 1rem;
+  }
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const IconToggle = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Input = styled.input`

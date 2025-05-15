@@ -1,35 +1,14 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { EnvioLista_Icon } from "@/components/atoms/icons/envios_icons/EnvioLista_Icon";
-import { Entregado_Icon } from "@/components/atoms/icons/envios_icons/Entregado_Icon";
-import { Pendiente_Icon } from "@/components/atoms/icons/envios_icons/Pendiente_Icon";
-import { Cancelado_Icon } from "@/components/atoms/icons/envios_icons/Cancelado_Icon";
 
 interface ProgressBarProps {
   progress: "25" | "50" | "75" | "100";
-  status: "pendiente" | "en_camino" | "entregando" | "cancelado";
   $isSelected?: boolean;
+  status?: "cancelado" | "pendiente" | "en_camino" | "entregando";
 }
 
-export const Progress_Bar: FC<ProgressBarProps> = ({ progress, status, $isSelected }) => {
-  const getColor = () => {
-    if (!$isSelected) return "#aaa";
-    if (status === "pendiente") return "#aaa";
-    if (status === "en_camino") return "#aaa";
-    if (status === "entregando") return "#aaa";
-    if (status === "cancelado") return "#aaa";
-    return "#000000";
-  };
 
-  const getIcon = () => {
-    const color = getColor();
-    if (status === "pendiente") return <Pendiente_Icon color={color} />;
-    if (status === "en_camino") return <EnvioLista_Icon color={color} />;
-    if (status === "entregando") return <Entregado_Icon color={color} />;
-    if (status === "cancelado") return <Cancelado_Icon />;
-    return null;
-  };
-
+export const Progress_Bar: FC<ProgressBarProps> = ({ progress, $isSelected }) => {
   const getActiveStep = () => {
     if (progress === "25") return 1;
     if (progress === "50") return 2;
@@ -45,11 +24,7 @@ export const Progress_Bar: FC<ProgressBarProps> = ({ progress, status, $isSelect
       <Line />
       {[1, 2, 3, 4].map((step) => (
         <Step key={step} style={{ left: `${(step - 1) * 33}%` }}>
-          {step === activeStep ? (
-            <IconWrapper>{getIcon()}</IconWrapper>
-          ) : (
-            <Circle active={step < activeStep} />
-          )}
+          <Circle active={step <= activeStep} />
         </Step>
       ))}
     </Bar_Container>
@@ -65,7 +40,7 @@ const Bar_Container = styled.div`
 
 const Line = styled.div`
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 0;
   right: 0;
   height: 1.5px;
@@ -89,19 +64,4 @@ const Circle = styled.div<{ active: boolean }>`
   border-radius: 50%;
   background-color: ${({ active, theme }) => (active ? "#000000" : theme.colors.contenedores)};
   border: 1px solid #aaa;
-`;
-
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  position: absolute;
-  top: -3px;
-`;
-
-const Label = styled.span`
-  margin-top: 2px;
-  font-size: 10px;
-  color: #666;
 `;

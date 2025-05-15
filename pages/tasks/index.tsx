@@ -164,6 +164,7 @@ const Tasks: NextPage = () => {
           onSubmit={(task) =>
             submitNewTask({
               ...task,
+              priority: task.priority as Priority,
               dueDate: task.dueDate || new Date().toISOString(),
             })
           }
@@ -188,13 +189,17 @@ const Tasks: NextPage = () => {
                 ...selectedTask,
                 title: updatedData.title,
                 description: updatedData.description,
-                priority: updatedData.priority,
+                priority: updatedData.priority as Priority,
                 status: updatedData.status,
                 assigned: updatedData.assigned,
                 tag: updatedData.tag,
                 dueDate: updatedData.dueDate,
                 endDate: new Date(updatedData.dueDate),
               });
+            }}
+            onDelete={() => {
+              // Add your delete logic here
+              console.log(`Task with ID ${selectedTask.id} deleted`);
             }}
           />
         </Task_Detail_Modal>
@@ -301,16 +306,18 @@ const Checkbox = styled.div<{ checked: boolean }>`
 const Page_Container = styled.div`
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
+  flex-direction: column;
   height: calc(100vh - ${Navbar_Height});
   overflow: hidden;
 `;
 
 const Main_Content = styled.div`
   display: flex;
+  flex: 1;
   overflow: hidden;
-  padding: 0px;
-  flex-grow: 1;
+  /* padding: 0px; */
+  /* flex-grow: 1; */
 `;
 
 const Content_Area = styled.div`
@@ -320,10 +327,10 @@ const Content_Area = styled.div`
   justify-content: center;
   max-width: calc(100vw - ${Sidebar_Width});
   padding-top: 2rem;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   margin-left: 5rem;
 `;
+
 
 const Board_Wrapper = styled.div`
   overflow-x: auto;

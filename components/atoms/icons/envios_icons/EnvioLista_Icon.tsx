@@ -10,7 +10,7 @@ export const EnvioLista_Icon: FC<Props> = ({ color = "#000" }) => {
     <Svg 
       stroke="currentColor"
       fill={color}
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 640 512"
       height="1em"
       width="1em"

@@ -333,6 +333,8 @@ declare module "@/locales/es" {
 
     //LOGIN
     login: {
+      cookies:string;
+      btnAcept:string;
       titleLogin: string,
       titleRegister: string,
       goToRegister: string;

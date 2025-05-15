@@ -6,7 +6,7 @@ export const Sun_Icon: FC = () => {
     <Svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 1024 1024"
       fill-rule="evenodd"
       height="1em"

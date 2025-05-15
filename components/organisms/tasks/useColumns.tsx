@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { Priority } from "@/mock_data/tasks";
 
 export interface Task {
   id: string;
   title: string;
   tag?: string;
-  priority?: string;
+  priority?: Priority;
   assigned?: string;
   description?: string;
   status?: string;

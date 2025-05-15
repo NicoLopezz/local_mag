@@ -19,10 +19,10 @@ const DragContext = createContext<DragContextProps>({
 export const DragProvider = ({ children }: { children: ReactNode }) => {
   const [draggedTask, setDraggedTask] = useState(null);
   const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
-    
-    useEffect(() => {
-      console.log("🧠 draggedTask actualizado:", draggedTask);
-    }, [draggedTask]);
+
+  useEffect(() => {
+    document.body.style.userSelect = draggedTask ? "none" : "";
+  }, [draggedTask]);
 
   return (
     <DragContext.Provider value={{ draggedTask, setDraggedTask, dragPosition, setDragPosition }}>
@@ -30,5 +30,6 @@ export const DragProvider = ({ children }: { children: ReactNode }) => {
     </DragContext.Provider>
   );
 };
+
 
 export const useDrag = () => useContext(DragContext);

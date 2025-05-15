@@ -10,7 +10,7 @@ import { useLang } from "@/context/Language_Context";
 interface Service {
   title: string;
   description: string;
-  imageUrl: string;
+  // imageUrl: string;
   href: string;
 }
 

@@ -5,6 +5,7 @@ export const Modal_Content = styled.div`
   background-color: ${({ theme }) => theme.colors.modal};
   padding: 2rem;
   border-radius: 12px;
+  min-width: 300px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   animation: fadeInContent 0.2s ease-out;
 

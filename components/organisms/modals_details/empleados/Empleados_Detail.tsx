@@ -20,17 +20,55 @@ export const Empleado_Detail: FC<Props> = ({ onClose }) => {
   );
 
   const empleado = empleadoBase
-    ? {
-        surname: "Generado",
-        age: Math.floor(Math.random() * 30 + 20),
-        children: Math.floor(Math.random() * 3),
-        address: "Calle Falsa 123",
-        dni: (Math.floor(Math.random() * 100000000)).toString(),
-        cuil: "20-" + Math.floor(Math.random() * 100000000) + "-0",
-        category: "A",
-        ...empleadoBase,
-      }
-    : null;
+  ? {
+      ...empleadoBase,
+      surname: "Generado",
+      age: Math.floor(Math.random() * 30 + 20),
+      children: Math.floor(Math.random() * 3),
+      address: "Calle Falsa 123",
+      dni: Math.floor(Math.random() * 100000000).toString(),
+      cuil: "20-" + Math.floor(Math.random() * 100000000) + "-0",
+      category: "A",
+      legajo: "EMP-" + Math.floor(Math.random() * 10000),
+      fechaIngreso: new Date(
+        Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 365 * 3)
+      ).toISOString().split("T")[0],
+      tipoContrato: ["Indefinido", "Temporario", "Pasantía"][
+        Math.floor(Math.random() * 3)
+      ],
+      salarioBase: Math.floor(Math.random() * 50000 + 30000),
+      salarioNeto: Math.floor(Math.random() * 45000 + 25000),
+      birthdate: new Date("1992-09-10"),
+      obraSocial: ["OSDE", "Swiss Medical", "Galeno"][
+        Math.floor(Math.random() * 3)
+      ],
+      art: ["ART 1", "ART 2", "ART 3"][Math.floor(Math.random() * 3)],
+      puestoExacto: ["Operario Senior", "Analista Junior", "Supervisor"][
+        Math.floor(Math.random() * 3)
+      ],
+      supervisor: "Juan Pérez",
+      contactoEmergencia: {
+        nombre: ["María Gómez", "Carlos Rodríguez", "Laura Fernández"][
+          Math.floor(Math.random() * 3)
+        ],
+        relacion: ["Esposa", "Padre", "Hermano"][
+          Math.floor(Math.random() * 3)
+        ],
+        telefono: "11" + Math.floor(Math.random() * 10000000 + 30000000),
+      },
+      vacaciones: {
+        totalDias: 14,
+        usados: Math.floor(Math.random() * 10),
+        disponibles: 14 - Math.floor(Math.random() * 10),
+      },
+      equiposAsignados: [
+        "Notebook",
+        "Teléfono corporativo",
+        "Herramientas especiales",
+      ],
+    }
+  : null;
+
 
   return (
     <Base_Details_Modal

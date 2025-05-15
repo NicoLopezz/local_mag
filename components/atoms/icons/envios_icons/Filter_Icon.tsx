@@ -6,7 +6,7 @@ export const Filter_Icon: FC = () => {
     <Svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 512 512"
       height="0.8em"
       width="0.8em"

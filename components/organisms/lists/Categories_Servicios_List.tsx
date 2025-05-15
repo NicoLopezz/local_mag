@@ -9,7 +9,7 @@ import { Divider} from "@/components/atoms/Divider";
 interface Category {
   title: string;
   description: string;
-  imageUrl: string;
+  // imageUrl: string;
   href: string;
 }
 

@@ -60,7 +60,7 @@ export const Input_FloatLabel: FC<Props> = ({
       >
         {label}
       </StyledLabel>
-      {finalError && <ErrorText>❗ {finalError}</ErrorText>}
+      {finalError && <ErrorText> {finalError}</ErrorText>}
     </Wrapper>
   );
 };

@@ -373,14 +373,15 @@ const TarjetaSection = styled.div`
   display: flex;
   gap: 40px;
   margin-top: -1rem;
-`;
 
-const PagoJusto = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  font-weight: bold;
-  margin-top: 0.5rem;
-  color: #000;
+  @media (max-width: 1440px) {
+  /* width: 50%; */
+  gap: 20px;     
+  margin-top: 1rem;
+  overflow-y: auto;
+  max-height: 400px; 
+}
+
 `;
 
 const Title = styled.div`
@@ -452,11 +453,11 @@ const CobrarSection = styled.div`
   flex-direction: column;
   gap: 1rem;
   padding: 2rem;
-  width: 90%;
+  width: auto;
   background-color: ${({ theme }) => theme.colors.modal};
   border-radius: 16px;
   border: 1px solid #dddddd5f;
-  height: 650px;
+  height: auto;
 `;
 
 const QuickPaymentButtons = styled.div`
@@ -551,7 +552,8 @@ const PaymentContentContainer = styled.div<{ isActive: boolean }>`
   transform: translateX(${({ isActive }) => (isActive ? "0" : "10px")});
   opacity: ${({ isActive }) => (isActive ? 1 : 0)};
   max-height: ${({ isActive }) => (isActive ? "500px" : "0")};
-  margin: ${({ isActive }) => (isActive ? "1rem 0" : "0")};
+  margin-top: -1rem;
+  /* margin: ${({ isActive }) => (isActive ? "1rem 0" : "0")}; */
 `;
 
 const ProductInfo = styled.div`
