@@ -1,0 +1,6 @@
+[build]
+  command = "npx @netlify/next"
+  publish = ".next"
+
+[functions]
+  directory = ".netlify/functions"
