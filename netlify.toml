@@ -1,5 +1,5 @@
 [build]
-  command = "npx @netlify/next"
+  command = "yarn build"
   publish = ".next"
 
 [functions]
