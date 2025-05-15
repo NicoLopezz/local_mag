@@ -24,7 +24,7 @@ export const lightColors: ThemeColors = {
   toggleOn: "#e9e9e9",
   toggleOff: "#10B981",
   background: "#f6f6f670",
-  contenedores: "#ffffff",
+  contenedores: "#dddddd1d",
   neutral: {
     light: "#ffffff",
     DEFAULT: "#9CA3AF",

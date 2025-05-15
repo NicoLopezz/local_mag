@@ -7,18 +7,20 @@ import { Task_Progress_Mini } from "@/components/atoms/card_tasks/Task_Progress_
 import Image from "next/image";
 import { useLang } from "@/context/Language_Context";
 import { useDrag } from "@/context/Drag_Context";
+import { Priority } from "@/mock_data/tasks";
 
 interface Props {
   id: string;
   title: string;
   tag?: string;
-  priority?: "Baja" | "Media" | "Alta" | "Sin prioridad";
+  priority?: Priority;
   assigned?: string;
   assignedImage?: string;
   status?: string;
   dueDate?: string;
   onOpenModal?: () => void;
   onMoveTask?: (taskId: string, direction: "next" | "last") => void;
+  isDragging?: boolean;
 }
 
 export const Task_Card: FC<Props> = ({
@@ -32,6 +34,8 @@ export const Task_Card: FC<Props> = ({
   dueDate,
   onOpenModal,
   onMoveTask,
+  
+  isDragging = false,
 }) => {
   const { setDraggedTask, setDragPosition } = useDrag();
   const { t } = useLang();
@@ -61,7 +65,7 @@ export const Task_Card: FC<Props> = ({
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.stopPropagation();
-  
+
     const taskData = {
       id,
       title,
@@ -72,25 +76,40 @@ export const Task_Card: FC<Props> = ({
       status,
       dueDate,
     };
-  
-    setDraggedTask(taskData);
-    setDragPosition({ x: e.clientX, y: e.clientY });
-  
+
+    let moved = false;
+    let animationFrameId: number;
+
     const onMouseMove = (e: MouseEvent) => {
-      setDragPosition({ x: e.clientX, y: e.clientY });
+      if (!moved) {
+        moved = true;
+        setDraggedTask(taskData);
+      }
+
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        setDragPosition({ x: e.clientX, y: e.clientY });
+      });
     };
-  
-    // ❌ NO LLAMES A setDraggedTask(null) ACÁ
-    const onMouseUp = () => {
-      setDragPosition(null); // dejá solo esto
+
+    const onMouseUp = (e: MouseEvent) => {
+      cancelAnimationFrame(animationFrameId);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
+
+      if (!moved) {
+        onOpenModal?.();
+      }
+
+      setTimeout(() => {
+        setDragPosition(null);
+        setDraggedTask(null);
+      }, 0);
     };
-  
+
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   };
-  
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -100,23 +119,49 @@ export const Task_Card: FC<Props> = ({
 
   return (
     <Card_Container
+      onClick={(e) => {
+        e.stopPropagation(); // Detenemos la propagación para abrir el modal solo cuando se hace click en la tarjeta
+        // onOpenModal();
+      }}
       onMouseDown={handleMouseDown}
-      onClick={onOpenModal}
       data-type="task"
       $mounted={mounted}
-      $isDragging={false} 
+      $isDragging={isDragging}
     >
       <Top_Row>
         <Task_Priority_Tag priority={priority} />
         <Icons_Wrapper>
-          <Icon_Box onClick={handleMoveNext}>
+          <Icon_Box
+            onClick={(e) => {
+              e.stopPropagation(); // Evita que el click en el ícono abra el modal
+              handleMoveNext(e);
+            }}
+          >
             <SvgIcon viewBox="0 0 24 24">
-              <path d="M10 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+              <path
+                d="M10 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+              />
             </SvgIcon>
           </Icon_Box>
-          <Icon_Box onClick={handleMoveLast}>
+
+          <Icon_Box
+            onClick={(e) => {
+              e.stopPropagation(); // Evita que el click en el ícono abra el modal
+              handleMoveLast(e);
+            }}
+          >
             <SvgIcon viewBox="0 0 24 24">
-              <path d="M6 6l6 6-6 6M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+              <path
+                d="M6 6l6 6-6 6M13 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+              />
             </SvgIcon>
           </Icon_Box>
         </Icons_Wrapper>
@@ -143,7 +188,12 @@ export const Task_Card: FC<Props> = ({
         <Right_Block>
           <Days_Left>{daysLeftText}</Days_Left>
           <AvatarWrapper>
-            <Profile_Image src={assignedImage} width={25} height={25} alt="profile" />
+            <Profile_Image
+              src={assignedImage}
+              width={25}
+              height={25}
+              alt="profile"
+            />
           </AvatarWrapper>
         </Right_Block>
       </Bottom_Row>
@@ -177,11 +227,14 @@ const Card_Container = styled.div<{ $isDragging: boolean; $mounted: boolean }>`
   gap: 6px;
   cursor: grab;
   touch-action: none;
-  transition: transform 200ms ease, opacity 200ms ease, border 200ms ease;
-  will-change: transform;
+  opacity: ${({ $isDragging }) => ($isDragging ? 0.95 : 1)};
+  transform: ${({ $isDragging }) => ($isDragging ? "scale(0.90)" : "scale(1)")};
+  transition: transform 180ms ease-in-out, opacity 120ms ease-in-out,
+    border 150ms ease;
+  will-change: transform, opacity;
   border: ${({ $isDragging }) =>
-    $isDragging ? "2px solid var(--strong-green)" : "1px solid transparent"};
-  animation: ${({ $mounted }) => ($mounted ? appear : "none")} 0.3s ease;
+    $isDragging ? "2px solid black" : "1px solid transparent"};
+  animation: ${({ $mounted }) => ($mounted ? appear : "none")} 0.1s ease;
 `;
 
 const Top_Row = styled.div`
@@ -203,6 +256,12 @@ const Icon_Box = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background-color 150ms ease, transform 150ms ease;
+
+  &:hover {
+    background-color: #d1d5db;
+    transform: scale(1.1);
+  }
 `;
 
 const SvgIcon = styled.svg`

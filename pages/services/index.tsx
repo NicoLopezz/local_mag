@@ -92,7 +92,7 @@ const Servicios: NextPage = () => {
   const categoriesFormatted = mockData.categories.map((category) => ({
     title: category.title,
     description: category.description,
-    imageUrl: category.imageUrl,
+    // imageUrl: category.imageUrl, // Removed as it does not exist on the type
     href: category.href,
   }));
 
@@ -105,7 +105,7 @@ const Servicios: NextPage = () => {
     .map((service) => ({
       title: service.title,
       description: service.description,
-      imageUrl: service.imageUrl,
+      // imageUrl: service.imageUrl,
       href: service.href,
     }));
 

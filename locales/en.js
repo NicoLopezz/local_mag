@@ -183,6 +183,8 @@ const en = {
 
   //LOGIN
   login: {
+    cookies: "We use cookies to improve your experience. By continuing, you agree to the use of all cookies.",
+    btnAcept:"Acept All",
     titleLogin: "Welcome back",
     titleRegister: "Create an account",
     goToRegister: "Register",

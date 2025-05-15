@@ -16,6 +16,7 @@ interface Props {
   assigned: string;
   tag: string;
   dueDate: string;
+  onDelete: () => void;
   onStatusChange: (newStatus: string) => void;
   onSaveChanges: (updatedTask: {
     title: string;
@@ -26,7 +27,6 @@ interface Props {
     tag: string;
     endDate: Date;
     dueDate: string;
-  
   }) => void;
 }
 
@@ -38,6 +38,7 @@ export const Task_Details: FC<Props> = ({
   assigned,
   tag,
   dueDate,
+  onDelete,
   onStatusChange,
   onSaveChanges,
 }) => {
@@ -134,7 +135,7 @@ export const Task_Details: FC<Props> = ({
       <Task_Actions_EditDetail
         showSave={hasChanges && isEditing}
         onSave={handleSave}
-        onDelete={() => console.log("Eliminar tarea")}
+        onDelete={onDelete}
       />
     </Container>
   );

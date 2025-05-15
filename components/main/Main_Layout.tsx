@@ -3,9 +3,6 @@ import styled from "styled-components";
 import { Navbar } from "../organisms/navbar/Navbar";
 import { Sidebar } from "../organisms/sidebar/Sidebar";
 
-const Navbar_Height = "1rem";
-const Sidebar_Width = "1rem";
-
 interface Props {
   children: ReactNode;
 }

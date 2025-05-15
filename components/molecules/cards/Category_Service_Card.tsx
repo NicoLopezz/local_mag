@@ -4,7 +4,7 @@ import { Card_Base } from "@/components/atoms/cards/Card_Base";
 interface Props {
   title: string;
   description: string;
-  imageUrl: string;
+  // imageUrl: string;
   href: string;
   isSelected: boolean;
   onSelect: (title: string) => void;
@@ -14,7 +14,7 @@ interface Props {
 export const Category_Service_Card: FC<Props> = ({
   title,
   description,
-  imageUrl,
+  // imageUrl,
   isSelected,
   onSelect,
 }) => {
@@ -22,7 +22,7 @@ export const Category_Service_Card: FC<Props> = ({
     <Card_Base
       title={title}
       description={description}
-      imageUrl={imageUrl}
+      // imageUrl={imageUrl}
       isSelected={isSelected}
       onClick={() => onSelect(title)} stock={0}  />
   );

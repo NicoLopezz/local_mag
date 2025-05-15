@@ -139,7 +139,6 @@ export const Envios_Board = ({
 
   const handleGuardarCambios = () => {
     if (selectedEnvio) {
-    
       console.log("Guardando cambios...");
 
       console.log({
@@ -344,36 +343,38 @@ export const Envios_Board = ({
 
                   <DetailInfo>
                     <InfoItem>
+                      <InfoLabel>{t.shipments.client}:</InfoLabel>
                       <Wrapper_Icon>
                         <Cliente_Icon />
-                        <InfoLabel>{t.shipments.client}:</InfoLabel>
+                        <InfoValue>{selectedEnvio.clienteName}</InfoValue>
                       </Wrapper_Icon>
-                      <InfoValue>{selectedEnvio.clienteName}</InfoValue>
                     </InfoItem>
 
                     <InfoItem>
+                      <TimeLabel>{t.shipments.departure}:</TimeLabel>
                       <WrapperIcon_Time>
                         <Clock_Icon />
-                        <TimeLabel>{t.shipments.departure}:</TimeLabel>
+                        <WrapperInfo_Time>
+                          <TimeText>{selectedEnvio.time}</TimeText>
+                          <TimeSeparator>-</TimeSeparator>
+                          <TimeLabel>{t.shipments.arrival}:</TimeLabel>
+                          <TimeText>
+                            {selectedEnvio.status === "entregando"
+                              ? selectedEnvio.time
+                              : t.shipments.filterStatuses[
+                                  selectedEnvio.status
+                                ]}
+                          </TimeText>
+                        </WrapperInfo_Time>
                       </WrapperIcon_Time>
-                      <WrapperInfo_Time>
-                        <TimeText>{selectedEnvio.time}</TimeText>
-                        <TimeSeparator>-</TimeSeparator>
-                        <TimeLabel>{t.shipments.arrival}:</TimeLabel>
-                        <TimeText>
-                          {selectedEnvio.status === "entregando"
-                            ? selectedEnvio.time
-                            : t.shipments.filterStatuses[selectedEnvio.status]}
-                        </TimeText>
-                      </WrapperInfo_Time>
                     </InfoItem>
 
                     <InfoItem>
+                      <InfoLabel>{t.shipments.destination}:</InfoLabel>
                       <Wrapper_Icon>
                         <Ubicacion_Icon />
-                        <InfoLabel>{t.shipments.destination}:</InfoLabel>
+                        <InfoValue>{selectedEnvio.direccion}</InfoValue>
                       </Wrapper_Icon>
-                      <InfoValue>{selectedEnvio.direccion}</InfoValue>
                     </InfoItem>
 
                     <InfoItem>
@@ -487,7 +488,7 @@ const ActiveFilter = styled.div`
   background: #e1e1e15a;
   border-radius: 8px;
   padding: 0.4rem 0.8rem;
-  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: ${({ theme }) => theme.colors.title};
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
@@ -498,7 +499,6 @@ const ActiveFilter = styled.div`
     }
   }
 `;
-
 
 const StyledSelect = styled.select`
   border: none;
@@ -526,31 +526,15 @@ const PedidosList = styled.div`
 const RemoveFilterButton = styled.button`
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 10px;
   cursor: pointer;
   color: #000000;
   transition: transform 0.2s ease;
-
   &:hover {
-    transform: scale(1.2);
+    transform: scale(1.5);
   }
-`;
-
-const GuardarButton = styled.button`
-  margin-top: 1.5rem;
-  padding: 0.5rem 1rem;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
-  color: ${({ theme }) => theme.colors.title};
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #43a047;
-  }
+  align-items: center;
+  justify-items: center;
 `;
 
 const EditButton = styled.button`
@@ -687,7 +671,6 @@ const WrapperInfo_Time = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-left: 1.5rem;
 `;
 
 const TimeLabel = styled.span`
@@ -705,8 +688,6 @@ const TimeSeparator = styled.span`
   margin: 0 0.25rem;
   color: ${({ theme }) => theme.colors.title};
 `;
-
-
 
 const RepartidorLink = styled.span`
   font-size: ${({ theme }) => theme.fontSizes.text}px;
@@ -735,27 +716,17 @@ const MapLink = styled.a`
   }
 `;
 
-
 const Wrapper_Icon = styled.div`
   display: flex;
   align-content: center;
-  justify-content: center;
+  justify-content: left;
   gap: 10px;
 `;
 
-const Wrapper_Time2 = styled.div`
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  gap: -50px;
-`;
-
 const FinalizarButton = styled.button`
-
   background-color: ${({ disabled, theme }) =>
     disabled ? "#f9f9f99" : theme.colors.button};
-  color: ${({ disabled}) =>
-    disabled ? "#a0a0a0": "white"};
+  color: ${({ disabled }) => (disabled ? "#a0a0a0" : "white")};
   font-size: ${({ theme }) => theme.fontSizes.text}px;
 
   padding: 0.5rem 1rem;
@@ -784,10 +755,7 @@ const Header_Detail_Wrapper = styled.div`
 `;
 
 const AddButton = styled.button`
-  background-color: ${({ disabled, theme }) =>
-    disabled ? "#f9f9f99" : theme.colors.button};
-  color: ${({ disabled}) =>
-    disabled ? "#a0a0a0": "white"};
+  color: ${({ disabled }) => (disabled ? "#a0a0a0" : "white")};
   font-size: ${({ theme }) => theme.fontSizes.text}px;
 
   padding: 0.5rem;
@@ -998,7 +966,7 @@ const InfoItem = styled.div`
 `;
 
 const InfoLabel = styled.strong`
-  width: 90px;
+  width: auto;
   font-size: ${({ theme }) => theme.fontSizes.text}px;
   color: ${({ theme }) => theme.colors.title};
   margin-right: 0.5rem;

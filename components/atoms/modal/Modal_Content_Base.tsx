@@ -22,3 +22,4 @@ export const Modal_Content_Base = styled.div`
     }
   }
 `;
+ 

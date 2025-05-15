@@ -269,6 +269,8 @@ const es = {
 
   //LOGIN
   login: {
+    cookies: "Usamos cookies para mejorar tu experiencia. Al continuar, aceptás el uso de todas las cookies.",
+    btnAcept:"Aceptar todas",
     titleLogin: "Bienvenido de nuevo",
     titleRegister: "Crea una cuenta",
     goToRegister: "Registrarse",

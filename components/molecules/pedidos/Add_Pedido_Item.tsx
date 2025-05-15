@@ -11,7 +11,7 @@ interface AddPedidoItemProps {
       proveedorName: string;
       status: "abierto" | "cerrado" | "cancelado";
       time?: string;
-    }) => void;  // <- Ahora acepta el objeto completo
+    }) => void;  
   }
 
 export const Add_Pedido_Item = ({
@@ -27,9 +27,7 @@ export const Add_Pedido_Item = ({
     proveedorName: string;
     status: "abierto" | "cerrado" | "cancelado";
     time?: string;
-  }) => {
-    console.log("📦 Datos RECIBIDOS en el modal:", pedidoData); 
-    
+  }) => {  
     if (!pedidoData.proveedorName.trim()) {
       alert("Ingresa un nombre de proveedor");
       return;

@@ -26,7 +26,8 @@ export const Tasks_Column: FC<Props> = ({
   onMoveTask,
   onDropTask,
 }) => {
-  const { draggedTask, setDraggedTask, setDragPosition, dragPosition } = useDrag();
+  const { draggedTask, setDraggedTask, setDragPosition, dragPosition } =
+    useDrag();
   const [isOver, setIsOver] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
@@ -60,10 +61,10 @@ export const Tasks_Column: FC<Props> = ({
         column: id,
         task: draggedTask?.id,
         dropIndex: hoverIndex ?? tasks.length,
-      });      
+      });
       if (draggedTask && isOver) {
         const dropIndex = hoverIndex ?? tasks.length;
-        onDropTask(draggedTask, id, dropIndex); 
+        onDropTask(draggedTask, id, dropIndex);
         setDraggedTask(null);
         setDragPosition(null);
       }
@@ -71,7 +72,6 @@ export const Tasks_Column: FC<Props> = ({
     window.addEventListener("mouseup", handleMouseUp);
     return () => window.removeEventListener("mouseup", handleMouseUp);
   }, [draggedTask, isOver, hoverIndex]);
-  
 
   const renderTasks = () => {
     const items = [...tasks];
@@ -81,7 +81,7 @@ export const Tasks_Column: FC<Props> = ({
 
     return items.map((task, index) =>
       task.id === "__placeholder__" ? (
-        <Placeholder_Card key="placeholder" />
+        <Placeholder_Card key={`placeholder-${draggedTask?.id}`} />
       ) : (
         <Task_Card
           key={task.id}
@@ -104,6 +104,7 @@ export const Tasks_Column: FC<Props> = ({
           dueDate={task.dueDate}
           data-index={index}
           data-type="task"
+          isDragging={draggedTask?.id === task.id}
         />
       )
     );
@@ -124,8 +125,15 @@ export const Tasks_Column: FC<Props> = ({
   );
 };
 
+const Column_Header = styled.h3`
+  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
+  color: ${({ theme }) => theme.colors.title};
+  font-weight: 700;
+  margin: 0 0 12px 0;
+`;
+
 const Placeholder_Card = styled.div`
-  width: 100%;
+  width: 80%;
   height: 72px;
   border-radius: 8px;
   background-color: rgba(0, 0, 0, 0.05);
@@ -136,56 +144,41 @@ const Placeholder_Card = styled.div`
 
 const Column = styled.div`
   flex-shrink: 0;
+  width: 40%;
+  /* height: calc(100vh - 8rem); // o ajustado según tu layout */
+  height: 400px;
+  display: flex;
+  flex-direction: column;
   background-color: ${({ theme }) => theme.colors.contenedores};
   border-radius: 12px;
   padding: 10px;
-  width: 40%;
-  display: flex;
-  flex-direction: column;
   gap: 12px;
+  border: 2px solid red;
+  @media (max-width: 1300px) {
+    width: 35%;
+  }
 `;
 
-const Column_Header = styled.h3`
-  font-size: ${({ theme }) => theme.fontSizes.subtitle}px;
-  color: ${({ theme }) => theme.colors.title};
-  font-weight: 700;
-  margin: 0 0 12px 0;
-`;
 
 const Scrollable = styled.div`
-  max-height: 400px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: auto;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
-  
+
+  /* scrollbar-width: none; */
+  -ms-overflow-style: none;
+  border: 2px solid blue;
+
 
   &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.background};
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.icon};
-    border-radius: 6px;
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: ${({ theme }) => theme.colors.button};
+    display: none;
   }
 `;
 
-
-const Cards_Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 80%;
-`;
 

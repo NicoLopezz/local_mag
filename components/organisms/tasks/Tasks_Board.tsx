@@ -3,7 +3,8 @@ import styled from "styled-components";
 import type { Task, Column } from "@/mock_data/tasks";
 import { Tasks_Column } from "@/components/organisms/tasks/Tasks_Column";
 import { New_Column_Card } from "@/components/molecules/tasks/New_Column_Card";
-import { Drag_Overlay } from "@/components/molecules/tasks/Drag_Overlay";
+// import { Drag_Overlay } from "@/components/molecules/tasks/Drag_Overlay";
+import { Ghost_Task_Card } from "@/components/molecules/tasks/Ghost_Task_Card";
 
 interface Props {
   columns: Column[];
@@ -43,6 +44,8 @@ export const Tasks_Board: FC<Props> = ({
     );
   };
 
+  
+
   const handleMoveTask = (taskId: string, direction: "next" | "last") => {
     const currentColumnIndex = columns.findIndex((col) =>
       col.tasks.some((t) => t.id === taskId)
@@ -73,9 +76,8 @@ export const Tasks_Board: FC<Props> = ({
     targetColumnId: string,
     index: number
   ) => {
-    console.log("🟡 handleDropTask:", { task, targetColumnId, index });
     const newColumns = [...columns];
-
+  
     const sourceColumnIndex = newColumns.findIndex((col) =>
       col.tasks.some((t) => t.id === task.id)
     );
@@ -83,21 +85,28 @@ export const Tasks_Board: FC<Props> = ({
       (col) => col.id === targetColumnId
     );
     if (sourceColumnIndex === -1 || targetColumnIndex === -1) return;
-
+  
     const sourceTasks = [...newColumns[sourceColumnIndex].tasks];
     const targetTasks = [...newColumns[targetColumnIndex].tasks];
-
+  
     const taskIndex = sourceTasks.findIndex((t) => t.id === task.id);
     if (taskIndex === -1) return;
-
-    sourceTasks.splice(taskIndex, 1); 
+    if (
+      sourceColumnIndex === targetColumnIndex &&
+      taskIndex === index
+    ) return;
+    sourceTasks.splice(taskIndex, 1);  
+    const existingInTarget = targetTasks.findIndex((t) => t.id === task.id);
+    if (existingInTarget !== -1) {
+      targetTasks.splice(existingInTarget, 1);
+    }
     targetTasks.splice(index, 0, task);
-
     newColumns[sourceColumnIndex].tasks = sourceTasks;
     newColumns[targetColumnIndex].tasks = targetTasks;
-
     onColumnsChange(newColumns);
   };
+  
+  
 
   const handleAddColumn = (title: string) => {
     onColumnsChange([
@@ -131,17 +140,15 @@ export const Tasks_Board: FC<Props> = ({
         </Board>
       </Wrapper>
 
-      <Drag_Overlay />
+      <Ghost_Task_Card />
     </>
   );
 };
 const Wrapper = styled.div`
   width: 100%;
+  height: 100dvh;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 8px;
-  height: 70vh;
-  scrollbar-width: auto;
   -webkit-overflow-scrolling: touch;
 `;
 
@@ -152,4 +159,5 @@ const Board = styled.div`
   gap: 24px;
   width: fit-content;
   align-items: flex-start;
+  
 `;
