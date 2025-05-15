@@ -2,9 +2,9 @@ import { FC } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 
-import { SearchInput } from "../../molecules/navbar/Search_Input";
-import { NotificationBell } from "../../molecules/navbar/Notification_Bell";
-import { UserProfile } from "../../molecules/navbar/User_Profile";
+import { SearchInput } from "../../molecules/NavBar/Search_Input";
+import { NotificationBell } from "../../molecules/NavBar/Notification_Bell";
+import { UserProfile } from "../../molecules/NavBar/User_Profile";
 import { Cobrar_Detail } from "../../organisms/cobrar_modals/Cobrar_Detail";
 import { Stock_Detail } from "../../organisms/stock_modals/Stock_Detail";
 import {Dollar_Icon} from "@/components/atoms/icons/Dollar_Icon"
